@@ -1,0 +1,25 @@
+{
+  "name": "transactional-emails",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone, minimal transactional email template generator. Own setup, no monorepo dependency.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:real-data": "jest tests/integration",
+    "lint": "eslint src scripts",
+    "lint:fix": "eslint src scripts --fix",
+    "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\"",
+    "generate:template": "node scripts/generate-template.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
