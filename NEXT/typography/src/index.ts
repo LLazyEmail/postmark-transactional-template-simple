@@ -1,0 +1,15 @@
+export { button } from './components/button';
+export { heading } from './components/heading';
+export { image } from './components/image';
+export { imageLink } from './components/imageLink';
+export { italic } from './components/italic';
+export { link } from './components/link';
+export { list } from './components/list';
+export { listItem } from './components/listItem';
+export { mainTitle } from './components/mainTitle';
+export { mainTitleImage } from './components/mainTitleImage';
+export { paragraph } from './components/paragraph';
+export { paragraphComponentUpdated } from './components/paragraphComponentUpdated';
+export { separator } from './components/separator';
+export { strong } from './components/strong';
+export { subtitle } from './components/subtitle';
