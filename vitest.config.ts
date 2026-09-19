@@ -25,6 +25,9 @@ export default defineConfig({
     include: ['tests/**/*.{test,spec}.{js,ts}'],
     exclude: ['**/node_modules/**', '**/dist/**'],
 
+    setupFiles: ['./tests/setup.ts'],
+    typecheck: { enabled: true },
+
     // -----------------------------------------------------------------------
     // Coverage — only used when you run `npm run test:coverage`.
     // V8 provider is the default and is faster than Istanbul [citation:6].
