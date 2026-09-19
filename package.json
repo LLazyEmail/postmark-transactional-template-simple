@@ -4,7 +4,6 @@
   "private": true,
   "description": "Standalone, minimal transactional email template generator. Own setup, no monorepo dependency.",
   "main": "src/index.js",
-  "workspaces": ["packages/*"],
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
