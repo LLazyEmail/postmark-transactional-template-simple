@@ -105,4 +105,37 @@ export function listTemplates(): string[] {
 }
 
 /** Look up a raw template object (useful for tests). */
-export
+/** Look up a raw template object (useful for tests). */
+export function getTemplate(
+  templateId: string
+): RegisteredTemplate {
+  const tpl =
+    registry[templateId] ?? registry[String(templateId).toLowerCase()];
+  if (!tpl) {
+    throw new Error(
+      `Unknown template id: "${templateId}". Available: ${listTemplates().join(
+        ', '
+      )}`
+    );
+  }
+  return tpl;
+}
+
+/**
+ * Default export — mirrors the CommonJS surface the legacy `index.js`
+ * exposed (`{ renderTemplate, listTemplates }`), so both:
+ *
+ *   const { renderTemplate } = require('./templates');
+ *   import { renderTemplate } from './templates';
+ *   import templates from './templates';
+ *
+ * keep working during the migration.
+ */
+const registryApi = {
+  renderTemplate,
+  listTemplates,
+  getTemplate,
+  templates,
+};
+
+export default registryApi;
