@@ -1,15 +1,17 @@
 {
-  "env": {
-    "node": true,
-    "es2021": true,
-    "jest": true
-  },
-  "extends": "eslint:recommended",
-  "parserOptions": {
-    "ecmaVersion": 2021,
-    "sourceType": "script"
-  },
-  "rules": {
-    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
-  }
+  "overrides": [
+    {
+      "files": ["tests/**/*.{js,ts}"],
+      "globals": {
+        "describe": "readonly",
+        "it": "readonly",
+        "expect": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "beforeAll": "readonly",
+        "afterAll": "readonly",
+        "vi": "readonly"
+      }
+    }
+  ]
 }

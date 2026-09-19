@@ -5,8 +5,11 @@
   "description": "Standalone, minimal transactional email template generator. Own setup, no monorepo dependency.",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
-    "test:real-data": "jest tests/integration",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:real-data": "vitest run tests/integration",
     "lint": "eslint src scripts",
     "lint:fix": "eslint src scripts --fix",
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
@@ -15,11 +18,11 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "jest": "^29.7.0",
+    "vitest": "^3.0.0",
     "eslint": "^8.57.0",
     "prettier": "^3.2.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   }
 }
