@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
+import * as fs from 'node:fs';
+import * as os from 'node:os';
+import * as path from 'node:path';
+
 import { fileURLToPath } from 'node:url';
 import { CATALOG, SAMPLE_PAYLOADS, type TemplateCatalogEntry } from './template-catalog.ts';
 

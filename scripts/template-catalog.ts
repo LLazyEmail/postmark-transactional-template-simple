@@ -3,7 +3,7 @@
  */
 
 export interface TemplateCatalogEntry {
-  ids: string[];
+  ids: [string, ...string[]];
   file: string;
   exportName: string;
 }
