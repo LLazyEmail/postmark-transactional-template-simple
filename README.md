@@ -106,6 +106,14 @@ No `typescript` in `package.json`, no build step, `main` is CommonJS only. Dropp
 
 ---
 
+```
+npm run generate:template
+npm run generate:template -- --all
+npm run generate:template -- --list
+npm run generate:template -- --template=InvoiceEmail
+npm run generate:template -- --template=password-reset --data=src/data/password-reset.data.js
+```
+
 ### Verdict
 
 | Question | Answer |
