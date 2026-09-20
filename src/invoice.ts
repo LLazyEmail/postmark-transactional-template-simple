@@ -1,4 +1,5 @@
-export { WelcomeEmail } from './welcomeEmail';
-export type { WelcomeEmailProps } from './welcomeEmail';
+export { WelcomeEmail } from './templates/welcomeEmail';
+export type { WelcomeEmailProps } from './types/welcome';
 
-export { InvoiceEmail } from './invoiceEmail';
+export { InvoiceEmail } from './templates/invoiceEmail';
+export type { InvoiceEmailProps } from './types/invoice';
