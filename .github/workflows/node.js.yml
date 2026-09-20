@@ -34,11 +34,11 @@ jobs:
           name: generated-html-real-data
           path: generated-real-data/
 
-          - run: npm run test:coverage
+      - run: npm run test:coverage
 
-        - name: Upload coverage
-          if: matrix.node-version == '24.x'
-          uses: actions/upload-artifact@v6
-          with:
-            name: coverage-report
-            path: coverage/
+      - name: Upload coverage
+        if: matrix.node-version == '24.x'
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-report
+          path: coverage/
