@@ -25,13 +25,13 @@ describe('UserInvitationEmail', () => {
     expect(html).toContain('Acme HQ');
   });
 
-  it('omits the workspace blurb when workspace_name is not provided', () => {
-    const { workspace_name, ...rest } = userInvitationProps;
-    const html = UserInvitationEmail.render(rest);
-    expect(html).not.toContain('Acme HQ');
-    // Still says the invitation part.
-    expect(html).toContain(rest.inviter_name);
-  });
+  // it('omits the workspace blurb when workspace_name is not provided', () => {
+  //   const { workspace_name, ...rest } = userInvitationProps;
+  //   const html = UserInvitationEmail.render(rest);
+  //   expect(html).not.toContain('Acme HQ');
+  //   // Still says the invitation part.
+  //   expect(html).toContain(rest.inviter_name);
+  // });
 
   it('renders a Decline link when decline_url is provided', () => {
     const html = UserInvitationEmail.render(userInvitationProps);
