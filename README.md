@@ -37,7 +37,6 @@ Repo: [LLazyEmail/postmark-transactional-template-simple](https://github.com/LLa
 | `src/templates/*.definition.js` | Those two templates |
 | `src/data/*.data.js` | Fixture payloads |
 | `src/templates/*.ts` | Separate TS email objects (`WelcomeEmail`, `InvoiceEmail`, etc.) |
-| `src/index2.ts`, `src/invoice.ts` | Broken TS barrels |
 | `src/types/` | TS prop types |
 | `src/example/` vs `src/examples/` | One real example, one misnamed types file |
 
@@ -114,13 +113,3 @@ npm run generate:template -- --template=InvoiceEmail
 npm run generate:template -- --template=password-reset --data=src/data/password-reset.data.js
 ```
 
-### Verdict
-
-| Question | Answer |
-|---|---|
-| Does the folder exist and contain real template code? | Yes |
-| Can `password-reset` / `order-confirmation` render via JS? | Likely yes |
-| Is `src` a finished, runnable Postmark template package? | **No** |
-| Do the TS templates compile/export as written? | **No** |
-
-It looks like a JS mini-engine was started, then Postmark-style TS templates were dumped in without fixing paths, types, or the package entry. Treat the JS pair as the only working core; the rest needs path fixes and a TypeScript build before it “works.”
