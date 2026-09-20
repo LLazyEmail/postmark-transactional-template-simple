@@ -3,7 +3,7 @@ import type { TrialExpiringEmailProps } from '../types/trialExpiring';
 
 const props: TrialExpiringEmailProps = {
   name: 'Alex',
-  preheader: 'Your Pro trial ends in 3 days — here's what happens next.',
+  preheader: "Your Pro trial ends in 3 days — here's what happens next.",
   trial_end_date: 'January 19, 2026',
   trial_days_remaining: '3',
   plan_name: 'Pro',
