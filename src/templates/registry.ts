@@ -67,7 +67,7 @@ const templates = [
 // so 'password-reset', 'PasswordResetEmail', and 'passwordresetemail'
 // all resolve to the same template.
 // ---------------------------------------------------------------------------
-const registry: Record<string, RegisteredTemplate> = {};
+const registry: Record<string, any> = {};
 for (const tpl of templates) {
   registry[tpl.id] = tpl;
   registry[tpl.name] = tpl;
@@ -107,7 +107,7 @@ export function listTemplates(): string[] {
 /** Look up a raw template object (useful for tests). */
 export function getTemplate(
   templateId: string
-): RegisteredTemplate {
+): any {
   const tpl =
     registry[templateId] ?? registry[String(templateId).toLowerCase()];
   if (!tpl) {
