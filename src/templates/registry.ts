@@ -51,7 +51,7 @@ function fromTyped<Props>(template: {
 // ---------------------------------------------------------------------------
 // Canonical template list.
 // ---------------------------------------------------------------------------
-const templates: RegisteredTemplate[] = [
+const templates: RegisteredTemplate<unknown>[] = [
   fromLegacy(PASSWORD_RESET_ID, passwordReset.name, passwordReset),
   fromLegacy(ORDER_CONFIRMATION_ID, orderConfirmation.name, orderConfirmation),
 
@@ -67,7 +67,7 @@ const templates: RegisteredTemplate[] = [
 // so 'password-reset', 'PasswordResetEmail', and 'passwordresetemail'
 // all resolve to the same template.
 // ---------------------------------------------------------------------------
-const registry: Record<string, RegisteredTemplate> = {};
+const registry: Record<string, RegisteredTemplate<unknown>> = {};
 for (const tpl of templates) {
   registry[tpl.id] = tpl;
   registry[tpl.name] = tpl;
@@ -105,10 +105,9 @@ export function listTemplates(): string[] {
 }
 
 /** Look up a raw template object (useful for tests). */
-/** Look up a raw template object (useful for tests). */
 export function getTemplate(
   templateId: string
-): RegisteredTemplate {
+): RegisteredTemplate<unknown> {
   const tpl =
     registry[templateId] ?? registry[String(templateId).toLowerCase()];
   if (!tpl) {
