@@ -1,4 +1,4 @@
-import type { ITemplate } from './template';
+import type { ITemplate } from '../types/template';
 
 // ---------------------------------------------------------------------------
 // User Invitation email — typed props for the "you've been invited to
