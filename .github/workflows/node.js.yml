@@ -21,8 +21,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          registry-url: https://registry.npmjs.org
 
-      - run: npm install
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
       - run: npm run lint
       - run: npm test
       - run: npm run test:real-data
