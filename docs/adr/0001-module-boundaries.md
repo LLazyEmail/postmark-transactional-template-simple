@@ -28,7 +28,7 @@ boundary rules from day one.
   `defineTemplate`. This is the ONLY place that template's copy and field
   mapping should live. The module carries its preview `sample`.
 - `src/templates/manifest.ts` — the only registration list. The public
-  `renderTemplate(id, payload)` registry and the CLI catalog are derived
+  `renderTemplate(id, payload)` registry and the generate-template catalog are derived
   from it. Adding a template means one module plus one line here.
 - `src/templates/legacySamples.ts` — preview payloads for templates that
   predate `sample` on the module. Do not add new entries.
@@ -44,7 +44,7 @@ boundary rules from day one.
 3. Every template must be a `defineTemplate()` module listed in
    `src/templates/manifest.ts`, with a unit test in `tests/unit/`. The
    preview payload lives on the template as `sample`. Do not edit
-   `registry.ts` or `scripts/template-catalog.ts` for a new template.
+   `registry.ts` for a new template. Do not add a second catalog file.
 
 ## Consequences
 
