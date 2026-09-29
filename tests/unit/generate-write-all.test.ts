@@ -2,7 +2,7 @@ import { mkdtempSync, existsSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import slugs from '../fixtures/generated-slugs.json';
+import slugs from '../fixtures/generated-slugs.json' with { type: 'json' };
 import { createProjectGenerator } from '../../scripts/create-project-generator.ts';
 
 describe('generate writeAll snapshot (step 9)', () => {
