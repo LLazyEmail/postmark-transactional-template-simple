@@ -17,51 +17,47 @@ export const BASELINE_FILES = [
   'user-invitation.html',
 ] as const;
 
-describe('generate-template baseline',
-  () => {
-    it('keeps the six output filenames',
-      () => {
-        expect(BASELINE_FILES).toHaveLength(6);
-      });
+function htmlFrom(template: { render: (payload: never) => string }, payload: unknown): string {
+  return template.render(payload as never);
+}
 
-    it('password-reset still renders the reset link',
-      () => {
-        const html = passwordReset(SAMPLE_PAYLOADS['password-reset']);
-        expect(html).toContain('fixture-token-123');
-        expect(html.toLowerCase()).toContain('reset');
-      });
-
-    it('order-confirmation still renders order 1001',
-      () => {
-        const html = orderConfirmation(SAMPLE_PAYLOADS['order-confirmation']);
-        expect(html).toContain('1001');
-        expect(html).toContain('$49.00');
-      });
-
-    it('WelcomeEmail still renders the confirm CTA',
-      () => {
-        const html = WelcomeEmail.render(SAMPLE_PAYLOADS.WelcomeEmail as never);
-        expect(html).toContain('Confirm email');
-        expect(html).toContain('https://example.com/confirm');
-      });
-
-    it('InvoiceEmail still renders INV-2026-0001',
-      () => {
-        const html = InvoiceEmail.render(SAMPLE_PAYLOADS.InvoiceEmail as never);
-        expect(html).toContain('INV-2026-0001');
-      });
-
-    it('TrialExpiringEmail still mentions the Pro trial',
-      () => {
-        const html = TrialExpiringEmail.render(SAMPLE_PAYLOADS.TrialExpiringEmail as never);
-        expect(html.toLowerCase()).toContain('trial');
-        expect(html).toContain('Pro');
-      });
-
-    it('UserInvitationEmail still names Acme and Alex',
-      () => {
-        const html = UserInvitationEmail.render(SAMPLE_PAYLOADS.UserInvitationEmail as never);
-        expect(html).toContain('Acme');
-        expect(html).toContain('alex@example.com');
-      });
+describe('generate-template baseline', () => {
+  it('keeps the six output filenames', () => {
+    expect(BASELINE_FILES).toHaveLength(6);
   });
+
+  it('password-reset still renders the reset link', () => {
+    const html = htmlFrom(passwordReset, SAMPLE_PAYLOADS['password-reset']);
+    expect(html).toContain('fixture-token-123');
+    expect(html.toLowerCase()).toContain('reset');
+  });
+
+  it('order-confirmation still renders order 1001', () => {
+    const html = htmlFrom(orderConfirmation, SAMPLE_PAYLOADS['order-confirmation']);
+    expect(html).toContain('1001');
+    expect(html).toContain('$49.00');
+  });
+
+  it('WelcomeEmail still renders the confirm CTA', () => {
+    const html = htmlFrom(WelcomeEmail, SAMPLE_PAYLOADS.WelcomeEmail);
+    expect(html).toContain('Confirm email');
+    expect(html).toContain('https://example.com/confirm');
+  });
+
+  it('InvoiceEmail still renders INV-2026-0001', () => {
+    const html = htmlFrom(InvoiceEmail, SAMPLE_PAYLOADS.InvoiceEmail);
+    expect(html).toContain('INV-2026-0001');
+  });
+
+  it('TrialExpiringEmail still mentions the Pro trial', () => {
+    const html = htmlFrom(TrialExpiringEmail, SAMPLE_PAYLOADS.TrialExpiringEmail);
+    expect(html.toLowerCase()).toContain('trial');
+    expect(html).toContain('Pro');
+  });
+
+  it('UserInvitationEmail still names Acme and Alex', () => {
+    const html = htmlFrom(UserInvitationEmail, SAMPLE_PAYLOADS.UserInvitationEmail);
+    expect(html).toContain('Acme');
+    expect(html).toContain('alex@example.com');
+  });
+});
