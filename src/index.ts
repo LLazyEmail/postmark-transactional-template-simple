@@ -1,11 +1,11 @@
-export { WelcomeEmail } from './templates/welcomeEmail.ts';
-export { InvoiceEmail } from './templates/invoiceEmail.ts';
-export { TrialExpiringEmail } from './templates/trialExpiringEmail.ts';
-export { UserInvitationEmail } from './templates/userInvitationEmail.ts';
-export { ExampleEmail } from './templates/exampleEmail.ts';
-export { CommentNotificationEmail } from './templates/commentNotificationEmail.ts';
-export { passwordReset } from './templates/password-reset.definition.ts';
-export { orderConfirmation } from './templates/order-confirmation.definition.ts';
+export { WelcomeEmail } from './templates/welcome/welcomeEmail.ts';
+export { InvoiceEmail } from './templates/invoice/invoiceEmail.ts';
+export { TrialExpiringEmail } from './templates/trial-expiring/trialExpiringEmail.ts';
+export { UserInvitationEmail } from './templates/user-invitation/userInvitationEmail.ts';
+export { ExampleEmail } from './templates/example/exampleEmail.ts';
+export { CommentNotificationEmail } from './templates/comment-notification/commentNotificationEmail.ts';
+export { passwordReset } from './templates/password-reset/passwordResetEmail.ts';
+export { orderConfirmation } from './templates/order-confirmation/orderConfirmationEmail.ts';
 
 export {
   renderTemplate,

@@ -1,14 +1,14 @@
-import type { ExampleEmailProps } from '../types/example.ts';
-import { renderPostmarkDocument } from '../layout/postmarkDocument.ts';
+import type { ExampleEmailProps } from '../../types/example.ts';
+import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import {
   actionBlock,
   attributeRow,
   attributeTable,
   bulletproofButton,
   subCopy,
-} from '../layout/blocks.ts';
-import { escapeHtml } from '../layout/html.ts';
-import { defineTemplate } from './defineTemplate.ts';
+} from '../../layout/blocks.ts';
+import { escapeHtml } from '../../layout/html.ts';
+import { defineTemplate } from '../defineTemplate.ts';
 
 /**
  * ExampleEmail
@@ -22,7 +22,7 @@ import { defineTemplate } from './defineTemplate.ts';
 export const ExampleEmail = defineTemplate<ExampleEmailProps>({
   id: 'example',
   name: 'ExampleEmail',
-  file: 'exampleEmail.ts',
+  file: 'example/exampleEmail.ts',
   exportName: 'ExampleEmail',
   sample: {
     preheader:

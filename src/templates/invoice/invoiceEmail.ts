@@ -1,5 +1,5 @@
-import type { ITemplate } from '../types/template';
-import type { InvoiceEmailProps } from '../types/invoice';
+import type { ITemplate } from '../../types/template';
+import type { InvoiceEmailProps } from '../../types/invoice';
 
 /**
  * InvoiceEmail
@@ -12,7 +12,7 @@ import type { InvoiceEmailProps } from '../types/invoice';
  * The `{{#each invoice_details}}` block is expanded in TypeScript.
  *
  * Usage:
- *   import { InvoiceEmail } from './templates/invoiceEmail';
+ *   import { InvoiceEmail } from './templates/invoice/invoiceEmail';
  *   const html = InvoiceEmail.render({ ...props });
  */
 export const InvoiceEmail: ITemplate<InvoiceEmailProps> = {

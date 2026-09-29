@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
   passwordReset,
   TEMPLATE_ID,
-} from '../../src/templates/password-reset.definition';
+} from '../../src/templates/password-reset/passwordResetEmail';
 import { passwordResetProps } from '../fixtures/props';
 
 describe('password-reset.definition', () => {

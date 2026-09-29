@@ -1,6 +1,6 @@
 // tests/unit/welcomeEmail.test.ts
 import { describe, it, expect } from 'vitest';
-import { WelcomeEmail } from '../../src/templates/welcomeEmail';
+import { WelcomeEmail } from '../../src/templates/welcome/welcomeEmail';
 import { welcomeMinimalProps, welcomeRichProps } from '../fixtures/props';
 
 describe('WelcomeEmail', () => {

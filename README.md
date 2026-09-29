@@ -53,7 +53,9 @@ transactional-emails/
 │   ├── layout/                     # shared Postmark document + body blocks
 │   ├── templates/
 │   │   ├── manifest.ts             # the only registration list
-│   │   └── *.ts                    # one defineTemplate module per email
+│   │   ├── welcome/                # one folder per email
+│   │   ├── invoice/
+│   │   └── …
 │   └── data/                       # optional fixture payloads
 ├── tests/
 │   ├── unit/
@@ -67,9 +69,9 @@ transactional-emails/
 
 1. Add a props interface under `src/types/`. Extend `EmailBrandProps` for the
    masthead and footer.
-2. Create `src/templates/<name>Email.ts` with `defineTemplate`. Render the
-   body through `renderPostmarkDocument` — do not copy the stylesheet or the
-   masthead/footer tables. Put the CLI preview payload on `sample`.
+2. Create `src/templates/<id>/<name>Email.ts` with `defineTemplate`. Render
+   the body through `renderPostmarkDocument` — do not copy the stylesheet or
+   the masthead/footer tables. Put the CLI preview payload on `sample`.
 3. Append that export to the list in `src/templates/manifest.ts`. The
    registry, the generator catalog, and the render-all test pick it up
    from there.

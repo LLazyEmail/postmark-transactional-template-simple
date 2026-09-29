@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ExampleEmail } from '../../src/templates/exampleEmail';
+import { ExampleEmail } from '../../src/templates/example/exampleEmail';
 import { exampleProps } from '../fixtures/props';
 
 describe('ExampleEmail', () => {

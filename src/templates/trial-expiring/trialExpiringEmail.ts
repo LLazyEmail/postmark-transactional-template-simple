@@ -1,34 +1,32 @@
-// src/templates/order-confirmation.definition.ts
-import type {
-  OrderConfirmationEmailProps,
-  OrderConfirmationEmailTemplate,
-} from '../types/orderConfirmation';
-
-/** Stable registry ID (legacy-compatible kebab-case). */
-export const TEMPLATE_ID = 'order-confirmation' as const;
+import type { ITemplate } from '../../types/template';
+import type { TrialExpiringEmailProps } from '../../types/trialExpiring';
 
 /**
- * OrderConfirmationEmail
- * ----------------------
- * Typed conversion of the legacy `order-confirmation.definition.js`.
+ * TrialExpiringEmail
+ * ------------------
+ * Typed port of the "trial expiring" transactional template.
  *
- * Renders the Postmark-style receipt layout with an itemized purchase
- * table, shipping/billing block, and a "View order" CTA.
+ * Emits the same inline-styled, table-based HTML as the Postmark
+ * reference layout so it renders consistently across email clients.
+ *
+ * Usage:
+ *   import { TrialExpiringEmail } from './templates/trial-expiring/trialExpiringEmail';
+ *   const html = TrialExpiringEmail.render({ ...props });
  */
-export const orderConfirmation: OrderConfirmationEmailTemplate = {
-  name: 'OrderConfirmationEmail',
+export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
+  name: 'TrialExpiringEmail',
 
   render: ({
     name,
     preheader,
-    order_id,
-    order_date,
-    total,
-    order_items,
-    shipping_address,
-    billing_address,
+    trial_end_date,
+    trial_days_remaining,
+    plan_name,
+    plan_price,
     action_url,
+    secondary_url,
     support_url,
+    benefits,
     product_name,
     company_name,
     company_address,
@@ -36,44 +34,33 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
     company_url,
   }) => {
     // -----------------------------------------------------------------------
-    // Itemized rows.
+    // Render the benefits list from the typed array.
     // -----------------------------------------------------------------------
-    const itemRows = order_items
+    const benefitItems = benefits
       .map(
-        ({ description, unit_price, quantity, total }) => `
-                                <tr>
-                                  <td width="60%" class="purchase_item"><span class="f-fallback">${description}</span></td>
-                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${unit_price}</span></td>
-                                  <td class="align-right" width="10%" class="purchase_item"><span class="f-fallback">${quantity}</span></td>
-                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${total}</span></td>
-                                </tr>`
+        ({ title, description }) => `
+                        <tr>
+                          <td class="benefit_item">
+                            <p class="f-fallback benefit_title"><strong>${title}</strong>${
+          description
+            ? ` — <span class="benefit_description">${description}</span>`
+            : ''
+        }</p>
+                          </td>
+                        </tr>`
       )
       .join('');
 
-    // -----------------------------------------------------------------------
-    // Multi-line addresses: turn "\n" into <br> for HTML rendering.
-    // -----------------------------------------------------------------------
-    const formatAddress = (addr: string) =>
-      addr.split('\n').join('<br>');
-
-    // Show billing block only when it differs from shipping.
-    const billingBlock =
-      billing_address && billing_address !== shipping_address
-        ? `
-                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    const secondaryCta = secondary_url
+      ? `
+                        <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
-                            <td class="attributes_content">
-                              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Billing address:</strong><br>${formatAddress(billing_address)}</span>
-                                  </td>
-                                </tr>
-                              </table>
+                            <td align="center">
+                              <a href="${secondary_url}" class="f-fallback" target="_blank">Compare plans</a>
                             </td>
                           </tr>
                         </table>`
-        : '';
+      : '';
 
     return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -103,18 +90,14 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
     .align-center { text-align: center; }
     .button { background-color: #3869D4; border-top: 10px solid #3869D4; border-right: 18px solid #3869D4; border-bottom: 10px solid #3869D4; border-left: 18px solid #3869D4; display: inline-block; color: #FFF; text-decoration: none; border-radius: 3px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16); -webkit-text-size-adjust: none; box-sizing: border-box; }
     .button--green { background-color: #22BC66; border-top: 10px solid #22BC66; border-right: 18px solid #22BC66; border-bottom: 10px solid #22BC66; border-left: 18px solid #22BC66; }
+    .button--red { background-color: #FF6136; border-top: 10px solid #FF6136; border-right: 18px solid #FF6136; border-bottom: 10px solid #FF6136; border-left: 18px solid #FF6136; }
     @media only screen and (max-width: 500px) { .button { width: 100% !important; text-align: center !important; } }
     .attributes { margin: 0 0 21px; }
     .attributes_content { background-color: #F4F4F7; padding: 16px; }
     .attributes_item { padding: 0; }
-    .purchase { width: 100%; margin: 0; padding: 35px 0; }
-    .purchase_content { width: 100%; margin: 0; padding: 25px 0 0 0; }
-    .purchase_item { padding: 10px 0; color: #51545E; font-size: 15px; line-height: 18px; }
-    .purchase_heading { padding-bottom: 8px; border-bottom: 1px solid #EAEAEC; }
-    .purchase_heading p { margin: 0; color: #85878E; font-size: 12px; }
-    .purchase_footer { padding-top: 15px; border-top: 1px solid #EAEAEC; }
-    .purchase_total { margin: 0; text-align: right; font-weight: bold; color: #333333; }
-    .purchase_total--label { padding: 0 15px 0 0; }
+    .benefit_item { padding: 4px 0; color: #51545E; font-size: 15px; line-height: 20px; }
+    .benefit_title { margin: 0; }
+    .benefit_description { color: #6B6E76; }
     body { background-color: #F2F4F6; color: #51545E; }
     p { color: #51545E; }
     .email-wrapper { width: 100%; margin: 0; padding: 0; background-color: #F2F4F6; }
@@ -125,13 +108,14 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
     .email-body_inner { width: 570px; margin: 0 auto; padding: 0; background-color: #FFFFFF; }
     .email-footer { width: 570px; margin: 0 auto; padding: 0; text-align: center; }
     .email-footer p { color: #A8AAAF; }
-    .body-action { width: 100%; margin: 30px auto; padding: 0; text-align: center; }
+    .body-action, .body-action-secondary { width: 100%; margin: 30px auto; padding: 0; text-align: center; }
+    .body-action-secondary a { font-size: 14px; color: #3869D4; text-decoration: underline; }
     .body-sub { margin-top: 25px; padding-top: 25px; border-top: 1px solid #EAEAEC; }
     .content-cell { padding: 45px; }
     @media only screen and (max-width: 600px) { .email-body_inner, .email-footer { width: 100% !important; } }
     @media (prefers-color-scheme: dark) {
       body, .email-body, .email-body_inner, .email-content, .email-wrapper, .email-masthead, .email-footer { background-color: #333333 !important; color: #FFF !important; }
-      p, ul, ol, blockquote, h1, h2, h3, span, .purchase_item { color: #FFF !important; }
+      p, ul, ol, blockquote, h1, h2, h3, span, .benefit_item { color: #FFF !important; }
       .attributes_content { background-color: #222 !important; }
       .email-masthead_name { text-shadow: none !important; }
     }
@@ -159,52 +143,7 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Hi ${name},</h1>
-                        <p>Thanks for your order. This email is your receipt for order <strong>${order_id}</strong> placed on <strong>${order_date}</strong>.</p>
-
-                        <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td align="center">
-                              <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
-                                <tr>
-                                  <td align="center">
-                                    <a href="${action_url}" class="f-fallback button button--green" target="_blank">View your order</a>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-
-                        <table class="purchase" width="100%" cellpadding="0" cellspacing="0">
-                          <tr>
-                            <td>
-                              <h3>${order_id}</h3>
-                            </td>
-                            <td>
-                              <h3 class="align-right">${order_date}</h3>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colspan="2">
-                              <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                  <th class="purchase_heading" align="left"><p class="f-fallback">Description</p></th>
-                                  <th class="purchase_heading" align="right"><p class="f-fallback">Unit price</p></th>
-                                  <th class="purchase_heading" align="right"><p class="f-fallback">Qty</p></th>
-                                  <th class="purchase_heading" align="right"><p class="f-fallback">Amount</p></th>
-                                </tr>${itemRows}
-                                <tr>
-                                  <td colspan="3" width="80%" class="purchase_footer" valign="middle">
-                                    <p class="f-fallback purchase_total purchase_total--label">Total</p>
-                                  </td>
-                                  <td width="20%" class="purchase_footer" valign="middle">
-                                    <p class="f-fallback purchase_total">${total}</p>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
+                        <p>Your <strong>${plan_name}</strong> trial ends on <strong>${trial_end_date}</strong> — that's in <strong>${trial_days_remaining}</strong> day(s). After that, you'll be charged <strong>${plan_price}</strong> unless you cancel.</p>
 
                         <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
@@ -212,16 +151,46 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
                               <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                   <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Shipping address:</strong><br>${formatAddress(shipping_address)}</span>
+                                    <span class="f-fallback"><strong>Plan:</strong> ${plan_name}</span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="attributes_item">
+                                    <span class="f-fallback"><strong>Trial ends:</strong> ${trial_end_date}</span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="attributes_item">
+                                    <span class="f-fallback"><strong>Price after trial:</strong> ${plan_price}</span>
                                   </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
-                        </table>${billingBlock}
+                        </table>
 
-                        <p>If you have any questions about this order, simply reply to this email or reach out to our <a href="${support_url}">support team</a>.</p>
-                        <p>Cheers,<br>The ${product_name} team</p>
+                        <p>If you do nothing, your account will continue seamlessly. Here's what you'll keep:</p>
+
+                        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">${benefitItems}
+                        </table>
+
+                        <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td align="center">
+                              <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
+                                <tr>
+                                  <td align="center">
+                                    <a href="${action_url}" class="f-fallback button button--green" target="_blank">Keep My ${plan_name} Plan</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>${secondaryCta}
+
+                        <p>If you have any questions about your trial or billing, just reply to this email or reach out to our <a href="${support_url}">support team</a>.</p>
+                        <p>Cheers,
+                          <br>The ${product_name} team</p>
 
                         <table class="body-sub" role="presentation">
                           <tr>
@@ -243,7 +212,9 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
                   <tr>
                     <td class="content-cell" align="center">
                       <p class="f-fallback sub align-center">
-                        ${company_name}<br>${company_address}<br>${company_suite}
+                        ${company_name}
+                        <br>${company_address}
+                        <br>${company_suite}
                       </p>
                     </td>
                   </tr>

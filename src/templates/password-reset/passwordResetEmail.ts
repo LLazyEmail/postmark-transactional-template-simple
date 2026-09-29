@@ -1,8 +1,8 @@
-import type { PasswordResetEmailProps } from '../types/passwordReset.ts';
-import { renderPostmarkDocument } from '../layout/postmarkDocument.ts';
-import { actionBlock, bulletproofButton, subCopy } from '../layout/blocks.ts';
-import { escapeHtml } from '../layout/html.ts';
-import { defineTemplate } from './defineTemplate.ts';
+import type { PasswordResetEmailProps } from '../../types/passwordReset.ts';
+import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
+import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
+import { escapeHtml } from '../../layout/html.ts';
+import { defineTemplate } from '../defineTemplate.ts';
 
 /** Stable registry id. Legacy callers and `renderTemplate('password-reset')` use this. */
 export const TEMPLATE_ID = 'password-reset' as const;
@@ -17,7 +17,7 @@ export const TEMPLATE_ID = 'password-reset' as const;
 export const passwordReset = defineTemplate<PasswordResetEmailProps>({
   id: TEMPLATE_ID,
   name: 'PasswordResetEmail',
-  file: 'password-reset.definition.ts',
+  file: 'password-reset/passwordResetEmail.ts',
   exportName: 'passwordReset',
   sample: {
     name: 'Jordan',

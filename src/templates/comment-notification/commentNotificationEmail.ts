@@ -1,11 +1,11 @@
 import type {
   CommentAttachment,
   CommentNotificationEmailProps,
-} from '../types/commentNotification.ts';
-import { renderPostmarkDocument } from '../layout/postmarkDocument.ts';
-import { attributeRow, attributeTable } from '../layout/blocks.ts';
-import { escapeHtml } from '../layout/html.ts';
-import { defineTemplate } from './defineTemplate.ts';
+} from '../../types/commentNotification.ts';
+import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
+import { attributeRow, attributeTable } from '../../layout/blocks.ts';
+import { escapeHtml } from '../../layout/html.ts';
+import { defineTemplate } from '../defineTemplate.ts';
 
 function attachmentTable(items: CommentAttachment[] | undefined): string {
   if (!items || items.length === 0) return '';
@@ -32,7 +32,7 @@ export const CommentNotificationEmail =
   defineTemplate<CommentNotificationEmailProps>({
     id: 'comment-notification',
     name: 'CommentNotificationEmail',
-    file: 'commentNotificationEmail.ts',
+    file: 'comment-notification/commentNotificationEmail.ts',
     exportName: 'CommentNotificationEmail',
     sample: {
       body: 'Just left a comment on the Q3 launch doc.\nCan we ship the revised hero by Friday?',

@@ -1,6 +1,6 @@
 // tests/unit/trialExpiringEmail.test.ts
 import { describe, it, expect } from 'vitest';
-import { TrialExpiringEmail } from '../../src/templates/trialExpiringEmail';
+import { TrialExpiringEmail } from '../../src/templates/trial-expiring/trialExpiringEmail';
 import { trialExpiringProps } from '../fixtures/props';
 
 describe('TrialExpiringEmail', () => {

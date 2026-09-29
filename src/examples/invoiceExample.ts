@@ -1,4 +1,4 @@
-import { InvoiceEmail } from '../templates/invoiceEmail';
+import { InvoiceEmail } from '../templates/invoice/invoiceEmail';
 import type { InvoiceEmailProps } from '../types/invoice';
 
 const props: InvoiceEmailProps = {

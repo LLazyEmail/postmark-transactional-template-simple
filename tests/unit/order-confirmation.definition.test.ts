@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
   orderConfirmation,
   TEMPLATE_ID,
-} from '../../src/templates/order-confirmation.definition';
+} from '../../src/templates/order-confirmation/orderConfirmationEmail';
 import { orderConfirmationProps } from '../fixtures/props';
 
 describe('order-confirmation.definition', () => {

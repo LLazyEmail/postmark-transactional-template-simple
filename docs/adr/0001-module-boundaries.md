@@ -24,9 +24,10 @@ boundary rules from day one.
   the small blocks templates compose (button, attribute table, sub-copy).
   This is product layout, not a generic package: the stylesheet is specific
   to these transactional emails. A new template must not paste that shell again.
-- `src/templates/<name>.ts` — one module per template, created with
-  `defineTemplate`. This is the ONLY place that template's copy and field
-  mapping should live. The module carries its preview `sample`.
+- `src/templates/<id>/<name>Email.ts` — one folder and one module per
+  template, created with `defineTemplate`. This is the ONLY place that
+  template's copy and field mapping should live. The module carries its
+  preview `sample`.
 - `src/templates/manifest.ts` — the only registration list. The public
   `renderTemplate(id, payload)` registry and the generate-template catalog are derived
   from it. Adding a template means one module plus one line here.

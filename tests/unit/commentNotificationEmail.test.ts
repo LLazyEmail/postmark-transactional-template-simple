@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CommentNotificationEmail } from '../../src/templates/commentNotificationEmail';
+import { CommentNotificationEmail } from '../../src/templates/comment-notification/commentNotificationEmail';
 import { commentNotificationProps } from '../fixtures/props';
 
 describe('CommentNotificationEmail', () => {
