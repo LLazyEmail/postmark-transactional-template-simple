@@ -1,19 +1,26 @@
 #!/usr/bin/env node
 import { createRequire } from 'node:module';
-import { spawnSync } from 'node:child_process';
 import * as fs from 'node:fs';
-import * as os from 'node:os';
 import * as path from 'node:path';
-
 import { fileURLToPath } from 'node:url';
+
 import { CATALOG, SAMPLE_PAYLOADS, type TemplateCatalogEntry } from './template-catalog.ts';
+import { templates, type TemplateRegistration } from '../src/templates/manifest.ts';
 
 const requireData = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TEMPLATES_DIR = path.join(ROOT, 'src', 'templates');
 const DATA_DIR = path.join(ROOT, 'src', 'data');
 const DEFAULT_OUT_DIR = 'generated';
-const SKIP_FILES = new Set(['index.js', 'index2.js', 'registry.ts', 'registry.js']);
+const SKIP_FILES = new Set([
+  'index.js',
+  'index2.js',
+  'registry.ts',
+  'registry.js',
+  'defineTemplate.ts',
+  'manifest.ts',
+  'legacySamples.ts',
+]);
 
 interface CliArgs {
   all?: boolean;
@@ -59,6 +66,19 @@ function findEntry(templateId: string): TemplateCatalogEntry | undefined {
   return CATALOG.find((entry) => entry.ids.some((id) => id.toLowerCase() === needle));
 }
 
+function findTemplate(templateId: string): TemplateRegistration {
+  const needle = String(templateId).toLowerCase();
+  const template = templates.find((entry) =>
+    [entry.id, entry.name, ...entry.aliases].some((id) => id.toLowerCase() === needle)
+  );
+  if (!template) {
+    throw new Error(
+      `Unknown template id: "${templateId}". Available: ${CATALOG.flatMap((item) => item.ids).join(', ')}`
+    );
+  }
+  return template;
+}
+
 function slugFromId(templateId: string): string {
   const entry = findEntry(templateId);
   return (entry ? entry.ids[0] : String(templateId))
@@ -75,7 +95,9 @@ function loadPayload(templateId: string, dataPath?: string): unknown {
     const candidate = path.join(DATA_DIR, `${slug}.data.js`);
     if (fs.existsSync(candidate)) return requireData(candidate);
   }
-  throw new Error(`No payload for "${templateId}". Pass --data=path or add src/data/${slugFromId(templateId)}.data.js`);
+  throw new Error(
+    `No payload for "${templateId}". Pass --data=path or add a sample on the template.`
+  );
 }
 
 function writeHtml(outPath: string, html: string): string {
@@ -85,34 +107,14 @@ function writeHtml(outPath: string, html: string): string {
   return resolvedOutPath;
 }
 
-function serializePayload(payload: unknown): string {
-  return JSON.stringify(payload, (_key, value) =>
-    value instanceof Date ? { __date: value.toISOString() } : value
-  );
-}
-
-function runStripTypes(source: string): string {
-  const tmpFile = path.join(os.tmpdir(), `generate-template-${process.pid}-${Date.now()}.mts`);
-  fs.writeFileSync(tmpFile, source, 'utf8');
-  try {
-    const result = spawnSync(
-      process.execPath,
-      ['--experimental-strip-types', '--no-warnings', tmpFile],
-      { encoding: 'utf8', cwd: ROOT, maxBuffer: 10 * 1024 * 1024 }
-    );
-    if (result.status !== 0) {
-      const err = (result.stderr || result.stdout || '').trim();
-      throw new Error(err || `node exited ${result.status}`);
-    }
-    return result.stdout;
-  } finally {
-    fs.rmSync(tmpFile, { force: true });
-  }
-}
-
 function reviveDates(value: unknown): unknown {
   if (value instanceof Date) return value;
-  if (value && typeof value === 'object' && '__date' in value && typeof (value as { __date?: unknown }).__date === 'string') {
+  if (
+    value &&
+    typeof value === 'object' &&
+    '__date' in value &&
+    typeof (value as { __date?: unknown }).__date === 'string'
+  ) {
     return new Date((value as { __date: string }).__date);
   }
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value)) {
@@ -129,46 +131,6 @@ function reviveDates(value: unknown): unknown {
     return next;
   }
   return value;
-}
-
-function renderOne(templateId: string, payload: unknown): string {
-  const entry = findEntry(templateId);
-  if (!entry) {
-    throw new Error(`Unknown template id: "${templateId}". Available: ${CATALOG.flatMap((item) => item.ids).join(', ')}`);
-  }
-  const modulePath = path.join(TEMPLATES_DIR, entry.file);
-  if (!fs.existsSync(modulePath)) {
-    throw new Error(`Template file missing: ${path.relative(ROOT, modulePath)}`);
-  }
-  const payloadPath = path.join(os.tmpdir(), `generate-template-payload-${process.pid}-${Date.now()}.json`);
-  fs.writeFileSync(payloadPath, serializePayload(reviveDates(payload)), 'utf8');
-  const source = `
-import { readFileSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-function revive(value) {
-  if (value && typeof value === 'object' && typeof value.__date === 'string') return new Date(value.__date);
-  if (Array.isArray(value)) return value.map(revive);
-  if (value && typeof value === 'object') {
-    const next = {};
-    for (const [key, val] of Object.entries(value)) {
-      next[key] = key === 'signupDate' ? new Date(typeof val === 'object' && val.__date ? val.__date : val) : revive(val);
-    }
-    return next;
-  }
-  return value;
-}
-const raw = JSON.parse(readFileSync(${JSON.stringify(payloadPath)}, 'utf8'));
-const mod = await import(pathToFileURL(${JSON.stringify(modulePath)}).href);
-const exported = mod[${JSON.stringify(entry.exportName)}] ?? mod.default;
-if (!exported) throw new Error('Export missing');
-const html = typeof exported === 'function' ? exported(revive(raw)) : exported.render(revive(raw));
-process.stdout.write(html);
-`;
-  try {
-    return runStripTypes(source);
-  } finally {
-    fs.rmSync(payloadPath, { force: true });
-  }
 }
 
 function main(): void {
@@ -188,7 +150,7 @@ function main(): void {
   const targets = wantAll ? CATALOG.map((entry) => entry.ids[0]) : [args.template as string];
   targets.forEach((templateId) => {
     const payload = loadPayload(templateId, wantAll ? undefined : args.data);
-    const html = renderOne(templateId, payload);
+    const html = findTemplate(templateId).render(reviveDates(payload));
     const fileName = `${slugFromId(templateId)}.html`;
     const outPath = wantAll
       ? path.join(args.out || DEFAULT_OUT_DIR, fileName)

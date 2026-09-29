@@ -46,11 +46,11 @@ transactional-emails/
 │   ├── template-engine/            # createTemplateFromDefinition + validation helpers
 │   └── template-runtime-display/   # pure displayHead/Main/Footer/Body renderers
 ├── src/
+│   ├── layout/                     # shared Postmark document + body blocks
 │   ├── templates/
-│   │   ├── password-reset.definition.js
-│   │   ├── order-confirmation.definition.js
-│   │   └── index.js                # renderTemplate(id, payload) registry
-│   └── data/                       # fixture payloads per template
+│   │   ├── manifest.ts             # the only registration list
+│   │   └── *.ts                    # one defineTemplate module per email
+│   └── data/                       # optional fixture payloads
 ├── tests/
 │   ├── unit/
 │   └── integration/
@@ -61,13 +61,17 @@ transactional-emails/
 
 ## Adding a new template
 
-1. Create `src/templates/<name>.definition.js` following the existing
-   `password-reset.definition.js` pattern: `validateInput`, `map`, `render`,
-   built via `createTemplateFromDefinition`.
-2. Add a fixture at `src/data/<name>.data.js`.
-3. Register it in `src/templates/index.js`.
-4. Add a unit test in `tests/unit/` and extend the integration test to cover
-   the new template.
+1. Add a props interface under `src/types/`. Extend `EmailBrandProps` for the
+   masthead and footer.
+2. Create `src/templates/<name>Email.ts` with `defineTemplate`. Render the
+   body through `renderPostmarkDocument` — do not copy the stylesheet or the
+   masthead/footer tables. Put the CLI preview payload on `sample`.
+3. Append that export to the list in `src/templates/manifest.ts`. The
+   registry, the generator catalog, and the render-all test pick it up
+   from there.
+4. Add a unit test in `tests/unit/`.
+5. Re-export the template and its props from `src/index2.ts` if callers
+   should import them directly.
 
 ## End-to-end proof
 

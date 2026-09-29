@@ -5,6 +5,8 @@ import type { UserInvitationEmailProps } from '../../src/types/userInvitation';
 import type { WelcomeEmailProps } from '../../src/types/welcome';
 import type { PasswordResetEmailProps } from '../../src/types/passwordReset';
 import type { OrderConfirmationEmailProps } from '../../src/types/orderConfirmation';
+import type { ExampleEmailProps } from '../../src/types/example';
+import type { CommentNotificationEmailProps } from '../../src/types/commentNotification';
 
 const branding = {
   product_name: '[Product Name]',
@@ -81,6 +83,40 @@ export const passwordResetProps: PasswordResetEmailProps = {
   operating_system: 'macOS',
   browser_name: 'Chrome',
   support_url: 'https://example.com/support',
+  ...branding,
+};
+
+export const exampleProps: ExampleEmailProps = {
+  preheader:
+    'This is example text for the preheader set via the YAML front-matter for each email.',
+  sender_name: 'Jordan Lee',
+  login_url: 'https://example.com/login',
+  username: 'alex@example.com',
+  trial_extension_url: 'https://example.com/trial/extend',
+  feedback_url: 'https://example.com/feedback',
+  expiration_date: 'January 31, 2026',
+  action_url: 'https://example.com/confirm',
+  danger_url: 'https://example.com/danger',
+  success_url: 'https://example.com/success',
+  default_url: 'https://example.com/default',
+  discount_url: 'https://example.com/discount',
+  ...branding,
+};
+
+export const commentNotificationProps: CommentNotificationEmailProps = {
+  body: 'The revised hero looks right.\nShipping Friday.',
+  commenter_name: 'Sam Rivera',
+  timestamp: 'January 5, 2026 2:14 PM',
+  action_url: 'https://example.com/comments/42',
+  notifications_url: 'https://example.com/settings/notifications',
+  attachment_details: [
+    {
+      attachment_name: 'hero-v3.png',
+      attachment_url: 'https://example.com/files/hero-v3.png',
+      attachment_size: '240 KB',
+      attachment_type: 'PNG',
+    },
+  ],
   ...branding,
 };
 
