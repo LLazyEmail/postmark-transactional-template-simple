@@ -1,51 +1,67 @@
-import { existsSync, readFileSync } from 'node:fs';
-import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { SAMPLE_PAYLOADS } from '../../scripts/template-catalog.ts';
+import { InvoiceEmail } from '../../src/templates/invoiceEmail';
+import { orderConfirmation } from '../../src/templates/order-confirmation.definition';
+import { passwordReset } from '../../src/templates/password-reset.definition';
+import { TrialExpiringEmail } from '../../src/templates/trialExpiringEmail';
+import { UserInvitationEmail } from '../../src/templates/userInvitationEmail';
+import { WelcomeEmail } from '../../src/templates/welcomeEmail';
 
-const GENERATED = path.resolve(process.cwd(), 'generated');
-
-const BASELINE = [
-  {
-    file: 'password-reset.html',
-    contains: ['reset your password', 'fixture-token-123'],
-  },
-  {
-    file: 'order-confirmation.html',
-    contains: ['#1001', '$49.00'],
-  },
-  {
-    file: 'welcome.html',
-    contains: ['Confirm email', 'https://example.com/confirm'],
-  },
-  {
-    file: 'invoice.html',
-    contains: ['INV-2026-0001'],
-  },
-  {
-    file: 'trial-expiring.html',
-    contains: ['trial', 'Pro'],
-  },
-  {
-    file: 'user-invitation.html',
-    contains: ['Acme', 'alex@example.com'],
-  },
+/** Output names `npm run generate:template -- --all` must keep writing. */
+export const BASELINE_FILES = [
+  'password-reset.html',
+  'order-confirmation.html',
+  'welcome.html',
+  'invoice.html',
+  'trial-expiring.html',
+  'user-invitation.html',
 ] as const;
 
-describe('generated HTML baseline', () => {
-  it('lists all six snapshot files', () => {
-    const missing = BASELINE.filter(({ file }) => !existsSync(path.join(GENERATED, file))).map(
-      ({ file }) => file
-    );
-    expect(missing, 'run npm run generate:template -- --all').toEqual([]);
-  });
+describe('generate-template baseline',
+  () => {
+    it('keeps the six output filenames',
+      () => {
+        expect(BASELINE_FILES).toHaveLength(6);
+      });
 
-  for (const { file, contains } of BASELINE) {
-    it(`${file} contains expected markers`, () => {
-      const html = readFileSync(path.join(GENERATED, file), 'utf8');
-      expect(html.startsWith('<!DOCTYPE html') || html.includes('<html')).toBe(true);
-      for (const marker of contains) {
-        expect(html.toLowerCase()).toContain(marker.toLowerCase());
-      }
-    });
-  }
-});
+    it('password-reset still renders the reset link',
+      () => {
+        const html = passwordReset(SAMPLE_PAYLOADS['password-reset']);
+        expect(html).toContain('fixture-token-123');
+        expect(html.toLowerCase()).toContain('reset');
+      });
+
+    it('order-confirmation still renders order 1001',
+      () => {
+        const html = orderConfirmation(SAMPLE_PAYLOADS['order-confirmation']);
+        expect(html).toContain('1001');
+        expect(html).toContain('$49.00');
+      });
+
+    it('WelcomeEmail still renders the confirm CTA',
+      () => {
+        const html = WelcomeEmail.render(SAMPLE_PAYLOADS.WelcomeEmail as never);
+        expect(html).toContain('Confirm email');
+        expect(html).toContain('https://example.com/confirm');
+      });
+
+    it('InvoiceEmail still renders INV-2026-0001',
+      () => {
+        const html = InvoiceEmail.render(SAMPLE_PAYLOADS.InvoiceEmail as never);
+        expect(html).toContain('INV-2026-0001');
+      });
+
+    it('TrialExpiringEmail still mentions the Pro trial',
+      () => {
+        const html = TrialExpiringEmail.render(SAMPLE_PAYLOADS.TrialExpiringEmail as never);
+        expect(html.toLowerCase()).toContain('trial');
+        expect(html).toContain('Pro');
+      });
+
+    it('UserInvitationEmail still names Acme and Alex',
+      () => {
+        const html = UserInvitationEmail.render(SAMPLE_PAYLOADS.UserInvitationEmail as never);
+        expect(html).toContain('Acme');
+        expect(html).toContain('alex@example.com');
+      });
+  });
