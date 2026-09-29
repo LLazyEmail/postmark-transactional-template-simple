@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@llazyemail/generate-template": "github:LLazyEmail/generate-template#main"
+    "@llazyemail/generate-template": "^0.2.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
