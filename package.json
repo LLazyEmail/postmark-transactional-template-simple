@@ -18,6 +18,9 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "@llazyemail/generate-template": "^1.0.1"
+  },
   "devDependencies": {
     "@types/node": "^26.6.2",
     "@typescript-eslint/parser": "^6.21.0",
