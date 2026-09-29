@@ -1,39 +1,16 @@
 #!/usr/bin/env node
 /**
- * Project entry for generate-template.
- * Catalog and sample payloads come from the template manifest.
- * Each catalog entry injects `render` so the package does not load template files.
+ * CLI flags (must stay compatible):
+ *   --list
+ *   --all
+ *   --template=<id>
+ *   --data=<path>
+ *   --out=<file-or-dir>
  */
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { createGenerator } from '@llazyemail/generate-template';
-import { lookupKeys, templates } from '../src/templates/manifest.ts';
+import { createProjectGenerator } from './create-project-generator.ts';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-
-const catalog = templates.map((template) => ({
-  ids: lookupKeys(template),
-  file: template.file,
-  exportName: template.exportName,
-  render: template,
-}));
-
-const samplePayloads: Record<string, unknown> = {};
-for (const template of templates) {
-  for (const id of lookupKeys(template)) {
-    samplePayloads[id] = template.sample;
-  }
-}
-
-const generate = createGenerator({
-  root: ROOT,
-  templatesDir: 'src/templates',
-  dataDir: 'src/data',
-  outDir: 'generated',
-  reviveDates: true,
-  catalog,
-  samplePayloads,
-});
+const generate = createProjectGenerator();
 
 function flag(name: string): string | undefined {
   const prefix = `--${name}=`;
