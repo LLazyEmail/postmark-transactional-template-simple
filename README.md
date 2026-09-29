@@ -1,115 +1,95 @@
-# postmark-transactional-template-simple
+# transactional-emails
 
-```
-templates/
-  welcomeEmail.ts
-  invoiceEmail.ts
-  trialExpiringEmail.ts        ← new
-  userInvitationEmail.ts       ← new
-types/
-  template.ts
-  components.ts
-  invoice.ts
-  trialExpiring.ts             ← new
-  userInvitation.ts            ← new
-  welcome.ts                   ← new (optional, moves WelcomeEmailProps out of the template file)
-  index.ts
-templates/
-  index.ts
-examples/
-  trialExpiringExample.ts      ← new
-  userInvitationExample.ts     ← new
-```
+A small, standalone transactional email template generator. Built as its own
+repository (no monorepo, no shared workspace) so it can move fast and be
+fully finished on its own timeline. See
+[docs/adr/0001-module-boundaries.md](docs/adr/0001-module-boundaries.md) for
+why the code is split the way it is.
 
+The public entry is `src/index.ts`. It exports every template, its props, and
+`renderTemplate` / `listTemplates` / `getTemplate`.
 
-**Short answer: `src` as a whole does not work as one app.** There are two unfinished stacks mixed together. Only the small CommonJS renderer for two templates is wired enough to run. The TypeScript templates are broken at import time.
+## Why this exists
 
-Repo: [LLazyEmail/postmark-transactional-template-simple](https://github.com/LLazyEmail/postmark-transactional-template-simple/tree/main/src)
+This repo intentionally mirrors the target package shape used in
+`hn_email_template` (`template-engine` + `template-runtime-display` +
+definition-based templates), but starts from a much simpler problem —
+transactional emails with flat, simple payloads and no front-matter, digest
+sections, or ad variants. The goal is to prove the pattern cheaply here, then
+carry lessons back into the more complex repo once it settles.
 
----
+This repo does **not** depend on `hn_email_template` in any way. The two
+packages under `packages/` were copied in as a starting point and are now
+owned independently — feel free to change them without worrying about the
+other repo.
 
-### What is actually in `src`
+## Setup
 
-| Path | Role |
-|---|---|
-| `src/index.js` | Public JS entry: `renderTemplate`, `listTemplates` |
-| `src/templates/index.js` | Registry for **only** `password-reset` and `order-confirmation` |
-| `src/templates/*.definition.js` | Those two templates |
-| `src/data/*.data.js` | Fixture payloads |
-| `src/templates/*.ts` | Separate TS email objects (`WelcomeEmail`, `InvoiceEmail`, etc.) |
-| `src/types/` | TS prop types |
-| `src/example/` vs `src/examples/` | One real example, one misnamed types file |
-
-`package.json` points at `src/index.js`, has **no TypeScript**, no `tsconfig`, empty runtime `dependencies`. Scripts only cover JS (`jest`, eslint, prettier on `*.js`).
-
----
-
-### What works
-
-The JS path is internally consistent:
-
-- `src/index.js` → `src/templates/index.js`
-- definitions require `packages/template-engine` and `packages/template-runtime-display` (those folders exist)
-- unit tests call `passwordReset(fixture)` / similar and expect HTML + validation errors
-
-If you `npm install` and `npm test`, **those two templates should render**. That is the only “it works” slice.
-
-```js
-const { renderTemplate, listTemplates } = require('./src');
-listTemplates(); // ['password-reset', 'order-confirmation']
-renderTemplate('password-reset', { recipientName, resetUrl, companyName });
+```bash
+npm install
 ```
 
----
+## Available Scripts
 
-### What does not work
+| Script | Description |
+|--------|-------------|
+| `npm test` | Run all unit and integration tests |
+| `npm run test:real-data` | Run only the integration tests that generate real HTML from fixture data |
+| `npm run generate:template -- --template=password-reset --data=src/data/password-reset.data.js --out=generated/password-reset.html` | Generate a template's HTML from the CLI |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Run ESLint with auto-fix |
+| `npm run format` | Format source files with Prettier |
+| `npm run format:check` | Check formatting with Prettier |
 
-**1. TS entry files point at files that are not next to them**
-
-`src/index2.ts`:
-
-```ts
-export { WelcomeEmail } from './welcomeEmail';
-export { InvoiceEmail } from './invoiceEmail';
-export { TrialExpiringEmail } from './trialExpiringEmail';
-export { UserInvitationEmail } from './userInvitationEmail';
-```
-
-Those files live in `src/templates/`, not `src/`. Same mistake in `src/invoice.ts`. Node/TS cannot resolve this.
-
-**2. Missing type module under `src/types`**
-
-`src/types/welcome.ts` (and others) do:
-
-```ts
-import type { ITemplate } from './template';
-```
-
-`ITemplate` is in repo-root `types/template.ts`, **not** `src/types/template.ts`. That import fails.
-
-**3. Two APIs that never meet**
-
-- JS: `renderTemplate(id, payload)` + definition files  
-- TS: `{ name, render(props) }` objects  
-
-The registry does not include Welcome / Invoice / Trial / Invitation. The TS objects do not use the engine in `packages/`.
-
-**4. Examples are wrong**
-
-- `src/example/trialExpiringExample.ts` is a real usage of `TrialExpiringEmail.render(props)` — but there is no runner and no TS toolchain.
-- `src/examples/userInvitationExample.ts` is **not an example**. It is a copy of the props interface, and it imports `./template` from the wrong folder.
-
-**5. You cannot run the TS templates as the package is set up**
-
-No `typescript` in `package.json`, no build step, `main` is CommonJS only. Dropping `index2.ts` into Node will not execute.
-
----
+## Structure
 
 ```
-npm run generate:template
-npm run generate:template -- --all
-npm run generate:template -- --list
-npm run generate:template -- --template=InvoiceEmail
-npm run generate:template -- --template=password-reset --data=src/data/password-reset.data.js
+transactional-emails/
+├── packages/
+│   ├── template-engine/            # createTemplateFromDefinition + validation helpers
+│   └── template-runtime-display/   # pure displayHead/Main/Footer/Body renderers
+├── src/
+│   ├── index.ts                    # public exports
+│   ├── layout/                     # shared Postmark document + body blocks
+│   ├── templates/
+│   │   ├── manifest.ts             # the only registration list
+│   │   └── *.ts                    # one defineTemplate module per email
+│   └── data/                       # optional fixture payloads
+├── tests/
+│   ├── unit/
+│   └── integration/
+├── scripts/
+│   └── generate-template.ts
+└── docs/adr/
 ```
 
+## Adding a new template
+
+1. Add a props interface under `src/types/`. Extend `EmailBrandProps` for the
+   masthead and footer.
+2. Create `src/templates/<name>Email.ts` with `defineTemplate`. Render the
+   body through `renderPostmarkDocument` — do not copy the stylesheet or the
+   masthead/footer tables. Put the CLI preview payload on `sample`.
+3. Append that export to the list in `src/templates/manifest.ts`. The
+   registry, the generator catalog, and the render-all test pick it up
+   from there.
+4. Add a unit test in `tests/unit/`.
+5. Re-export the template and its props from `src/index.ts` if callers
+   should import them directly.
+
+## End-to-end proof
+
+```bash
+npm run test:real-data
+```
+
+This renders every registered template through the same `renderTemplate(id, payload)`
+path used in production, writes the HTML to `generated-real-data/`, and
+asserts the output is well-formed. Open the generated files in a browser to
+inspect them directly.
+
+## Directory Policy
+
+See [docs/adr/0001-module-boundaries.md](docs/adr/0001-module-boundaries.md).
+Short version: template-specific logic lives in `src/templates/`, anything
+reusable across templates belongs in `packages/`.
