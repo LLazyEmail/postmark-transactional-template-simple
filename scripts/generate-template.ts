@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 /**
- * CLI flags (must stay compatible):
- *   --list
- *   --all
- *   --template=<id>
- *   --data=<path>
- *   --out=<file-or-dir>
+ * Thin project CLI. Catalog/renderers live in create-project-generator.ts.
+ * Flags: --list --all --template= --data= --out=
  */
 import path from 'node:path';
 import { createProjectGenerator } from './create-project-generator.ts';
@@ -29,26 +25,21 @@ async function run(): Promise<void> {
 
   const templateFlag = flag('template');
   const wantAll = process.argv.includes('--all') || !templateFlag || templateFlag === 'all';
-  const targets = wantAll
-    ? generate.catalog.map((entry) => {
-        const id = entry.ids[0];
-        if (!id) throw new Error('Catalog entry is missing an id');
-        return id;
-      })
-    : [templateFlag as string];
 
-  for (const templateId of targets) {
-    const result = await generate.run({
-      templateId,
-      dataPath: wantAll ? undefined : flag('data'),
-      write: {
-        out: wantAll
-          ? path.join(flag('out') || generate.outDir, `${generate.slug(templateId)}.html`)
-          : flag('out') || path.join(generate.outDir, `${generate.slug(templateId)}.html`),
-      },
-    });
-    if (result.path) console.log(result.path);
+  if (wantAll) {
+    const paths = await generate.writeAll(flag('out') || generate.outDir);
+    paths.forEach((filePath) => console.log(filePath));
+    return;
   }
+
+  const result = await generate.run({
+    templateId: templateFlag as string,
+    dataPath: flag('data'),
+    write: {
+      out: flag('out') || path.join(generate.outDir, `${generate.slug(templateFlag as string)}.html`),
+    },
+  });
+  if (result.path) console.log(result.path);
 }
 
 run().catch((error: unknown) => {
