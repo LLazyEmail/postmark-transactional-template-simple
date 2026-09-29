@@ -16,11 +16,10 @@
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\"",
     "generate:template": "node --experimental-strip-types --no-warnings scripts/generate-template.ts",
     "build": "tsup",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "node scripts/build-generate-template.mjs"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@llazyemail/generate-template": "github:LLazyEmail/generate-template#main"
+    "@llazyemail/generate-template": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
