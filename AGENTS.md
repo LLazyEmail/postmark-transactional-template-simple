@@ -8,3 +8,19 @@
 - Dependency versions must be semver (`^1.0.1`), resolved through the registry in `.npmrc` (`https://npm.pkg.github.com` for `@llazyemail`).
 - If CI cannot install, fix registry auth (`GITHUB_TOKEN` / `NODE_AUTH_TOKEN` with `packages: read`). Do not switch the install source to git.
 - If the published package is wrong or incomplete, publish a new version of the module. Do not work around it from this repo.
+
+## Generate CLI
+
+Supported flags (do not rename or drop):
+
+- `--list`
+- `--all`
+- `--template=<id>`
+- `--data=<path>`
+- `--out=<file-or-dir>`
+
+`npm run generate:template` must keep those flags. If the package CLI changes flag names, fix `@llazyemail/generate-template` and publish. Do not fork flags in this repo.
+
+## Module breaks working generation
+
+`tests/unit/generate-html-diff.test.ts` is the contract. If an npm bump of `@llazyemail/generate-template` makes those markers fail (missing HTML, `[object Object]` dates, wrong slugs), treat it as a module regression. Publish a new module version. Do not copy engine code back into `scripts/`.
