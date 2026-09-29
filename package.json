@@ -15,11 +15,12 @@
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\"",
     "generate:template": "node --experimental-strip-types --no-warnings scripts/generate-template.ts",
+    "generate:assert": "node --experimental-strip-types --no-warnings scripts/assert-generated.ts",
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@llazyemail/generate-template": "^1.0.1"
+    "@llazyemail/generate-template": "1.0.3"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
