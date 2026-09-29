@@ -21,7 +21,7 @@ describe('generate CLI flags (step 5)', () => {
     expect(generate.find('welcome')).toBeTruthy();
   });
 
-  it('--all writes slug.html names for the baseline six', async () => {
+  it('--all writes slug.html names for the baseline six', () => {
     const expected = {
       'password-reset': 'password-reset',
       'order-confirmation': 'order-confirmation',
@@ -36,7 +36,7 @@ describe('generate CLI flags (step 5)', () => {
     }
   });
 
-  it('unknown --template fails from the module, not a local workaround', () => {
-    expect(() => generate.render('not-a-template')).toThrow();
+  it('unknown --template fails from the module, not a local workaround', async () => {
+    await expect(generate.render('not-a-template')).rejects.toThrow();
   });
 });

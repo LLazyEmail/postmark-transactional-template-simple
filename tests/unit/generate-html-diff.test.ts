@@ -19,8 +19,8 @@ describe('generate HTML diff (step 6)', () => {
   const generate = createProjectGenerator();
 
   for (const [id, markers] of Object.entries(MARKERS)) {
-    it(`${id} still contains baseline markers`, () => {
-      const html = generate.render(id);
+    it(`${id} still contains baseline markers`, async () => {
+      const html = await generate.render(id);
       expect(html).toMatch(/<!DOCTYPE html|<html/i);
       for (const marker of markers) {
         expect(html.toLowerCase()).toContain(marker.toLowerCase());
@@ -28,8 +28,8 @@ describe('generate HTML diff (step 6)', () => {
     });
   }
 
-  it('WelcomeEmail still revives signupDate as a date string, not [object Object]', () => {
-    const html = generate.render('WelcomeEmail');
+  it('WelcomeEmail still revives signupDate as a date string, not [object Object]', async () => {
+    const html = await generate.render('WelcomeEmail');
     expect(html).not.toContain('[object Object]');
     expect(html).toMatch(/2026|Jan|signed up/i);
   });
