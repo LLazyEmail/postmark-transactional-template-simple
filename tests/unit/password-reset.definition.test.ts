@@ -42,4 +42,17 @@ describe('password-reset.definition', () => {
     const html = passwordReset.render(passwordResetProps);
     expect(html).toContain(`href="${passwordResetProps.support_url}"`);
   });
+
+  it('describes the device that requested the reset', () => {
+    const html = passwordReset.render(passwordResetProps);
+    expect(html).toContain(
+      `from a ${passwordResetProps.operating_system} device using ${passwordResetProps.browser_name}`
+    );
+  });
+
+  it('escapes HTML in the recipient name', () => {
+    const html = passwordReset.render({ ...passwordResetProps, name: 'A<B>' });
+    expect(html).toContain('Hi A&lt;B&gt;,');
+    expect(html).not.toContain('Hi A<B>,');
+  });
 });

@@ -13,6 +13,8 @@ import {
   welcomeMinimalProps,
   passwordResetProps,
   orderConfirmationProps,
+  exampleProps,
+  commentNotificationProps,
 } from '../fixtures/props';
 
 describe('registry', () => {
@@ -27,6 +29,8 @@ describe('registry', () => {
           'WelcomeEmail',
           'TrialExpiringEmail',
           'UserInvitationEmail',
+          'ExampleEmail',
+          'CommentNotificationEmail',
         ])
       );
     });
@@ -71,6 +75,13 @@ describe('registry', () => {
     it('resolves "order-confirmation" to the OrderConfirmationEmail template', () => {
       const html = renderTemplate('order-confirmation', orderConfirmationProps);
       expect(html).toContain(orderConfirmationProps.order_id);
+    });
+
+    it('resolves "example" and "comment-notification"', () => {
+      expect(renderTemplate('example', exampleProps)).toContain(exampleProps.username);
+      expect(renderTemplate('comment-notification', commentNotificationProps)).toContain(
+        commentNotificationProps.commenter_name
+      );
     });
   });
 
