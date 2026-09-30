@@ -17,12 +17,10 @@ boundary rules from day one.
 
 - `packages/template-engine/` — the generic factory (`createTemplateFromDefinition`)
   and validation helpers. No template-specific knowledge allowed here.
-- `packages/template-runtime-display/` — pure, non-mutating HTML rendering.
-  Low-level components (`headComponent`, `mainComponent`, `bodyComponent`,
-  `footerComponent`) and the display sections that call them
-  (`displayHead`, `displayMain`, `displayFooter`, `displayBody`,
-  `displayContent`). No template-specific knowledge allowed here — only
-  layout primitives. This package is the one that will be published on its own.
+- `packages/template-runtime-display/` — pure functions that return HTML
+  fragments: `head`, `main`, `body`, `footer`, `content`, and `document`.
+  One module per fragment. No template-specific knowledge allowed here.
+  This package is the one that will be published on its own.
 - `src/layout/` — the shared Postmark document (`renderPostmarkDocument`) and
   the small blocks templates compose (button, attribute table, sub-copy).
   This is product layout, not a generic package: the stylesheet is specific

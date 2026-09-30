@@ -1,10 +1,11 @@
-import type { DisplayHeadProps, HtmlString } from '../types';
+export interface HeadProps {
+  /** Text for `<title>`. Empty when omitted. */
+  title?: string;
+  /** Inbox preview text. Rendered as a hidden div inside `<head>`. */
+  preview?: string;
+}
 
-/** Low-level `<head>` fragment. `displayHead` delegates here. */
-export function headComponent({
-  title,
-  preview,
-}: DisplayHeadProps = {}): HtmlString {
+export function head({ title, preview }: HeadProps = {}): string {
   return `
   <head>
     <meta charset="utf-8" />
