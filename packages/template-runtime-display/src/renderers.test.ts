@@ -1,6 +1,16 @@
 // packages/template-runtime-display/src/renderers.test.ts
 import { describe, it, expect } from 'vitest';
-import { displayHead, displayMain, displayFooter, displayBody } from './renderers';
+import {
+  bodyComponent,
+  displayBody,
+  displayContent,
+  displayFooter,
+  displayHead,
+  displayMain,
+  footerComponent,
+  headComponent,
+  mainComponent,
+} from './index';
 
 describe('displayHead', () => {
   it('renders empty by default', () => {
@@ -72,5 +82,32 @@ describe('displayBody', () => {
     expect(html).toMatch(/^<!DOCTYPE html>/);
     expect(html).toContain('<body>');
     expect(html).toContain('</html>');
+  });
+});
+
+describe('components', () => {
+  it('display sections delegate to the matching component', () => {
+    const head = { title: 'Hi', preview: 'peek' };
+    const main = { heading: 'H', bodyText: 'B', ctaLabel: 'Go', ctaUrl: 'https://x' };
+    const footer = { companyName: 'Acme', unsubscribeUrl: 'https://x/u' };
+    expect(displayHead(head)).toBe(headComponent(head));
+    expect(displayMain(main)).toBe(mainComponent(main));
+    expect(displayFooter(footer)).toBe(footerComponent(footer));
+    expect(displayBody({ mainHtml: '<main></main>', footerHtml: '<footer></footer>' })).toContain(
+      bodyComponent({ mainHtml: '<main></main>', footerHtml: '<footer></footer>' })
+    );
+  });
+});
+
+describe('displayContent', () => {
+  it('renders an empty content section by default', () => {
+    const html = displayContent();
+    expect(html).toContain('<div>');
+    expect(html).toContain('</div>');
+    expect(html).not.toContain('article');
+  });
+
+  it('inserts the supplied HTML', () => {
+    expect(displayContent({ content: '<p>Hello</p>' })).toContain('<p>Hello</p>');
   });
 });

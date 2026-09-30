@@ -47,7 +47,7 @@ npm install
 transactional-emails/
 ├── packages/
 │   ├── template-engine/            # createTemplateFromDefinition + validation helpers
-│   └── template-runtime-display/   # pure displayHead/Main/Footer/Body renderers
+│   └── template-runtime-display/   # components + displayHead/Main/Footer/Body/Content
 ├── src/
 │   ├── index.ts                    # public exports
 │   ├── layout/                     # shared Postmark document + body blocks

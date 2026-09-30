@@ -1,7 +1,7 @@
 {
   "name": "@llazyemail/template-runtime-display",
   "version": "0.1.0",
-  "description": "Pure, non-mutating HTML renderers for transactional email display shells.",
+  "description": "Pure HTML components and display sections for transactional email shells.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
