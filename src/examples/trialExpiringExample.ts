@@ -1,4 +1,4 @@
-import { TrialExpiringEmail } from '../templates/trialExpiringEmail';
+import { TrialExpiringEmail } from '../templates/trial-expiring/trialExpiringEmail';
 import type { TrialExpiringEmailProps } from '../types/trialExpiring';
 
 const props: TrialExpiringEmailProps = {

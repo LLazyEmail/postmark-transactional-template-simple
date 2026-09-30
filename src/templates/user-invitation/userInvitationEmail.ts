@@ -1,32 +1,32 @@
-import type { ITemplate } from '../types/template';
-import type { TrialExpiringEmailProps } from '../types/trialExpiring';
+import type { ITemplate } from '../../types/template';
+import type { UserInvitationEmailProps } from '../../types/userInvitation';
 
 /**
- * TrialExpiringEmail
- * ------------------
- * Typed port of the "trial expiring" transactional template.
+ * UserInvitationEmail
+ * -------------------
+ * Typed port of the "user invitation" transactional template.
  *
- * Emits the same inline-styled, table-based HTML as the Postmark
- * reference layout so it renders consistently across email clients.
+ * Renders the standard Postmark-style, table-based invitation email with
+ * an Accept button and an optional Decline link.
  *
  * Usage:
- *   import { TrialExpiringEmail } from './templates/trialExpiringEmail';
- *   const html = TrialExpiringEmail.render({ ...props });
+ *   import { UserInvitationEmail } from './templates/user-invitation/userInvitationEmail';
+ *   const html = UserInvitationEmail.render({ ...props });
  */
-export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
-  name: 'TrialExpiringEmail',
+export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
+  name: 'UserInvitationEmail',
 
   render: ({
-    name,
+    invitee_name,
+    invitee_email,
+    inviter_name,
+    workspace_name,
+    role,
     preheader,
-    trial_end_date,
-    trial_days_remaining,
-    plan_name,
-    plan_price,
     action_url,
-    secondary_url,
+    decline_url,
+    expires_at,
     support_url,
-    benefits,
     product_name,
     company_name,
     company_address,
@@ -34,33 +34,26 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
     company_url,
   }) => {
     // -----------------------------------------------------------------------
-    // Render the benefits list from the typed array.
+    // Optional workspace blurb, e.g. "join the Acme workspace".
     // -----------------------------------------------------------------------
-    const benefitItems = benefits
-      .map(
-        ({ title, description }) => `
-                        <tr>
-                          <td class="benefit_item">
-                            <p class="f-fallback benefit_title"><strong>${title}</strong>${
-          description
-            ? ` — <span class="benefit_description">${description}</span>`
-            : ''
-        }</p>
-                          </td>
-                        </tr>`
-      )
-      .join('');
+    const workspaceBlurb = workspace_name
+      ? ` join <strong>${workspace_name}</strong>`
+      : '';
 
-    const secondaryCta = secondary_url
+    // -----------------------------------------------------------------------
+    // Optional decline row — only rendered if a URL is supplied.
+    // -----------------------------------------------------------------------
+    const declineBlock = decline_url
       ? `
                         <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td align="center">
-                              <a href="${secondary_url}" class="f-fallback" target="_blank">Compare plans</a>
+                              <a href="${decline_url}" class="f-fallback" target="_blank">Decline invitation</a>
                             </td>
                           </tr>
                         </table>`
-      : '';
+      : `
+                        <p class="f-fallback sub">If you did not expect this invitation, you can safely ignore this email.</p>`;
 
     return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -95,9 +88,6 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
     .attributes { margin: 0 0 21px; }
     .attributes_content { background-color: #F4F4F7; padding: 16px; }
     .attributes_item { padding: 0; }
-    .benefit_item { padding: 4px 0; color: #51545E; font-size: 15px; line-height: 20px; }
-    .benefit_title { margin: 0; }
-    .benefit_description { color: #6B6E76; }
     body { background-color: #F2F4F6; color: #51545E; }
     p { color: #51545E; }
     .email-wrapper { width: 100%; margin: 0; padding: 0; background-color: #F2F4F6; }
@@ -109,13 +99,13 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
     .email-footer { width: 570px; margin: 0 auto; padding: 0; text-align: center; }
     .email-footer p { color: #A8AAAF; }
     .body-action, .body-action-secondary { width: 100%; margin: 30px auto; padding: 0; text-align: center; }
-    .body-action-secondary a { font-size: 14px; color: #3869D4; text-decoration: underline; }
+    .body-action-secondary a { font-size: 14px; color: #6B6E76; text-decoration: underline; }
     .body-sub { margin-top: 25px; padding-top: 25px; border-top: 1px solid #EAEAEC; }
     .content-cell { padding: 45px; }
     @media only screen and (max-width: 600px) { .email-body_inner, .email-footer { width: 100% !important; } }
     @media (prefers-color-scheme: dark) {
       body, .email-body, .email-body_inner, .email-content, .email-wrapper, .email-masthead, .email-footer { background-color: #333333 !important; color: #FFF !important; }
-      p, ul, ol, blockquote, h1, h2, h3, span, .benefit_item { color: #FFF !important; }
+      p, ul, ol, blockquote, h1, h2, h3, span { color: #FFF !important; }
       .attributes_content { background-color: #222 !important; }
       .email-masthead_name { text-shadow: none !important; }
     }
@@ -142,8 +132,8 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
                   <tr>
                     <td class="content-cell">
                       <div class="f-fallback">
-                        <h1>Hi ${name},</h1>
-                        <p>Your <strong>${plan_name}</strong> trial ends on <strong>${trial_end_date}</strong> — that's in <strong>${trial_days_remaining}</strong> day(s). After that, you'll be charged <strong>${plan_price}</strong> unless you cancel.</p>
+                        <h1>Hi ${invitee_name},</h1>
+                        <p><strong>${inviter_name}</strong> has invited you to${workspaceBlurb} on ${product_name} as a <strong>${role}</strong>.</p>
 
                         <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
@@ -151,27 +141,27 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
                               <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
                                   <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Plan:</strong> ${plan_name}</span>
+                                    <span class="f-fallback"><strong>Invited by:</strong> ${inviter_name}</span>
                                   </td>
                                 </tr>
                                 <tr>
                                   <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Trial ends:</strong> ${trial_end_date}</span>
+                                    <span class="f-fallback"><strong>Role:</strong> ${role}</span>
                                   </td>
                                 </tr>
                                 <tr>
                                   <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Price after trial:</strong> ${plan_price}</span>
+                                    <span class="f-fallback"><strong>Invited email:</strong> ${invitee_email}</span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="attributes_item">
+                                    <span class="f-fallback"><strong>Invitation expires:</strong> ${expires_at}</span>
                                   </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
-                        </table>
-
-                        <p>If you do nothing, your account will continue seamlessly. Here's what you'll keep:</p>
-
-                        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">${benefitItems}
                         </table>
 
                         <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -180,15 +170,15 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">
-                                    <a href="${action_url}" class="f-fallback button button--green" target="_blank">Keep My ${plan_name} Plan</a>
+                                    <a href="${action_url}" class="f-fallback button button--green" target="_blank">Accept Invitation</a>
                                   </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
-                        </table>${secondaryCta}
+                        </table>${declineBlock}
 
-                        <p>If you have any questions about your trial or billing, just reply to this email or reach out to our <a href="${support_url}">support team</a>.</p>
+                        <p>If you have any questions, reach out to <a href="${support_url}">our support team</a> — we're happy to help.</p>
                         <p>Cheers,
                           <br>The ${product_name} team</p>
 

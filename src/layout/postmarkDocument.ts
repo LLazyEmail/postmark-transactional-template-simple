@@ -6,7 +6,7 @@ import { escapeHtml } from './html.ts';
  *
  * Individual templates used to paste this stylesheet and the masthead/footer
  * tables into every file. New templates pass only the inner body. The CSS is
- * the class-based source (the same sheet `invoiceEmail.ts` inlines), not the
+ * the class-based source (the same sheet `invoice/invoiceEmail.ts` inlines), not the
  * premailer-inlined HTML stored under `reference/`.
  */
 const POSTMARK_STYLES = `

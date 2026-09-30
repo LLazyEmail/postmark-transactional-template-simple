@@ -10,7 +10,7 @@ export interface DefinedTemplate<Props> extends ITemplate<Props> {
   readonly id: string;
   /** Extra lookup keys (legacy kebab-case aliases, short names). */
   readonly aliases: readonly string[];
-  /** Source filename under `src/templates/`, for the generator file listing. */
+  /** Path under `src/templates/`, for the generator file listing. */
   readonly file: string;
   /** Named export the module is known by. */
   readonly exportName: string;

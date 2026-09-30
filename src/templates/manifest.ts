@@ -7,14 +7,14 @@ import {
 
 export type { TemplateRegistration };
 
-import { passwordReset } from './password-reset.definition.ts';
-import { orderConfirmation } from './order-confirmation.definition.ts';
-import { InvoiceEmail } from './invoiceEmail.ts';
-import { WelcomeEmail } from './welcomeEmail.ts';
-import { TrialExpiringEmail } from './trialExpiringEmail.ts';
-import { UserInvitationEmail } from './userInvitationEmail.ts';
-import { ExampleEmail } from './exampleEmail.ts';
-import { CommentNotificationEmail } from './commentNotificationEmail.ts';
+import { passwordReset } from './password-reset/passwordResetEmail.ts';
+import { orderConfirmation } from './order-confirmation/orderConfirmationEmail.ts';
+import { InvoiceEmail } from './invoice/invoiceEmail.ts';
+import { WelcomeEmail } from './welcome/welcomeEmail.ts';
+import { TrialExpiringEmail } from './trial-expiring/trialExpiringEmail.ts';
+import { UserInvitationEmail } from './user-invitation/userInvitationEmail.ts';
+import { ExampleEmail } from './example/exampleEmail.ts';
+import { CommentNotificationEmail } from './comment-notification/commentNotificationEmail.ts';
 
 import {
   invoiceSample,
@@ -55,35 +55,35 @@ export const templates: readonly TemplateRegistration[] = [
   passwordReset,
   adopt(orderConfirmation, {
     id: 'order-confirmation',
-    file: 'order-confirmation.definition.ts',
+    file: 'order-confirmation/orderConfirmationEmail.ts',
     exportName: 'orderConfirmation',
     sample: orderConfirmationSample,
   }),
   adopt(WelcomeEmail, {
     id: 'WelcomeEmail',
     aliases: ['welcome'],
-    file: 'welcomeEmail.ts',
+    file: 'welcome/welcomeEmail.ts',
     exportName: 'WelcomeEmail',
     sample: welcomeSample,
   }),
   adopt(InvoiceEmail, {
     id: 'InvoiceEmail',
     aliases: ['invoice'],
-    file: 'invoiceEmail.ts',
+    file: 'invoice/invoiceEmail.ts',
     exportName: 'InvoiceEmail',
     sample: invoiceSample,
   }),
   adopt(TrialExpiringEmail, {
     id: 'TrialExpiringEmail',
     aliases: ['trial-expiring'],
-    file: 'trialExpiringEmail.ts',
+    file: 'trial-expiring/trialExpiringEmail.ts',
     exportName: 'TrialExpiringEmail',
     sample: trialExpiringSample,
   }),
   adopt(UserInvitationEmail, {
     id: 'UserInvitationEmail',
     aliases: ['user-invitation'],
-    file: 'userInvitationEmail.ts',
+    file: 'user-invitation/userInvitationEmail.ts',
     exportName: 'UserInvitationEmail',
     sample: userInvitationSample,
   }),

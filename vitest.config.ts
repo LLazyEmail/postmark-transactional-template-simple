@@ -22,7 +22,10 @@ export default defineConfig({
     // Where tests live. Mirrors Jest's default and matches your
     // `tests/` directory.
     // -----------------------------------------------------------------------
-    include: ['tests/**/*.{test,spec}.{js,ts}'],
+    include: [
+      'tests/**/*.{test,spec}.{js,ts}',
+      'packages/**/*.{test,spec}.{js,ts}',
+    ],
     exclude: ['**/node_modules/**', '**/dist/**'],
 
     setupFiles: ['./tests/setup.ts'],

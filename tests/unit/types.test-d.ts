@@ -2,7 +2,7 @@
 import { describe, it } from 'vitest';
 import { expectTypeOf } from 'vitest';
 import type { ITemplate } from '../../src/types/template';
-import { InvoiceEmail } from '../../src/templates/invoiceEmail';
+import { InvoiceEmail } from '../../src/templates/invoice/invoiceEmail';
 
 describe('Type checks', () => {
   it('InvoiceEmail matches ITemplate interface', () => {

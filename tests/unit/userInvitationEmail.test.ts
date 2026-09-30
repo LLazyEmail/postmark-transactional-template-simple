@@ -1,6 +1,6 @@
 // tests/unit/userInvitationEmail.test.ts
 import { describe, it, expect } from 'vitest';
-import { UserInvitationEmail } from '../../src/templates/userInvitationEmail';
+import { UserInvitationEmail } from '../../src/templates/user-invitation/userInvitationEmail';
 import { userInvitationProps } from '../fixtures/props';
 
 describe('UserInvitationEmail', () => {

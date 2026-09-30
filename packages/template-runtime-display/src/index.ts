@@ -1,11 +1,15 @@
-// packages/template-runtime-display/src/index.ts
+export { headComponent } from './components/headComponent';
+export { mainComponent } from './components/mainComponent';
+export { bodyComponent } from './components/bodyComponent';
+export { footerComponent } from './components/footerComponent';
 
 export {
   displayHead,
   displayMain,
   displayFooter,
   displayBody,
-} from './renderers';
+  displayContent,
+} from './display/sections';
 
 export type {
   HtmlString,
@@ -13,8 +17,10 @@ export type {
   DisplayMainProps,
   DisplayFooterProps,
   DisplayBodyProps,
+  DisplayContentProps,
   DisplayHeadRenderer,
   DisplayMainRenderer,
   DisplayFooterRenderer,
   DisplayBodyRenderer,
+  DisplayContentRenderer,
 } from './types';

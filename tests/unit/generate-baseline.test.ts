@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { lookupKeys, templates } from '../../src/templates/manifest.ts';
-import { InvoiceEmail } from '../../src/templates/invoiceEmail';
-import { orderConfirmation } from '../../src/templates/order-confirmation.definition';
-import { passwordReset } from '../../src/templates/password-reset.definition';
-import { TrialExpiringEmail } from '../../src/templates/trialExpiringEmail';
-import { UserInvitationEmail } from '../../src/templates/userInvitationEmail';
-import { WelcomeEmail } from '../../src/templates/welcomeEmail';
+import { InvoiceEmail } from '../../src/templates/invoice/invoiceEmail';
+import { orderConfirmation } from '../../src/templates/order-confirmation/orderConfirmationEmail';
+import { passwordReset } from '../../src/templates/password-reset/passwordResetEmail';
+import { TrialExpiringEmail } from '../../src/templates/trial-expiring/trialExpiringEmail';
+import { UserInvitationEmail } from '../../src/templates/user-invitation/userInvitationEmail';
+import { WelcomeEmail } from '../../src/templates/welcome/welcomeEmail';
 
 /** Output names `npm run generate:template -- --all` must keep writing. */
 export const BASELINE_FILES = [

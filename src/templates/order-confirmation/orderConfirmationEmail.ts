@@ -1,31 +1,33 @@
-import type { ITemplate } from '../types/template';
-import type { UserInvitationEmailProps } from '../types/userInvitation';
+// src/templates/order-confirmation/orderConfirmationEmail.ts
+import type {
+  OrderConfirmationEmailProps,
+  OrderConfirmationEmailTemplate,
+} from '../../types/orderConfirmation';
+
+/** Stable registry ID (legacy-compatible kebab-case). */
+export const TEMPLATE_ID = 'order-confirmation' as const;
 
 /**
- * UserInvitationEmail
- * -------------------
- * Typed port of the "user invitation" transactional template.
+ * OrderConfirmationEmail
+ * ----------------------
+ * Typed conversion of the legacy `order-confirmation.definition.js`.
  *
- * Renders the standard Postmark-style, table-based invitation email with
- * an Accept button and an optional Decline link.
- *
- * Usage:
- *   import { UserInvitationEmail } from './templates/userInvitationEmail';
- *   const html = UserInvitationEmail.render({ ...props });
+ * Renders the Postmark-style receipt layout with an itemized purchase
+ * table, shipping/billing block, and a "View order" CTA.
  */
-export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
-  name: 'UserInvitationEmail',
+export const orderConfirmation: OrderConfirmationEmailTemplate = {
+  name: 'OrderConfirmationEmail',
 
   render: ({
-    invitee_name,
-    invitee_email,
-    inviter_name,
-    workspace_name,
-    role,
+    name,
     preheader,
+    order_id,
+    order_date,
+    total,
+    order_items,
+    shipping_address,
+    billing_address,
     action_url,
-    decline_url,
-    expires_at,
     support_url,
     product_name,
     company_name,
@@ -34,26 +36,44 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
     company_url,
   }) => {
     // -----------------------------------------------------------------------
-    // Optional workspace blurb, e.g. "join the Acme workspace".
+    // Itemized rows.
     // -----------------------------------------------------------------------
-    const workspaceBlurb = workspace_name
-      ? ` join <strong>${workspace_name}</strong>`
-      : '';
+    const itemRows = order_items
+      .map(
+        ({ description, unit_price, quantity, total }) => `
+                                <tr>
+                                  <td width="60%" class="purchase_item"><span class="f-fallback">${description}</span></td>
+                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${unit_price}</span></td>
+                                  <td class="align-right" width="10%" class="purchase_item"><span class="f-fallback">${quantity}</span></td>
+                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${total}</span></td>
+                                </tr>`
+      )
+      .join('');
 
     // -----------------------------------------------------------------------
-    // Optional decline row — only rendered if a URL is supplied.
+    // Multi-line addresses: turn "\n" into <br> for HTML rendering.
     // -----------------------------------------------------------------------
-    const declineBlock = decline_url
-      ? `
-                        <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    const formatAddress = (addr: string) =>
+      addr.split('\n').join('<br>');
+
+    // Show billing block only when it differs from shipping.
+    const billingBlock =
+      billing_address && billing_address !== shipping_address
+        ? `
+                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
-                            <td align="center">
-                              <a href="${decline_url}" class="f-fallback" target="_blank">Decline invitation</a>
+                            <td class="attributes_content">
+                              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                  <td class="attributes_item">
+                                    <span class="f-fallback"><strong>Billing address:</strong><br>${formatAddress(billing_address)}</span>
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                           </tr>
                         </table>`
-      : `
-                        <p class="f-fallback sub">If you did not expect this invitation, you can safely ignore this email.</p>`;
+        : '';
 
     return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -83,11 +103,18 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
     .align-center { text-align: center; }
     .button { background-color: #3869D4; border-top: 10px solid #3869D4; border-right: 18px solid #3869D4; border-bottom: 10px solid #3869D4; border-left: 18px solid #3869D4; display: inline-block; color: #FFF; text-decoration: none; border-radius: 3px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16); -webkit-text-size-adjust: none; box-sizing: border-box; }
     .button--green { background-color: #22BC66; border-top: 10px solid #22BC66; border-right: 18px solid #22BC66; border-bottom: 10px solid #22BC66; border-left: 18px solid #22BC66; }
-    .button--red { background-color: #FF6136; border-top: 10px solid #FF6136; border-right: 18px solid #FF6136; border-bottom: 10px solid #FF6136; border-left: 18px solid #FF6136; }
     @media only screen and (max-width: 500px) { .button { width: 100% !important; text-align: center !important; } }
     .attributes { margin: 0 0 21px; }
     .attributes_content { background-color: #F4F4F7; padding: 16px; }
     .attributes_item { padding: 0; }
+    .purchase { width: 100%; margin: 0; padding: 35px 0; }
+    .purchase_content { width: 100%; margin: 0; padding: 25px 0 0 0; }
+    .purchase_item { padding: 10px 0; color: #51545E; font-size: 15px; line-height: 18px; }
+    .purchase_heading { padding-bottom: 8px; border-bottom: 1px solid #EAEAEC; }
+    .purchase_heading p { margin: 0; color: #85878E; font-size: 12px; }
+    .purchase_footer { padding-top: 15px; border-top: 1px solid #EAEAEC; }
+    .purchase_total { margin: 0; text-align: right; font-weight: bold; color: #333333; }
+    .purchase_total--label { padding: 0 15px 0 0; }
     body { background-color: #F2F4F6; color: #51545E; }
     p { color: #51545E; }
     .email-wrapper { width: 100%; margin: 0; padding: 0; background-color: #F2F4F6; }
@@ -98,14 +125,13 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
     .email-body_inner { width: 570px; margin: 0 auto; padding: 0; background-color: #FFFFFF; }
     .email-footer { width: 570px; margin: 0 auto; padding: 0; text-align: center; }
     .email-footer p { color: #A8AAAF; }
-    .body-action, .body-action-secondary { width: 100%; margin: 30px auto; padding: 0; text-align: center; }
-    .body-action-secondary a { font-size: 14px; color: #6B6E76; text-decoration: underline; }
+    .body-action { width: 100%; margin: 30px auto; padding: 0; text-align: center; }
     .body-sub { margin-top: 25px; padding-top: 25px; border-top: 1px solid #EAEAEC; }
     .content-cell { padding: 45px; }
     @media only screen and (max-width: 600px) { .email-body_inner, .email-footer { width: 100% !important; } }
     @media (prefers-color-scheme: dark) {
       body, .email-body, .email-body_inner, .email-content, .email-wrapper, .email-masthead, .email-footer { background-color: #333333 !important; color: #FFF !important; }
-      p, ul, ol, blockquote, h1, h2, h3, span { color: #FFF !important; }
+      p, ul, ol, blockquote, h1, h2, h3, span, .purchase_item { color: #FFF !important; }
       .attributes_content { background-color: #222 !important; }
       .email-masthead_name { text-shadow: none !important; }
     }
@@ -132,37 +158,8 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
                   <tr>
                     <td class="content-cell">
                       <div class="f-fallback">
-                        <h1>Hi ${invitee_name},</h1>
-                        <p><strong>${inviter_name}</strong> has invited you to${workspaceBlurb} on ${product_name} as a <strong>${role}</strong>.</p>
-
-                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td class="attributes_content">
-                              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Invited by:</strong> ${inviter_name}</span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Role:</strong> ${role}</span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Invited email:</strong> ${invitee_email}</span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="attributes_item">
-                                    <span class="f-fallback"><strong>Invitation expires:</strong> ${expires_at}</span>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
+                        <h1>Hi ${name},</h1>
+                        <p>Thanks for your order. This email is your receipt for order <strong>${order_id}</strong> placed on <strong>${order_date}</strong>.</p>
 
                         <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
@@ -170,17 +167,61 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">
-                                    <a href="${action_url}" class="f-fallback button button--green" target="_blank">Accept Invitation</a>
+                                    <a href="${action_url}" class="f-fallback button button--green" target="_blank">View your order</a>
                                   </td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
-                        </table>${declineBlock}
+                        </table>
 
-                        <p>If you have any questions, reach out to <a href="${support_url}">our support team</a> — we're happy to help.</p>
-                        <p>Cheers,
-                          <br>The ${product_name} team</p>
+                        <table class="purchase" width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td>
+                              <h3>${order_id}</h3>
+                            </td>
+                            <td>
+                              <h3 class="align-right">${order_date}</h3>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">
+                              <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                  <th class="purchase_heading" align="left"><p class="f-fallback">Description</p></th>
+                                  <th class="purchase_heading" align="right"><p class="f-fallback">Unit price</p></th>
+                                  <th class="purchase_heading" align="right"><p class="f-fallback">Qty</p></th>
+                                  <th class="purchase_heading" align="right"><p class="f-fallback">Amount</p></th>
+                                </tr>${itemRows}
+                                <tr>
+                                  <td colspan="3" width="80%" class="purchase_footer" valign="middle">
+                                    <p class="f-fallback purchase_total purchase_total--label">Total</p>
+                                  </td>
+                                  <td width="20%" class="purchase_footer" valign="middle">
+                                    <p class="f-fallback purchase_total">${total}</p>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+
+                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td class="attributes_content">
+                              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                  <td class="attributes_item">
+                                    <span class="f-fallback"><strong>Shipping address:</strong><br>${formatAddress(shipping_address)}</span>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>${billingBlock}
+
+                        <p>If you have any questions about this order, simply reply to this email or reach out to our <a href="${support_url}">support team</a>.</p>
+                        <p>Cheers,<br>The ${product_name} team</p>
 
                         <table class="body-sub" role="presentation">
                           <tr>
@@ -202,9 +243,7 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
                   <tr>
                     <td class="content-cell" align="center">
                       <p class="f-fallback sub align-center">
-                        ${company_name}
-                        <br>${company_address}
-                        <br>${company_suite}
+                        ${company_name}<br>${company_address}<br>${company_suite}
                       </p>
                     </td>
                   </tr>

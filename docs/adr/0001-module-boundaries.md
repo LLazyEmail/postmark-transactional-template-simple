@@ -17,16 +17,20 @@ boundary rules from day one.
 
 - `packages/template-engine/` — the generic factory (`createTemplateFromDefinition`)
   and validation helpers. No template-specific knowledge allowed here.
-- `packages/template-runtime-display/` — pure, non-mutating HTML rendering
-  functions (`displayHead`, `displayMain`, `displayFooter`, `displayBody`).
-  No template-specific knowledge allowed here either — only layout primitives.
+- `packages/template-runtime-display/` — pure, non-mutating HTML rendering.
+  Low-level components (`headComponent`, `mainComponent`, `bodyComponent`,
+  `footerComponent`) and the display sections that call them
+  (`displayHead`, `displayMain`, `displayFooter`, `displayBody`,
+  `displayContent`). No template-specific knowledge allowed here — only
+  layout primitives. This package is the one that will be published on its own.
 - `src/layout/` — the shared Postmark document (`renderPostmarkDocument`) and
   the small blocks templates compose (button, attribute table, sub-copy).
   This is product layout, not a generic package: the stylesheet is specific
   to these transactional emails. A new template must not paste that shell again.
-- `src/templates/<name>.ts` — one module per template, created with
-  `defineTemplate`. This is the ONLY place that template's copy and field
-  mapping should live. The module carries its preview `sample`.
+- `src/templates/<id>/<name>Email.ts` — one folder and one module per
+  template, created with `defineTemplate`. This is the ONLY place that
+  template's copy and field mapping should live. The module carries its
+  preview `sample`.
 - `src/templates/manifest.ts` — the only registration list. The public
   `renderTemplate(id, payload)` registry and the generate-template catalog are derived
   from it. Adding a template means one module plus one line here.

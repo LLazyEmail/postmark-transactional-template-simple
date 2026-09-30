@@ -1,7 +1,7 @@
-import type { ITemplate } from '../types/template';
-import type { WelcomeEmailProps } from '../types/welcome';
+import type { ITemplate } from '../../types/template';
+import type { WelcomeEmailProps } from '../../types/welcome';
 
-export type { WelcomeEmailProps } from '../types/welcome';
+export type { WelcomeEmailProps } from '../../types/welcome';
 
 /**
  * WelcomeEmail

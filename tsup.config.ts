@@ -2,8 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: {
-    index: 'src/index.js',
-    templates: 'src/index2.ts',
+    index: 'src/index.ts',
     registry: 'src/templates/registry.ts',
   },
   format: ['cjs', 'esm'],

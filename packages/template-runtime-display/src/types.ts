@@ -61,6 +61,15 @@ export interface DisplayBodyProps {
 }
 
 // ---------------------------------------------------------------------------
+// displayContent
+// ---------------------------------------------------------------------------
+
+export interface DisplayContentProps {
+  /** Inner HTML for the content section. The section is empty when omitted. */
+  content?: HtmlString;
+}
+
+// ---------------------------------------------------------------------------
 // Renderer function types — useful for consumers that want to pass these
 // around (e.g. a plugin registry, a custom pipeline).
 // ---------------------------------------------------------------------------
@@ -69,3 +78,4 @@ export type DisplayHeadRenderer = (props?: DisplayHeadProps) => HtmlString;
 export type DisplayMainRenderer = (props?: DisplayMainProps) => HtmlString;
 export type DisplayFooterRenderer = (props?: DisplayFooterProps) => HtmlString;
 export type DisplayBodyRenderer = (props?: DisplayBodyProps) => HtmlString;
+export type DisplayContentRenderer = (props?: DisplayContentProps) => HtmlString;

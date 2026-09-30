@@ -1,6 +1,6 @@
 // tests/unit/invoiceEmail.test.ts
 import { describe, it, expect } from 'vitest';
-import { InvoiceEmail } from '../../src/templates/invoiceEmail';
+import { InvoiceEmail } from '../../src/templates/invoice/invoiceEmail';
 import { invoiceProps } from '../fixtures/props';
 
 describe('InvoiceEmail', () => {
