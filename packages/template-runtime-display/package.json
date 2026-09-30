@@ -1,7 +1,7 @@
 {
   "name": "@llazyemail/template-runtime-display",
   "version": "0.1.0",
-  "description": "Pure HTML components and display sections for transactional email shells.",
+  "description": "HTML fragments for an email document: head, main, body, footer, content, and the full document.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

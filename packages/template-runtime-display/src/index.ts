@@ -1,26 +1,17 @@
-export { headComponent } from './components/headComponent';
-export { mainComponent } from './components/mainComponent';
-export { bodyComponent } from './components/bodyComponent';
-export { footerComponent } from './components/footerComponent';
+export { head } from './head';
+export type { HeadProps } from './head';
 
-export {
-  displayHead,
-  displayMain,
-  displayFooter,
-  displayBody,
-  displayContent,
-} from './display/sections';
+export { main } from './main';
+export type { MainProps } from './main';
 
-export type {
-  HtmlString,
-  DisplayHeadProps,
-  DisplayMainProps,
-  DisplayFooterProps,
-  DisplayBodyProps,
-  DisplayContentProps,
-  DisplayHeadRenderer,
-  DisplayMainRenderer,
-  DisplayFooterRenderer,
-  DisplayBodyRenderer,
-  DisplayContentRenderer,
-} from './types';
+export { footer } from './footer';
+export type { FooterProps } from './footer';
+
+export { body } from './body';
+export type { BodyProps } from './body';
+
+export { content } from './content';
+export type { ContentProps } from './content';
+
+export { document } from './document';
+export type { DocumentProps } from './document';
