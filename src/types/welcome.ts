@@ -1,1 +1,2 @@
-export type { WelcomeEmailProps, WelcomeEmailTemplate } from '../templates/welcome/types.ts';
+// This file is no longer used. Type definitions have been moved to their respective template directories.
+// Import from src/templates/*/types instead.

@@ -1,12 +1,12 @@
 // tests/fixtures/props.ts
-import type { InvoiceEmailProps } from '../../src/types/invoice';
-import type { TrialExpiringEmailProps } from '../../src/types/trialExpiring';
-import type { UserInvitationEmailProps } from '../../src/types/userInvitation';
-import type { WelcomeEmailProps } from '../../src/types/welcome';
-import type { PasswordResetEmailProps } from '../../src/types/passwordReset';
-import type { OrderConfirmationEmailProps } from '../../src/types/orderConfirmation';
-import type { ExampleEmailProps } from '../../src/types/example';
-import type { CommentNotificationEmailProps } from '../../src/types/commentNotification';
+import type { InvoiceEmailProps } from '../../src/templates/invoice/types';
+import type { TrialExpiringEmailProps } from '../../src/templates/trial-expiring/types';
+import type { UserInvitationEmailProps } from '../../src/templates/user-invitation/types';
+import type { WelcomeEmailProps } from '../../src/templates/welcome/types';
+import type { PasswordResetEmailProps } from '../../src/templates/password-reset/types';
+import type { OrderConfirmationEmailProps } from '../../src/templates/order-confirmation/types';
+import type { ExampleEmailProps } from '../../src/templates/example/types';
+import type { CommentNotificationEmailProps } from '../../src/templates/comment-notification/types';
 
 const branding = {
   product_name: '[Product Name]',
