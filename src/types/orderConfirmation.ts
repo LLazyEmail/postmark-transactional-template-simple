@@ -1,1 +1,2 @@
-export type { OrderConfirmationEmailProps, OrderConfirmationEmailTemplate, OrderLineItem } from '../templates/order-confirmation/types.ts';
+// This file is no longer used. Type definitions have been moved to their respective template directories.
+// Import from src/templates/*/types instead.

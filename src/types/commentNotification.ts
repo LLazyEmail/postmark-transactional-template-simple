@@ -1,5 +1,2 @@
-export type {
-  CommentAttachment,
-  CommentNotificationEmailProps,
-  CommentNotificationEmailTemplate,
-} from '../templates/comment-notification/types.ts';
+// This file is no longer used. Type definitions have been moved to their respective template directories.
+// Import from src/templates/*/types instead.
