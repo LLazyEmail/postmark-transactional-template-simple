@@ -13,16 +13,17 @@ export {
   getTemplate,
 } from './templates/registry.ts';
 
-export type { WelcomeEmailProps } from './types/welcome.ts';
-export type { InvoiceEmailProps } from './types/invoice.ts';
-export type { TrialExpiringEmailProps } from './types/trialExpiring.ts';
-export type { UserInvitationEmailProps } from './types/userInvitation.ts';
-export type { PasswordResetEmailProps } from './types/passwordReset.ts';
-export type { OrderConfirmationEmailProps } from './types/orderConfirmation.ts';
-export type { ExampleEmailProps } from './types/example.ts';
+export type { WelcomeEmailProps, WelcomeEmailTemplate } from './templates/welcome/types.ts';
+export type { InvoiceEmailProps, InvoiceEmailTemplate } from './templates/invoice/types.ts';
+export type { TrialExpiringEmailProps, TrialExpiringEmailTemplate } from './templates/trial-expiring/types.ts';
+export type { UserInvitationEmailProps, UserInvitationEmailTemplate } from './templates/user-invitation/types.ts';
+export type { PasswordResetEmailProps, PasswordResetEmailTemplate } from './templates/password-reset/types.ts';
+export type { OrderConfirmationEmailProps, OrderConfirmationEmailTemplate } from './templates/order-confirmation/types.ts';
+export type { ExampleEmailProps, ExampleEmailTemplate } from './templates/example/types.ts';
 export type {
   CommentNotificationEmailProps,
+  CommentNotificationEmailTemplate,
   CommentAttachment,
-} from './types/commentNotification.ts';
+} from './templates/comment-notification/types.ts';
 export type { EmailBrandProps } from './types/brand.ts';
 export type { ITemplate } from './types/template.ts';
