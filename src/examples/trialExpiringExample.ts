@@ -1,5 +1,5 @@
 import { TrialExpiringEmail } from '../templates/trial-expiring/trialExpiringEmail';
-import type { TrialExpiringEmailProps } from '../types/trialExpiring';
+import type { TrialExpiringEmailProps } from '../templates/trial-expiring/types';
 
 const props: TrialExpiringEmailProps = {
   name: 'Alex',
