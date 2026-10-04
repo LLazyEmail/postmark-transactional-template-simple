@@ -1,6 +1,8 @@
 import type { EmailBrandProps } from '../types/brand.ts';
-import { escapeHtml } from './html.ts';
+import { body as renderBody, escapeHtml, head } from './blocks.ts';
 import { POSTMARK_STYLES } from './postmarkStyles.ts';
+import { POSTMARK_MSO_FALLBACK } from './postmarkMsoFallback.ts';
+import { renderPostmarkFooter } from './postmarkFooter.ts';
 
 export interface PostmarkDocumentProps extends EmailBrandProps {
   preheader?: string;
@@ -14,32 +16,26 @@ export function renderPostmarkDocument({
   company_address,
   company_suite,
   company_url,
-  body,
+  body: bodyHtml,
 }: PostmarkDocumentProps): string {
   const preheaderHtml =
     preheader === undefined
       ? ''
       : `<span class="preheader">${escapeHtml(preheader)}</span>\n    `;
 
-  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="x-apple-disable-message-reformatting" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="supported-color-schemes" content="light dark" />
-    <title></title>
-    <style type="text/css" rel="stylesheet" media="all">${POSTMARK_STYLES}
-    </style>
-    <!--[if mso]>
-    <style type="text/css">
-      .f-fallback  { font-family: Arial, sans-serif; }
-    </style>
-  <![endif]-->
-  </head>
-  <body>
-    ${preheaderHtml}<table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+  const footerHtml = renderPostmarkFooter({
+    company_name,
+    company_address,
+    company_suite,
+  });
+
+  const documentHead = head({
+    styles: POSTMARK_STYLES,
+    extraHead: POSTMARK_MSO_FALLBACK,
+  });
+  const documentBody = renderBody({
+    preheaderHtml,
+    mainHtml: `<table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr><td align="center">
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
             <tr><td class="email-masthead">
@@ -47,19 +43,20 @@ export function renderPostmarkDocument({
               </td></tr>
             <tr><td class="email-body" width="570" cellpadding="0" cellspacing="0">
                 <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                  <tr><td class="content-cell"><div class="f-fallback">${body}</div></td></tr>
+                  <tr><td class="content-cell"><div class="f-fallback">${bodyHtml}</div></td></tr>
                 </table>
               </td></tr>
             <tr><td>
-                <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                  <tr><td class="content-cell" align="center">
-                      <p class="f-fallback sub align-center">${escapeHtml(company_name)}<br>${escapeHtml(company_address)}<br>${escapeHtml(company_suite)}</p>
-                    </td></tr>
-                </table>
+                ${footerHtml}
               </td></tr>
           </table>
         </td></tr>
-    </table>
-  </body>
+    </table>`,
+  });
+
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  ${documentHead}
+  ${documentBody}
 </html>`;
 }
