@@ -1,4 +1,4 @@
-import { escapeHtml } from './html.ts';
+import { escapeHtml } from './display.ts';
 
 export type ButtonVariant = 'green' | 'red';
 

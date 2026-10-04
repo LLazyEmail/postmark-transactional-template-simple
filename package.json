@@ -20,7 +20,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@llazyemail/generate-template": "1.0.1"
+    "@llazyemail/generate-template": "1.0.1",
+    "@llazyemail/template-runtime-display": "0.7.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",

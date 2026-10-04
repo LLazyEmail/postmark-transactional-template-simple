@@ -1,4 +1,4 @@
-import { escapeHtml } from './html.ts';
+import { escapeHtml } from './display.ts';
 import type { EmailBrandProps } from '../types/brand.ts';
 
 export type PostmarkFooterBrandProps = Pick<
