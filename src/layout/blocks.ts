@@ -1,4 +1,8 @@
-import { escapeHtml } from './display.ts';
+import { escapeHtml } from '@llazyemail/template-runtime-display';
+
+export { body, escapeHtml, head } from '@llazyemail/template-runtime-display';
+export type { BodyProps, HeadProps } from '@llazyemail/template-runtime-display';
+
 
 export type ButtonVariant = 'green' | 'red';
 

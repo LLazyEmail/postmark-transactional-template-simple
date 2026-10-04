@@ -1,5 +1,5 @@
 import type { EmailBrandProps } from '../types/brand.ts';
-import { body as renderBody, escapeHtml, head } from './display.ts';
+import { body as renderBody, escapeHtml, head } from './blocks.ts';
 import { POSTMARK_STYLES } from './postmarkStyles.ts';
 import { POSTMARK_MSO_FALLBACK } from './postmarkMsoFallback.ts';
 import { renderPostmarkFooter } from './postmarkFooter.ts';
