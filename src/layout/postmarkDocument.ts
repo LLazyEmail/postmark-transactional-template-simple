@@ -1,6 +1,8 @@
 import type { EmailBrandProps } from '../types/brand.ts';
 import { escapeHtml } from './html.ts';
 import { POSTMARK_STYLES } from './postmarkStyles.ts';
+import { POSTMARK_MSO_FALLBACK } from './postmarkMsoFallback.ts';
+import { renderPostmarkFooter } from './postmarkFooter.ts';
 
 export interface PostmarkDocumentProps extends EmailBrandProps {
   preheader?: string;
@@ -21,6 +23,12 @@ export function renderPostmarkDocument({
       ? ''
       : `<span class="preheader">${escapeHtml(preheader)}</span>\n    `;
 
+  const footerHtml = renderPostmarkFooter({
+    company_name,
+    company_address,
+    company_suite,
+  });
+
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -32,11 +40,7 @@ export function renderPostmarkDocument({
     <title></title>
     <style type="text/css" rel="stylesheet" media="all">${POSTMARK_STYLES}
     </style>
-    <!--[if mso]>
-    <style type="text/css">
-      .f-fallback  { font-family: Arial, sans-serif; }
-    </style>
-  <![endif]-->
+    ${POSTMARK_MSO_FALLBACK}
   </head>
   <body>
     ${preheaderHtml}<table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -51,11 +55,7 @@ export function renderPostmarkDocument({
                 </table>
               </td></tr>
             <tr><td>
-                <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-                  <tr><td class="content-cell" align="center">
-                      <p class="f-fallback sub align-center">${escapeHtml(company_name)}<br>${escapeHtml(company_address)}<br>${escapeHtml(company_suite)}</p>
-                    </td></tr>
-                </table>
+                ${footerHtml}
               </td></tr>
           </table>
         </td></tr>
