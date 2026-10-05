@@ -15,7 +15,7 @@
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\"",
     "generate:template": "node --experimental-strip-types --no-warnings scripts/generate-template.ts",
-    "generate:assert": "node --experimental-strip-types --no-warnings scripts/assert-generated.ts",
+    "generate:assert": "generate-template-assert --slugs-file=tests/fixtures/generated-slugs.json",
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
