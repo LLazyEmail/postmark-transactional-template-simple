@@ -4,6 +4,7 @@ import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
+import { passwordResetSample } from './sample.ts';
 
 /** Stable registry id. Legacy callers and `renderTemplate('password-reset')` use this. */
 export const TEMPLATE_ID = 'password-reset' as const;
@@ -20,19 +21,7 @@ export const passwordReset = defineTemplate<PasswordResetEmailProps>({
   name: 'PasswordResetEmail',
   file: 'password-reset/passwordResetEmail.ts',
   exportName: 'passwordReset',
-  sample: {
-    name: 'Jordan',
-    preheader: 'Use this link to reset your password.',
-    action_url: 'https://example.com/reset?token=fixture-token-123',
-    operating_system: 'macOS',
-    browser_name: 'Chrome',
-    support_url: 'https://example.com/support',
-    product_name: '[Product Name]',
-    company_name: 'Acme Inc.',
-    company_address: '1234 Street Rd.',
-    company_suite: 'Suite 1234',
-    company_url: 'https://example.com',
-  },
+  sample: passwordResetSample,
 
   render: ({
     name,

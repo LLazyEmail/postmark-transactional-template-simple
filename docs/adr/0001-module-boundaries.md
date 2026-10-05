@@ -27,8 +27,10 @@ boundary rules from day one.
   to these transactional emails. A new template must not paste that shell again.
 - `src/templates/<id>/<name>Email.ts` — one folder and one module per
   template, created with `defineTemplate`. This is the ONLY place that
-  template's copy and field mapping should live. The module carries its
-  preview `sample`.
+  template's copy and field mapping should live.
+- `src/templates/<id>/sample.ts` — the preview payload the CLI uses when no
+  `--data` file is passed. The email module imports it and passes it as
+  `sample`. Do not inline fixture data in the builder.
 - `src/templates/manifest.ts` — the only registration list. The public
   `renderTemplate(id, payload)` registry and the generate-template catalog are derived
   from it. Adding a template means one module plus one line here.
@@ -45,8 +47,9 @@ boundary rules from day one.
    template's definition file, not in a shared package.
 3. Every template must be a `defineTemplate()` module listed in
    `src/templates/manifest.ts`, with a unit test in `tests/unit/`. The
-   preview payload lives on the template as `sample`. Do not edit
-   `registry.ts` for a new template. Do not add a second catalog file.
+   preview payload lives in `sample.ts` and is passed to `defineTemplate`
+   as `sample`. Do not edit `registry.ts` for a new template. Do not add a
+   second catalog file.
 
 ## Consequences
 
