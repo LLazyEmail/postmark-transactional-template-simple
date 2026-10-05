@@ -13,8 +13,8 @@ for (const slug of slugs as string[]) {
     missing.push(filePath);
     continue;
   }
-  const html = readFileSync(filePath, 'utf8');
-  if (!html.includes('<html') && !html.includes('<!DOCTYPE')) {
+  const html = readFileSync(filePath, 'utf8').toLowerCase();
+  if (!html.includes('<html') && !html.includes('<!doctype')) {
     empty.push(filePath);
   }
 }
