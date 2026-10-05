@@ -71,7 +71,9 @@ transactional-emails/
    masthead and footer.
 2. Create `src/templates/<id>/<name>Email.ts` with `defineTemplate`. Render
    the body through `renderPostmarkDocument` — do not copy the stylesheet or
-   the masthead/footer tables. Put the CLI preview payload on `sample`.
+   the masthead/footer tables. Put the CLI preview payload in
+   `src/templates/<id>/sample.ts` and pass that export as `sample`. Do not
+   inline fixture data in the builder.
 3. Append that export to the list in `src/templates/manifest.ts`. The
    registry, the generator catalog, and the render-all test pick it up
    from there.
