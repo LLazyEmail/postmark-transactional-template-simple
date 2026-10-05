@@ -1,7 +1,8 @@
-import { mkdtempSync, existsSync, readFileSync } from 'node:fs';
+import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { assertGenerated } from '@llazyemail/generate-template';
 import slugs from '../fixtures/generated-slugs.json' with { type: 'json' };
 import { createProjectGenerator } from '../../scripts/create-project-generator.ts';
 
@@ -11,11 +12,10 @@ describe('generate writeAll snapshot (step 9)', () => {
     const generate = createProjectGenerator();
     const paths = await generate.writeAll(dir);
     expect(paths.length).toBeGreaterThanOrEqual(slugs.length);
-    for (const slug of slugs) {
-      const filePath = path.join(dir, `${slug}.html`);
-      expect(existsSync(filePath), filePath).toBe(true);
-      const html = readFileSync(filePath, 'utf8');
-      expect(html).toMatch(/<!DOCTYPE html|<html/i);
-    }
+
+    const result = assertGenerated({ slugs, outDir: dir });
+    expect(result.missing, result.missing.join('\n')).toEqual([]);
+    expect(result.invalid, result.invalid.join('\n')).toEqual([]);
+    expect(result.ok).toBe(true);
   });
 });
