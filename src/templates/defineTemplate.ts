@@ -1,4 +1,4 @@
-import type { ITemplate } from '../types/template.ts';
+import type { ITemplate } from '../types/template/index.ts';
 
 /**
  * One renderable template plus the metadata the registry and the CLI need.

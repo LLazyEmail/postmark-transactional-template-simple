@@ -1,4 +1,4 @@
-import type { ITemplate } from '../types/template.ts';
+import type { ITemplate } from '../types/template/index.ts';
 import {
   defineTemplate,
   type DefinedTemplate,

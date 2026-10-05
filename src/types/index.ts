@@ -1,5 +1,5 @@
-export type { ITemplate } from './template';
-export * from './components';
+export type { ITemplate } from './template/index.ts';
+export * from './components/index.ts';
 export type { EmailBrandProps } from './brand';
 
 export type {

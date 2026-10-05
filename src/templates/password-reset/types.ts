@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template.ts';
+import type { ITemplate } from '../../types/template/index.ts';
 
 export interface PasswordResetEmailProps {
   /** Recipient display name used in the greeting. */
