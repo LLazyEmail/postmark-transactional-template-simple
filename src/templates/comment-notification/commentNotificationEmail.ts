@@ -1,25 +1,10 @@
 export type { CommentAttachment, CommentNotificationEmailProps } from './types.ts';
-import type {
-  CommentAttachment,
-  CommentNotificationEmailProps,
-} from './types.ts';
+import type { CommentNotificationEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
-import { attributeRow, attributeTable } from '../../layout/blocks.ts';
+import { attachmentTable } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
 import { commentNotificationSample } from './sample.ts';
-
-function attachmentTable(items: CommentAttachment[] | undefined): string {
-  if (!items || items.length === 0) return '';
-  const rows = items
-    .map((item) =>
-      attributeRow(
-        `<a href="${escapeHtml(item.attachment_url)}">${escapeHtml(item.attachment_name)}</a> <span>(${escapeHtml(item.attachment_size)} ${escapeHtml(item.attachment_type)})</span>`
-      )
-    )
-    .join('');
-  return attributeTable(rows);
-}
 
 /**
  * CommentNotificationEmail
