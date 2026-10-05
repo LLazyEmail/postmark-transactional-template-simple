@@ -65,3 +65,23 @@ export function subCopy(message: string, url: string, asLink = false): string {
                           </tr>
                         </table>`;
 }
+
+export interface AttachmentDetail {
+  attachment_name: string;
+  attachment_url: string;
+  attachment_size: string;
+  attachment_type: string;
+}
+
+/** Attribute table of file links. Omitted when there are no attachments. */
+export function attachmentTable(items: readonly AttachmentDetail[] | undefined): string {
+  if (!items || items.length === 0) return '';
+  const rows = items
+    .map((item) =>
+      attributeRow(
+        `<a href="${escapeHtml(item.attachment_url)}">${escapeHtml(item.attachment_name)}</a> <span>(${escapeHtml(item.attachment_size)} ${escapeHtml(item.attachment_type)})</span>`
+      )
+    )
+    .join('');
+  return attributeTable(rows);
+}
