@@ -26,4 +26,4 @@ export type {
   CommentAttachment,
 } from './templates/comment-notification/types.ts';
 export type { EmailBrandProps } from './types/brand.ts';
-export type { ITemplate } from './types/template.ts';
+export type { ITemplate } from './types/template/index.ts';
