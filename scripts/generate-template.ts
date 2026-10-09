@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Thin project CLI. Catalog and renderers live in create-project-generator.ts.
- * Flag parsing and the run loop come from @llazyemail/generate-template.
+ * Optional project wrapper. The npm script uses the published bin, which
+ * loads generate-template.config.ts. This file still works if a caller
+ * wants to pass the generator in-process.
  * Flags: --list --all --template= --data= --out=
  */
 import { main } from '@llazyemail/generate-template';
