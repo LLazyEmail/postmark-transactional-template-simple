@@ -1,0 +1,43 @@
+name: Generate templates
+
+# Render only. Lint, tests, and coverage stay in node.js.yml.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - src/**
+      - scripts/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/generate-templates.yml
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Generate HTML templates
+        uses: LLazyEmail/email-template-workflows@main
+        with:
+          working-directory: .
+          node-version: "24"
+          cache: npm
+          build-script: generate:template
+          # CLI uses --all / --template / --out, not --input / --output.
+          # Those two flags are still appended by the action (issue #21).
+          input: .
+          output: generated
+          extra-args: --all
+          validate-script: ""
+          upload-artifact: true
+          artifact-name: generated-html-templates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Assert generated HTML snapshot files
+        run: npm run generate:assert
