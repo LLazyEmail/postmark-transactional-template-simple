@@ -1,0 +1,59 @@
+name: Generate templates
+
+# Render only. Lint, tests, and coverage stay in node.js.yml.
+#
+# Not using LLazyEmail/email-template-workflows@main:
+# that action always runs `npm run <script> -- --input <input> --output <output>`
+# and does not set the GitHub Packages registry (issue #21).
+# @llazyemail/generate-template@1.1.1 (and the thin scripts/generate-template.ts
+# wrapper) only honor --list, --all, --template=, --data=, and --out=.
+# Bare --input/--output are ignored, so HTML would still land in outDir
+# `generated`, but install of @llazyemail/* fails without registry auth.
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - src/**
+      - scripts/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/generate-templates.yml
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          registry-url: https://npm.pkg.github.com
+          scope: "@llazyemail"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate HTML templates
+        # 1.1.1 CLI: --all writes every catalog template into --out (default generated/).
+        run: npm run generate:template -- --all --out=generated
+
+      - name: Assert generated HTML snapshot files
+        # generate-template-assert bin shipped in @llazyemail/generate-template@1.1.1.
+        run: npm run generate:assert
+
+      - name: Upload generated HTML
+        uses: actions/upload-artifact@v6
+        with:
+          name: generated-html-templates
+          path: generated/
