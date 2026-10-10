@@ -27,7 +27,9 @@ import {
 /**
  * The only place a template is registered.
  *
- * `registry.ts` and `scripts/generate-template.ts` both read this list.
+ * `registry.ts` and `scripts/create-project-generator.ts` both read this list.
+ * The published `generate-template` bin loads that factory through
+ * `generate-template.config.ts`.
  * A new template is a `defineTemplate()` module plus one entry here.
  */
 function adopt<Props>(

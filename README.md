@@ -62,7 +62,8 @@ transactional-emails/
 │   ├── unit/
 │   └── integration/
 ├── scripts/
-│   └── generate-template.ts
+│   └── create-project-generator.ts # catalog factory for the generate-template bin
+├── generate-template.config.ts     # entry the published bin loads
 └── docs/adr/
 ```
 
