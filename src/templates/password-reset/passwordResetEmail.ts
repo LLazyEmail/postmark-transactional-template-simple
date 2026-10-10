@@ -5,9 +5,23 @@ import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts'
 import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
 import { passwordResetSample } from './sample.ts';
+import type { FieldCheck } from '@llazyemail/validator';
 
 /** Stable registry id. Legacy callers and `renderTemplate('password-reset')` use this. */
 export const TEMPLATE_ID = 'password-reset' as const;
+
+const checks: FieldCheck[] = [
+  { field: 'name', errorMessage: 'Recipient name is required' },
+  { field: 'preheader', errorMessage: 'Preheader is required' },
+  { field: 'action_url', errorMessage: 'Action URL is required', rules: ['required', 'url'] },
+  { field: 'operating_system', errorMessage: 'Operating system is required' },
+  { field: 'browser_name', errorMessage: 'Browser name is required' },
+  { field: 'support_url', errorMessage: 'Support URL is required', rules: ['required', 'url'] },
+  { field: 'product_name', errorMessage: 'Product name is required' },
+  { field: 'company_name', errorMessage: 'Company name is required' },
+  { field: 'company_address', errorMessage: 'Company address is required' },
+  { field: 'company_url', errorMessage: 'Company URL is required', rules: ['required', 'url'] },
+];
 
 /**
  * PasswordResetEmail
@@ -22,6 +36,7 @@ export const passwordReset = defineTemplate<PasswordResetEmailProps>({
   file: 'password-reset/passwordResetEmail.ts',
   exportName: 'passwordReset',
   sample: passwordResetSample,
+  checks,
 
   render: ({
     name,

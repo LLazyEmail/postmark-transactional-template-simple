@@ -1,3 +1,4 @@
+import { validateInput } from '@llazyemail/validator';
 import { lookupKeys, templates, type TemplateRegistration } from './manifest.ts';
 
 /**
@@ -15,6 +16,7 @@ for (const tpl of templates) {
 
 /**
  * renderTemplate(templateId, payload) -> HTML string
+ * Runs any declared validation checks before rendering.
  */
 export function renderTemplate<Props = unknown>(
   templateId: string,
@@ -26,6 +28,11 @@ export function renderTemplate<Props = unknown>(
       `Unknown template id: "${templateId}". Available: ${listTemplates().join(', ')}`
     );
   }
+
+  if (tpl.checks && tpl.checks.length > 0) {
+    validateInput(payload as Record<string, unknown>, tpl.checks);
+  }
+
   return tpl.render(payload);
 }
 

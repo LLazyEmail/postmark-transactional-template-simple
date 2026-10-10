@@ -4,6 +4,7 @@ import {
   type DefinedTemplate,
   type TemplateRegistration,
 } from './defineTemplate.ts';
+import type { FieldCheck } from '@llazyemail/validator';
 
 export type { TemplateRegistration };
 
@@ -33,7 +34,7 @@ import {
  * A new template is a `defineTemplate()` module plus one entry here.
  */
 function adopt<Props>(
-  template: ITemplate<Props>,
+  template: ITemplate<Props> & { checks?: FieldCheck[] },
   meta: {
     id: string;
     aliases?: readonly string[];
@@ -49,6 +50,7 @@ function adopt<Props>(
     file: meta.file,
     exportName: meta.exportName,
     sample: meta.sample,
+    checks: template.checks,
     render: (props) => template.render(props),
   });
 }
