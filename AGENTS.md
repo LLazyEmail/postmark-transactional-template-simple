@@ -9,7 +9,10 @@
 - If CI cannot install, fix registry auth (`GITHUB_TOKEN` / `NODE_AUTH_TOKEN` with `packages: read`). Do not switch the install source to git.
 - If the published package is wrong or incomplete, publish a new version of the module and bump the pin. Do not work around it from this repo.
 
-## Generate CLI
+## Component types
+
+`packages/component-types` is the move-out boundary for `src/types/components`. Import it as `@llazyemail/component-types`. Do not add imports from this repository into that package. Publish it under that name when it leaves; do not replace the import with a git URL.
+
 
 Supported flags (do not rename or drop):
 
