@@ -29,6 +29,8 @@ other repo.
 npm install
 ```
 
+The `@llazyemail/validator` package (0.2.0) is available for validating template payloads once published to GitHub Packages. Create a Release in the validator repo to publish it.
+
 ## Available Scripts
 
 | Script | Description |
