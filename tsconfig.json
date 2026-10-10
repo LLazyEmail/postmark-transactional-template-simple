@@ -21,7 +21,10 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "@llazyemail/component-types": ["./packages/component-types/src/index.ts"]
+    }
   },
   "include": [
     "src/**/*.ts",
@@ -29,6 +32,7 @@
     "types/**/*.ts",
     "tests/**/*.ts",
     "scripts/**/*.ts",
+    "packages/component-types/src/**/*.ts",
     "packages/template-runtime-display/src/**/*.ts",
     "vitest.config.ts",
     "tsup.config.ts"
