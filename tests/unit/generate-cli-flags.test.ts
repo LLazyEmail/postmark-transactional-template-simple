@@ -1,10 +1,16 @@
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parseArgs, requestsFromArgs } from '@llazyemail/generate-template';
+import { createProjectGenerator as configFactory } from '../../generate-template.config.ts';
 import { createProjectGenerator, GENERATE_FLAGS } from '../../scripts/create-project-generator.ts';
 
 describe('generate CLI flags (step 5)', () => {
   const generate = createProjectGenerator();
+
+  it('config exports the same factory the bin loads', () => {
+    expect(configFactory).toBe(createProjectGenerator);
+    expect(configFactory().catalog.length).toBeGreaterThanOrEqual(6);
+  });
 
   it('keeps the supported flag set', () => {
     expect(GENERATE_FLAGS).toEqual(['--list', '--all', '--template=', '--data=', '--out=']);

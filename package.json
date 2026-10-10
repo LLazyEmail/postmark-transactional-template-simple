@@ -14,13 +14,13 @@
     "lint:fix": "eslint src scripts --fix",
     "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\"",
-    "generate:template": "node --experimental-strip-types --no-warnings scripts/generate-template.ts",
+    "generate:template": "generate-template",
     "generate:assert": "generate-template-assert --slugs-file=tests/fixtures/generated-slugs.json",
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@llazyemail/generate-template": "^1.5.0",
+    "@llazyemail/generate-template": "1.6.0",
     "@llazyemail/template-runtime-display": "0.9.0",
     "@llazyemail/render-template": "0.3.0"
   },
@@ -37,6 +37,7 @@
   "engines": {
     "node": ">=24"
   },
+  "generateTemplate": "./generate-template.config.ts",
   "overrides": {
     "@llazyemail/render-template": "0.3.0"
   }
