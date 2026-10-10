@@ -1,4 +1,5 @@
 import type { ITemplate } from '../types/template/index.ts';
+import type { FieldCheck } from '@llazyemail/validator';
 
 /**
  * One renderable template plus the metadata the registry and the CLI need.
@@ -16,6 +17,8 @@ export interface DefinedTemplate<Props> extends ITemplate<Props> {
   readonly exportName: string;
   /** Payload the CLI uses when no `--data` file is passed. */
   readonly sample: Props;
+  /** Optional validation checks run before render. */
+  readonly checks?: FieldCheck[];
 }
 
 export interface TemplateRegistration {
@@ -25,6 +28,7 @@ export interface TemplateRegistration {
   readonly file: string;
   readonly exportName: string;
   readonly sample: unknown;
+  readonly checks?: FieldCheck[];
   render(props: any): string;
 }
 
@@ -35,6 +39,7 @@ export function defineTemplate<Props>(config: {
   file: string;
   exportName: string;
   sample: Props;
+  checks?: FieldCheck[];
   render: (props: Props) => string;
 }): DefinedTemplate<Props> {
   return {
@@ -44,6 +49,7 @@ export function defineTemplate<Props>(config: {
     file: config.file,
     exportName: config.exportName,
     sample: config.sample,
+    checks: config.checks,
     render: config.render,
   };
 }
