@@ -45,7 +45,7 @@ the code wins; update this file.
 
 | Command | Purpose | Good outcome |
 |---|---|---|
-| `npm run typecheck` | `tsc --noEmit` | exit 0 |
+| `npm run typecheck` | **Do not run locally** (saves credits) — `npm test` type-checks anyway (`vitest.config.ts` has `typecheck: enabled`) | — |
 | `npx vitest run tests/unit/<file>.test.ts` | focused check while iterating (cheapest) | pass |
 | `npm test` | full suite before finishing | pass |
 | `npm run test:real-data` | integration render | pass |
@@ -55,7 +55,8 @@ the code wins; update this file.
 | `npm run generate:assert` | assert generated HTML against `tests/fixtures/generated-slugs.json` | pass |
 | `npm run lint` | `eslint src scripts` | pass |
 
-Change checklist: typecheck and full tests green. New or renamed templates keep
+Change checklist: full tests green (`npm test` type-checks via vitest — do not
+run `npm run typecheck` separately). New or renamed templates keep
 `tests/unit/data-instances.test.ts` green (every template id has a `templateData`
 entry, no orphans). Run `test:real-data` when rendering or data changed.
 Do not run coverage while iterating.

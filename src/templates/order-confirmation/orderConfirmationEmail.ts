@@ -12,6 +12,23 @@ import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { orderConfirmationData } from '../../data/order-confirmation.ts';
 
+function formatAddress(addr: string): string {
+  return addr.split('\n').map((line) => escapeHtml(line)).join('<br>');
+}
+
+/** Billing address block; empty when billing matches shipping or is blank. */
+function buildBillingBlock({
+  billing_address,
+  shipping_address,
+}: Pick<OrderConfirmationEmailProps, 'billing_address' | 'shipping_address'>): string {
+  if (!billing_address || billing_address === shipping_address) return '';
+  return attributeTable(
+    attributeRow(
+      `<span class="f-fallback"><strong>Billing address:</strong><br>${formatAddress(billing_address)}</span>`
+    )
+  );
+}
+
 /** Legacy kebab-case id. Kept as an alias so `renderTemplate('order-confirmation')` keeps resolving. */
 export const TEMPLATE_ID = 'order-confirmation' as const;
 
@@ -61,17 +78,10 @@ export const orderConfirmation = defineEmail<OrderConfirmationEmailProps>({
       )
       .join('');
 
-    const formatAddress = (addr: string) =>
-      addr.split('\n').map((line) => escapeHtml(line)).join('<br>');
-
-    const billingBlock =
-      billing_address && billing_address !== shipping_address
-        ? attributeTable(
-            attributeRow(
-              `<span class="f-fallback"><strong>Billing address:</strong><br>${formatAddress(billing_address)}</span>`
-            )
-          )
-        : '';
+    const billingBlock = buildBillingBlock({
+      billing_address,
+      shipping_address,
+    });
 
     const body = `<h1>Hi ${escapeHtml(name)},</h1>
                         <p>Thanks for your order. This email is your receipt for order <strong>${escapeHtml(order_id)}</strong> placed on <strong>${escapeHtml(order_date)}</strong>.</p>

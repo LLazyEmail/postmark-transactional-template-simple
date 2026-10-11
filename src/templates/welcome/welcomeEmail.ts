@@ -13,6 +13,18 @@ const checks: FieldCheck[] = [
   { field: 'signupDate', errorMessage: 'Signup date is required' },
 ];
 
+/** Branding product name; empty string when unset. */
+function buildProduct(product_name: string | undefined): string {
+  return product_name ?? '';
+}
+
+/** Support paragraph; empty when no support URL. */
+function buildSupport(support_url: string | undefined): string {
+  return support_url
+    ? `<p>If you have any questions, reach out to our <a href="${escapeHtml(support_url)}">support team</a>.</p>`
+    : '';
+}
+
 /**
  * WelcomeEmail
  * ------------
@@ -55,10 +67,8 @@ export const WelcomeEmail = defineEmail<WelcomeEmailProps>({
   `;
     }
 
-    const product = product_name ?? '';
-    const support = support_url
-      ? `<p>If you have any questions, reach out to our <a href="${escapeHtml(support_url)}">support team</a>.</p>`
-      : '';
+    const product = buildProduct(product_name);
+    const support = buildSupport(support_url);
     const body = `<h1>Welcome, ${escapeHtml(userName)}!</h1>
                         <p>Thanks for signing up on ${escapeHtml(signupDate.toDateString())}.</p>
                         ${support}
