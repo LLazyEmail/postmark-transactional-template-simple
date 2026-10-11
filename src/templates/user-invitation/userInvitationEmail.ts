@@ -12,6 +12,28 @@ import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { userInvitationData } from '../../data/user-invitation.ts';
 
+/** " join <strong>Workspace</strong>" suffix; empty when no workspace name. */
+function buildWorkspaceBlurb(workspace_name: string | undefined): string {
+  return workspace_name
+    ? ` join <strong>${escapeHtml(workspace_name)}</strong>`
+    : '';
+}
+
+/** Decline-invitation CTA, or the "safe to ignore" fallback without a decline URL. */
+function buildDeclineBlock(decline_url: string | undefined): string {
+  return decline_url
+    ? `
+                        <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td align="center">
+                              <a href="${escapeHtml(decline_url)}" class="f-fallback" target="_blank">Decline invitation</a>
+                            </td>
+                          </tr>
+                        </table>`
+    : `
+                        <p class="f-fallback sub">If you did not expect this invitation, you can safely ignore this email.</p>`;
+}
+
 /**
  * UserInvitationEmail
  * -------------------
@@ -43,21 +65,8 @@ export const UserInvitationEmail = defineEmail<UserInvitationEmailProps>({
     company_suite,
     company_url,
   }) => {
-    const workspaceBlurb = workspace_name
-      ? ` join <strong>${escapeHtml(workspace_name)}</strong>`
-      : '';
-
-    const declineBlock = decline_url
-      ? `
-                        <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td align="center">
-                              <a href="${escapeHtml(decline_url)}" class="f-fallback" target="_blank">Decline invitation</a>
-                            </td>
-                          </tr>
-                        </table>`
-      : `
-                        <p class="f-fallback sub">If you did not expect this invitation, you can safely ignore this email.</p>`;
+    const workspaceBlurb = buildWorkspaceBlurb(workspace_name);
+    const declineBlock = buildDeclineBlock(decline_url);
 
     const body = `<h1>Hi ${escapeHtml(invitee_name)},</h1>
                         <p><strong>${escapeHtml(inviter_name)}</strong> has invited you to${workspaceBlurb} on ${escapeHtml(product_name)} as a <strong>${escapeHtml(role)}</strong>.</p>

@@ -12,6 +12,43 @@ import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { trialExpiringData } from '../../data/trial-expiring.ts';
 
+/** Benefit list rows plus the optional "Compare plans" secondary CTA. */
+function buildBenefitCtaBlocks({
+  benefits,
+  secondary_url,
+}: Pick<TrialExpiringEmailProps, 'benefits' | 'secondary_url'>): {
+  benefitItems: string;
+  secondaryCta: string;
+} {
+  const benefitItems = benefits
+    .map(
+      ({ title, description }) => `
+                        <tr>
+                          <td class="benefit_item">
+                            <p class="f-fallback benefit_title"><strong>${escapeHtml(title)}</strong>${
+        description
+          ? ` \u2014 <span class="benefit_description">${escapeHtml(description)}</span>`
+          : ''
+      }</p>
+                          </td>
+                        </tr>`
+    )
+    .join('');
+
+  const secondaryCta = secondary_url
+    ? `
+                        <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td align="center">
+                              <a href="${escapeHtml(secondary_url)}" class="f-fallback" target="_blank">Compare plans</a>
+                            </td>
+                          </tr>
+                        </table>`
+    : '';
+
+  return { benefitItems, secondaryCta };
+}
+
 /**
  * TrialExpiringEmail
  * ------------------
@@ -43,31 +80,10 @@ export const TrialExpiringEmail = defineEmail<TrialExpiringEmailProps>({
     company_suite,
     company_url,
   }) => {
-    const benefitItems = benefits
-      .map(
-        ({ title, description }) => `
-                        <tr>
-                          <td class="benefit_item">
-                            <p class="f-fallback benefit_title"><strong>${escapeHtml(title)}</strong>${
-          description
-            ? ` \u2014 <span class="benefit_description">${escapeHtml(description)}</span>`
-            : ''
-        }</p>
-                          </td>
-                        </tr>`
-      )
-      .join('');
-
-    const secondaryCta = secondary_url
-      ? `
-                        <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td align="center">
-                              <a href="${escapeHtml(secondary_url)}" class="f-fallback" target="_blank">Compare plans</a>
-                            </td>
-                          </tr>
-                        </table>`
-      : '';
+    const { benefitItems, secondaryCta } = buildBenefitCtaBlocks({
+      benefits,
+      secondary_url,
+    });
 
     const body = `<h1>Hi ${escapeHtml(name)},</h1>
                         <p>Your <strong>${escapeHtml(plan_name)}</strong> trial ends on <strong>${escapeHtml(trial_end_date)}</strong> \u2014 that's in <strong>${escapeHtml(trial_days_remaining)}</strong> day(s). After that, you'll be charged <strong>${escapeHtml(plan_price)}</strong> unless you cancel.</p>

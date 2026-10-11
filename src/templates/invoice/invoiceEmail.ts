@@ -1,5 +1,5 @@
 export type { InvoiceEmailProps } from './types.ts';
-import type { InvoiceEmailProps } from './types.ts';
+import type { InvoiceLineItem, InvoiceEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import {
   actionBlock,
@@ -11,6 +11,19 @@ import {
 import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { invoiceData } from '../../data/invoice.ts';
+
+/** Itemized rows for the invoice details table. */
+function buildInvoiceRows(invoice_details: InvoiceLineItem[]): string {
+  return invoice_details
+    .map(
+      ({ description, amount }) => `
+                                <tr>
+                                  <td width="80%" class="purchase_item"><span class="f-fallback">${escapeHtml(description)}</span></td>
+                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">${escapeHtml(amount)}</span></td>
+                                </tr>`
+    )
+    .join('');
+}
 
 /**
  * InvoiceEmail
@@ -45,15 +58,7 @@ export const InvoiceEmail = defineEmail<InvoiceEmailProps>({
     company_suite,
     company_url,
   }) => {
-    const invoiceRows = invoice_details
-      .map(
-        ({ description, amount }) => `
-                                <tr>
-                                  <td width="80%" class="purchase_item"><span class="f-fallback">${escapeHtml(description)}</span></td>
-                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">${escapeHtml(amount)}</span></td>
-                                </tr>`
-      )
-      .join('');
+    const invoiceRows = buildInvoiceRows(invoice_details);
 
     const body = `<h1>Hi ${escapeHtml(name)},</h1>
                         <p>Thanks for using ${escapeHtml(product_name)}. This is an invoice for your recent purchase.</p>
