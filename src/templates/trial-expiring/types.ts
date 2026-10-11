@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template';
+import type { EmailModule } from '../defineEmail.ts';
 
 export interface TrialBenefit {
   /** Short label, e.g. "Unlimited projects". */
@@ -35,4 +35,4 @@ export interface TrialExpiringEmailProps {
   company_url: string;
 }
 
-export type TrialExpiringEmailTemplate = ITemplate<TrialExpiringEmailProps>;
+export type TrialExpiringEmailTemplate = EmailModule<TrialExpiringEmailProps>;

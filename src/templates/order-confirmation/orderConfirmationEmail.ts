@@ -1,8 +1,5 @@
 export type { OrderConfirmationEmailProps } from './types.ts';
-import type {
-  OrderConfirmationEmailProps,
-  OrderConfirmationEmailTemplate,
-} from './types.ts';
+import type { OrderConfirmationEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import {
   actionBlock,
@@ -12,6 +9,8 @@ import {
   subCopy,
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { orderConfirmationData } from '../../data/order-confirmation.ts';
 
 /** Legacy kebab-case id. Kept as an alias so `renderTemplate('order-confirmation')` keeps resolving. */
 export const TEMPLATE_ID = 'order-confirmation' as const;
@@ -25,8 +24,13 @@ export const TEMPLATE_ID = 'order-confirmation' as const;
  * footer. The body is the itemized receipt, shipping/billing block, and
  * "View order" CTA.
  */
-export const orderConfirmation: OrderConfirmationEmailTemplate = {
+export const orderConfirmation = defineEmail<OrderConfirmationEmailProps>({
+  id: 'OrderConfirmationEmail',
+  aliases: [TEMPLATE_ID],
   name: 'OrderConfirmationEmail',
+  file: 'order-confirmation/orderConfirmationEmail.ts',
+  exportName: 'orderConfirmation',
+  data: orderConfirmationData,
 
   render: ({
     name,
@@ -124,4 +128,4 @@ export const orderConfirmation: OrderConfirmationEmailTemplate = {
       body,
     });
   },
-};
+});

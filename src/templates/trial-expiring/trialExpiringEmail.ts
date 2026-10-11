@@ -1,5 +1,4 @@
 export type { TrialExpiringEmailProps } from './types.ts';
-import type { ITemplate } from '../../types/template';
 import type { TrialExpiringEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import {
@@ -10,6 +9,8 @@ import {
   subCopy,
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { trialExpiringData } from '../../data/trial-expiring.ts';
 
 /**
  * TrialExpiringEmail
@@ -17,8 +18,13 @@ import { escapeHtml } from '../../layout/html.ts';
  * Typed port of the "trial expiring" transactional template.
  * The shared Postmark document supplies the stylesheet, masthead, and footer.
  */
-export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
+export const TrialExpiringEmail = defineEmail<TrialExpiringEmailProps>({
+  id: 'TrialExpiringEmail',
+  aliases: ['trial-expiring'],
   name: 'TrialExpiringEmail',
+  file: 'trial-expiring/trialExpiringEmail.ts',
+  exportName: 'TrialExpiringEmail',
+  data: trialExpiringData,
 
   render: ({
     name,
@@ -98,4 +104,4 @@ export const TrialExpiringEmail: ITemplate<TrialExpiringEmailProps> = {
       body,
     });
   },
-};
+});

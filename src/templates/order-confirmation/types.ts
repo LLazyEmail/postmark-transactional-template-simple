@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template';
+import type { EmailModule } from '../defineEmail.ts';
 
 /** One line item on the order receipt. */
 export interface OrderLineItem {
@@ -52,4 +52,4 @@ export interface OrderConfirmationEmailProps {
 }
 
 export type OrderConfirmationEmailTemplate =
-  ITemplate<OrderConfirmationEmailProps>;
+  EmailModule<OrderConfirmationEmailProps>;

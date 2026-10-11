@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template/index.ts';
+import type { EmailModule } from '../defineEmail.ts';
 import type { EmailBrandProps } from '../../types/brand.ts';
 
 export interface CommentAttachment {
@@ -21,4 +21,4 @@ export interface CommentNotificationEmailProps extends EmailBrandProps {
 }
 
 export type CommentNotificationEmailTemplate =
-  ITemplate<CommentNotificationEmailProps>;
+  EmailModule<CommentNotificationEmailProps>;

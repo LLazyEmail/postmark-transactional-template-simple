@@ -9,7 +9,8 @@ import {
   subCopy,
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
-import { defineTemplate } from '../defineTemplate.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { exampleData } from '../../data/example.ts';
 
 /**
  * ExampleEmail
@@ -20,12 +21,13 @@ import { defineTemplate } from '../defineTemplate.ts';
  * brand placeholders are props. The escaped-mustache line is literal
  * text, matching the reference.
  */
-export const ExampleEmail = defineTemplate<ExampleEmailProps>({
+export const ExampleEmail = defineEmail<ExampleEmailProps>({
   id: 'ExampleEmail',
   aliases: ['example'],
   name: 'ExampleEmail',
   file: 'example/exampleEmail.ts',
   exportName: 'ExampleEmail',
+  data: exampleData,
 
   render: ({
     preheader,

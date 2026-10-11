@@ -3,6 +3,9 @@
 ## Status
 
 Accepted (2026-10-11). Supersedes the preview-payload bullets in ADR 0001.
+Map derivation superseded by ADR 0004 (2026-10-11): modules bind their data
+via `defineEmail({ data })` and `createEmailSystem()` derives `templateData`;
+`src/data/index.ts` no longer exists.
 
 ## Context
 
@@ -18,7 +21,8 @@ fields. Two sources of truth, and the older one was broken.
 - `src/data/<id>.ts` — one typed data instance per template, annotated with
   that template's props interface. This is the payload the CLI uses when no
   `--data` file is passed.
-- `src/data/index.ts` — the `templateData` map, keyed by template id.
+- `src/data/index.ts` — the `templateData` map, keyed by template id
+  (now derived; ADR 0004).
   `tests/unit/data-instances.test.ts` enforces that it covers every
   registered template and contains no orphans.
 - Template modules and `defineTemplate` carry no payload. Registering a

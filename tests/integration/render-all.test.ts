@@ -6,7 +6,7 @@ import {
   getTemplate,
 } from '../../src/templates/registry';
 import { templates } from '../../src/templates/manifest';
-import { templateData } from '../../src/data/index';
+import { templateData } from '../../src/templates/registry';
 import { welcomeMinimalProps } from '../fixtures/props';
 
 describe('integration: render every registered template', () => {

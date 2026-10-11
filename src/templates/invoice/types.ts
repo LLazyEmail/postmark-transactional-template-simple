@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template';
+import type { EmailModule } from '../defineEmail.ts';
 
 /**
  * One line item inside the invoice details table.
@@ -48,4 +48,4 @@ export interface InvoiceEmailProps {
   company_url: string;
 }
 
-export type InvoiceEmailTemplate = ITemplate<InvoiceEmailProps>;
+export type InvoiceEmailTemplate = EmailModule<InvoiceEmailProps>;

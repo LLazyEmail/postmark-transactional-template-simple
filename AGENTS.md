@@ -9,11 +9,11 @@ the code wins; update this file.
 
 | Task | Read first | Touch only |
 |---|---|---|
-| Add / remove a template | README §"Adding a new template" | `src/templates/<id>/`, `src/data/<id>.ts`, `src/data/index.ts`, `src/templates/manifest.ts`, `src/index.ts`, one `tests/unit/` file |
+| Add / remove a template | README §"Adding a new template" | `src/templates/<id>/`, `src/data/<id>.ts`, one line in `src/templates/manifest.ts`, one `tests/unit/` file |
 | Change what the CLI renders by default | — | `src/data/<id>.ts` (keep the props type) |
 | Change one email's copy or markup | that template's module | `src/templates/<id>/<name>Email.ts` (+ `types.ts`) |
 | Change the shared shell or styles (all emails) | `src/layout/` | `src/layout/` |
-| Add a lookup alias / rename an id | `src/templates/manifest.ts` | `manifest.ts`; id change also `src/data/index.ts` |
+| Add a lookup alias / rename an id | that template's module (`defineEmail`) | `src/templates/<id>/<name>Email.ts`; derived maps follow automatically |
 | Generated HTML is wrong | "Module regressions" below | `scripts/create-project-generator.ts` only for catalog wiring; otherwise module bump |
 | Understand the split of concerns | `docs/architecture.md` | — |
 
@@ -21,13 +21,13 @@ the code wins; update this file.
 
 | Path | What it is |
 |---|---|
-| `src/index.ts` | Public API: templates, props types, data instances, `renderTemplate` / `listTemplates` / `getTemplate` |
-| `src/templates/manifest.ts` | The only registration list; `lookupKeys()` = id + name + aliases |
-| `src/templates/registry.ts` | Derived, case-insensitive lookups. Do not edit for a new template |
-| `src/templates/defineTemplate.ts` | `defineTemplate()`: id/name/aliases/file/exportName/checks + render |
-| `src/templates/<id>/` | One folder per email: `<name>Email.ts` + `types.ts` |
-| `src/data/<id>.ts` | One typed data instance per template — the payload the CLI renders |
-| `src/data/index.ts` | `templateData` map keyed by template id; the only join between data and templates |
+| `src/index.ts` | Public API facade: the live email system, `defineEmail`/`createEmailSystem`, props types. Never add per-template lines |
+| `src/templates/manifest.ts` | The only registration list: flat list of `defineEmail()` modules |
+| `src/templates/defineEmail.ts` | `defineEmail()`: id/name/aliases/file/exportName/checks + typed `data` + render |
+| `src/templates/system.ts` | `createEmailSystem()`: derives lookups, maps, `templateData`, `renderTemplate`/`listTemplates`/`getTemplate` |
+| `src/templates/registry.ts` | Instantiates the system with the real manifest. Do not edit for a new template |
+| `src/templates/<id>/` | One folder per email: `<name>Email.ts` (module) + `types.ts` |
+| `src/data/<id>.ts` | One typed data instance per template — bound into its module via `defineEmail({ data })` |
 | `src/layout/` | Postmark document shell + blocks shared by all emails |
 | `scripts/create-project-generator.ts` | Engine catalog + `samplePayloads` wiring |
 | `generate-template.config.ts` | Entry the published bin loads |
@@ -39,7 +39,7 @@ the code wins; update this file.
 | `reference/<id>/` | Original Postmark exports. Compare rendered output; never edit |
 | `NEXT/` | Vendored, excluded from tsc. Do not import or build |
 | `docs/architecture.md` | Layers, data flow, test map (read on demand) |
-| `docs/adr/` | 0001 module boundaries, 0002 data instances, 0003 CamelCase ids |
+| `docs/adr/` | 0001 module boundaries, 0002 data instances, 0003 CamelCase ids, 0004 email modules + derived system |
 
 ## Commands
 
@@ -62,7 +62,8 @@ Do not run coverage while iterating.
 
 ## Data flow (one paragraph)
 
-`src/data/<id>.ts` → `src/data/index.ts` `templateData` →
+`src/data/<id>.ts` → bound into its module with `defineEmail({ data })` →
+`registry.ts` derives `emailSystem.templateData` via `createEmailSystem()` →
 `scripts/create-project-generator.ts` expands every entry over all lookup keys
 (id, name, aliases) into the engine's `samplePayloads` → CLI. Payload
 resolution at render: `--data=<path>` wins, then the data instance, then a
@@ -71,9 +72,9 @@ do not re-add them.
 
 ## Invariants
 
-- `manifest.ts` is the only registration list. Never edit `registry.ts` or add a second catalog file for a template.
+- `manifest.ts` is the only registration list (a flat list of `defineEmail()` modules). Never edit `registry.ts`, `system.ts`, or `src/index.ts` for a template, and never add a second catalog file.
 - Template ids are CamelCase (`<Name>Email`, equal to `name`). Kebab forms such as `password-reset` are aliases only; never register a new kebab-case id (ADR 0003).
-- Templates carry no payload data. Data lives in `src/data/` only.
+- Payloads live in `src/data/` only; a module binds its instance via `defineEmail({ data })` — never inline fixture data in render bodies.
 - Generated stems follow the slug of the id/alias; six baseline names are pinned in `tests/unit/generate-baseline.test.ts` and `tests/fixtures/generated-slugs.json` (`WelcomeEmail` writes `welcome.html`).
 - ESM with explicit `.ts` extensions on relative imports (`allowImportingTsExtensions`). `noUncheckedIndexedAccess` is on.
 - `welcomeData.signupDate` is a real `Date`; the engine is configured `reviveDates: true`.
@@ -120,6 +121,6 @@ or stub the packages to make tests pass.
 
 ## Credit savers
 
-- Read `manifest.ts` + `src/data/index.ts` (id/alias/payload truth) instead of grepping templates.
+- Read `manifest.ts` + the template module's `defineEmail({ data })` block (id/alias/payload truth) instead of grepping templates.
 - Do not open `NEXT/`, `reference/` (unless diffing rendered output), or the engine's `node_modules` source; the engine is a pinned black box here.
 - One focused test file before the full suite; open generated HTML in a browser instead of dumping it into context.

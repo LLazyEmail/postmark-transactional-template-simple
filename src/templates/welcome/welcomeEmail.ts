@@ -1,8 +1,9 @@
-import type { ITemplate } from '../../types/template';
 import type { WelcomeEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { welcomeData } from '../../data/welcome.ts';
 import type { FieldCheck } from '@llazyemail/validator';
 
 export type { WelcomeEmailProps } from './types.ts';
@@ -21,9 +22,14 @@ const checks: FieldCheck[] = [
  *
  * When `action_url` is supplied, the shared Postmark document is used.
  */
-export const WelcomeEmail: ITemplate<WelcomeEmailProps> & { checks?: FieldCheck[] } = {
+export const WelcomeEmail = defineEmail<WelcomeEmailProps>({
+  id: 'WelcomeEmail',
+  aliases: ['welcome'],
   name: 'WelcomeEmail',
+  file: 'welcome/welcomeEmail.ts',
+  exportName: 'WelcomeEmail',
   checks,
+  data: welcomeData,
 
   render: ({
     userName,
@@ -76,4 +82,4 @@ export const WelcomeEmail: ITemplate<WelcomeEmailProps> & { checks?: FieldCheck[
       body,
     });
   },
-};
+});

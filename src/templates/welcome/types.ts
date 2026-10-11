@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template';
+import type { EmailModule } from '../defineEmail.ts';
 
 export interface WelcomeEmailProps {
   userName: string;
@@ -20,4 +20,4 @@ export interface WelcomeEmailProps {
   company_url?: string;
 }
 
-export type WelcomeEmailTemplate = ITemplate<WelcomeEmailProps>;
+export type WelcomeEmailTemplate = EmailModule<WelcomeEmailProps>;

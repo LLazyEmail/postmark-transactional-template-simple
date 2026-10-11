@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { lookupKeys, templates } from '../../src/templates/manifest.ts';
-import { templateData } from '../../src/data/index.ts';
+import { templateData } from '../../src/templates/registry.ts';
 import { InvoiceEmail } from '../../src/templates/invoice/invoiceEmail';
 import { orderConfirmation } from '../../src/templates/order-confirmation/orderConfirmationEmail';
 import { passwordReset } from '../../src/templates/password-reset/passwordResetEmail';

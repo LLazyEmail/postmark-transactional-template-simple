@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template/index.ts';
+import type { EmailModule } from '../defineEmail.ts';
 
 export interface PasswordResetEmailProps {
   /** Recipient display name used in the greeting. */
@@ -22,4 +22,4 @@ export interface PasswordResetEmailProps {
   company_url: string;
 }
 
-export type PasswordResetEmailTemplate = ITemplate<PasswordResetEmailProps>;
+export type PasswordResetEmailTemplate = EmailModule<PasswordResetEmailProps>;

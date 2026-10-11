@@ -1,7 +1,7 @@
 // tests/unit/data-instances.test.ts
 import { describe, it, expect } from 'vitest';
 import { templates } from '../../src/templates/manifest.ts';
-import { templateData } from '../../src/data/index.ts';
+import { templateData } from '../../src/templates/registry.ts';
 
 describe('data instances', () => {
   it('every registered template has a data instance', () => {
