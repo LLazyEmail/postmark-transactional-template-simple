@@ -1,6 +1,6 @@
-import type { PasswordResetEmailProps } from './types';
+import type { PasswordResetEmailProps } from '../templates/password-reset/types.ts';
 
-export const passwordResetSample: PasswordResetEmailProps = {
+export const passwordResetData: PasswordResetEmailProps = {
   name: 'Jordan',
   preheader: 'Use this link to reset your password.',
   action_url: 'https://example.com/reset?token=fixture-token-123',

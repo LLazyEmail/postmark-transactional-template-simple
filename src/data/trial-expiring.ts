@@ -1,4 +1,6 @@
-module.exports = {
+import type { TrialExpiringEmailProps } from '../templates/trial-expiring/types.ts';
+
+export const trialExpiringData: TrialExpiringEmailProps = {
   name: 'Alex',
   preheader: 'Your Pro trial ends in 3 days.',
   trial_end_date: 'January 19, 2026',

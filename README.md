@@ -6,7 +6,8 @@ fully finished on its own timeline. See
 [docs/adr/0001-module-boundaries.md](docs/adr/0001-module-boundaries.md) for
 why the code is split the way it is.
 
-The public entry is `src/index.ts`. It exports every template, its props, and
+The public entry is `src/index.ts`. It exports every template, its props,
+the data instances from `src/data`, and
 `renderTemplate` / `listTemplates` / `getTemplate`.
 
 ## Why this exists
@@ -35,7 +36,7 @@ npm install
 |--------|-------------|
 | `npm test` | Run all unit and integration tests |
 | `npm run test:real-data` | Run only the integration tests that generate real HTML from fixture data |
-| `npm run generate:template -- --template=password-reset --data=src/data/password-reset.data.js --out=generated/password-reset.html` | Generate a template's HTML. The published `@llazyemail/generate-template@1.6.1` bin loads `generate-template.config.ts` |
+| `npm run generate:template -- --template=password-reset --out=generated/password-reset.html` | Generate a template's HTML from its data instance in `src/data/`. Add `--data=<path>` to render a real payload (`.js` or `.json`) instead. The published `@llazyemail/generate-template@1.6.1` bin loads `generate-template.config.ts` |
 | `npm run generate:assert -- --out=generated` | Assert generated HTML via `@llazyemail/generate-template`. A file counts if it contains `<html` or `<!doctype` |
 | `npm run lint` | Run ESLint |
 | `npm run lint:fix` | Run ESLint with auto-fix |
@@ -57,7 +58,7 @@ transactional-emails/
 │   │   ├── welcome/                # one folder per email
 │   │   ├── invoice/
 │   │   └── …
-│   └── data/                       # optional fixture payloads
+│   └── data/                       # typed data instances + templateData map
 ├── tests/
 │   ├── unit/
 │   └── integration/
@@ -73,14 +74,15 @@ transactional-emails/
    masthead and footer.
 2. Create `src/templates/<id>/<name>Email.ts` with `defineTemplate`. Render
    the body through `renderPostmarkDocument` — do not copy the stylesheet or
-   the masthead/footer tables. Put the CLI preview payload in
-   `src/templates/<id>/sample.ts` and pass that export as `sample`. Do not
-   inline fixture data in the builder.
-3. Append that export to the list in `src/templates/manifest.ts`. The
+   the masthead/footer tables. Do not inline fixture data in the builder.
+3. Create `src/data/<id>.ts` with the payload typed as the template's props
+   interface and register it in the `templateData` map in
+   `src/data/index.ts`, keyed by the template id.
+4. Append that export to the list in `src/templates/manifest.ts`. The
    registry, the generator catalog, and the render-all test pick it up
    from there.
-4. Add a unit test in `tests/unit/`.
-5. Re-export the template and its props from `src/index.ts` if callers
+5. Add a unit test in `tests/unit/`.
+6. Re-export the template and its props from `src/index.ts` if callers
    should import them directly.
 
 ## End-to-end proof
@@ -90,9 +92,9 @@ npm run test:real-data
 ```
 
 This renders every registered template through the same `renderTemplate(id, payload)`
-path used in production, writes the HTML to `generated-real-data/`, and
-asserts the output is well-formed. Open the generated files in a browser to
-inspect them directly.
+path used in production, using each template's data instance from `src/data/`,
+and asserts the output is well-formed HTML. To inspect real output, run
+`npm run generate:template -- --all` and open `generated/`.
 
 ## Directory Policy
 

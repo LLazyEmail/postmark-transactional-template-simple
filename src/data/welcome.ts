@@ -1,6 +1,6 @@
-import type { WelcomeEmailProps } from './types';
+import type { WelcomeEmailProps } from '../templates/welcome/types.ts';
 
-export const welcomeSample: WelcomeEmailProps = {
+export const welcomeData: WelcomeEmailProps = {
   userName: 'Alex',
   signupDate: new Date('2026-01-05T12:00:00Z'),
   preheader: 'Welcome aboard.',

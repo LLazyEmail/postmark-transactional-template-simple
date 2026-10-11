@@ -1,6 +1,6 @@
-import type { InvoiceEmailProps } from './types';
+import type { InvoiceEmailProps } from '../templates/invoice/types.ts';
 
-export const invoiceSample: InvoiceEmailProps = {
+export const invoiceData: InvoiceEmailProps = {
   name: 'Alex',
   preheader: 'Invoice for Jan 5, 2026.',
   invoice_id: 'INV-2026-0001',

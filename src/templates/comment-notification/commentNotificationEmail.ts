@@ -4,7 +4,6 @@ import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { attachmentTable } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
-import { commentNotificationSample } from './sample.ts';
 
 /**
  * CommentNotificationEmail
@@ -21,7 +20,6 @@ export const CommentNotificationEmail =
     name: 'CommentNotificationEmail',
     file: 'comment-notification/commentNotificationEmail.ts',
     exportName: 'CommentNotificationEmail',
-    sample: commentNotificationSample,
 
     render: ({
       body,

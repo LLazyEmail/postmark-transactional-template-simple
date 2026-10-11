@@ -17,21 +17,14 @@ import { UserInvitationEmail } from './user-invitation/userInvitationEmail.ts';
 import { ExampleEmail } from './example/exampleEmail.ts';
 import { CommentNotificationEmail } from './comment-notification/commentNotificationEmail.ts';
 
-import {
-  invoiceSample,
-  orderConfirmationSample,
-  trialExpiringSample,
-  userInvitationSample,
-  welcomeSample,
-} from './legacySamples.ts';
-
 /**
  * The only place a template is registered.
  *
  * `registry.ts` and `scripts/create-project-generator.ts` both read this list.
  * The published `generate-template` bin loads that factory through
  * `generate-template.config.ts`.
- * A new template is a `defineTemplate()` module plus one entry here.
+ * A new template is a `defineTemplate()` module, one entry here, and a data
+ * instance in `src/data/`.
  */
 function adopt<Props>(
   template: ITemplate<Props> & { checks?: FieldCheck[] },
@@ -40,7 +33,6 @@ function adopt<Props>(
     aliases?: readonly string[];
     file: string;
     exportName: string;
-    sample: Props;
   }
 ): DefinedTemplate<Props> {
   return defineTemplate({
@@ -49,7 +41,6 @@ function adopt<Props>(
     aliases: meta.aliases,
     file: meta.file,
     exportName: meta.exportName,
-    sample: meta.sample,
     checks: template.checks,
     render: (props) => template.render(props),
   });
@@ -61,35 +52,30 @@ export const templates: readonly TemplateRegistration[] = [
     id: 'order-confirmation',
     file: 'order-confirmation/orderConfirmationEmail.ts',
     exportName: 'orderConfirmation',
-    sample: orderConfirmationSample,
   }),
   adopt(WelcomeEmail, {
     id: 'WelcomeEmail',
     aliases: ['welcome'],
     file: 'welcome/welcomeEmail.ts',
     exportName: 'WelcomeEmail',
-    sample: welcomeSample,
   }),
   adopt(InvoiceEmail, {
     id: 'InvoiceEmail',
     aliases: ['invoice'],
     file: 'invoice/invoiceEmail.ts',
     exportName: 'InvoiceEmail',
-    sample: invoiceSample,
   }),
   adopt(TrialExpiringEmail, {
     id: 'TrialExpiringEmail',
     aliases: ['trial-expiring'],
     file: 'trial-expiring/trialExpiringEmail.ts',
     exportName: 'TrialExpiringEmail',
-    sample: trialExpiringSample,
   }),
   adopt(UserInvitationEmail, {
     id: 'UserInvitationEmail',
     aliases: ['user-invitation'],
     file: 'user-invitation/userInvitationEmail.ts',
     exportName: 'UserInvitationEmail',
-    sample: userInvitationSample,
   }),
   ExampleEmail,
   CommentNotificationEmail,

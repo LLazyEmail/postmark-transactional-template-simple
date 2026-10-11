@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { lookupKeys, templates } from '../../src/templates/manifest.ts';
+import { templateData } from '../../src/data/index.ts';
 import { InvoiceEmail } from '../../src/templates/invoice/invoiceEmail';
 import { orderConfirmation } from '../../src/templates/order-confirmation/orderConfirmationEmail';
 import { passwordReset } from '../../src/templates/password-reset/passwordResetEmail';
@@ -20,7 +21,7 @@ export const BASELINE_FILES = [
 const samples: Record<string, unknown> = {};
 for (const template of templates) {
   for (const id of lookupKeys(template)) {
-    samples[id] = template.sample;
+    samples[id] = templateData[template.id];
   }
 }
 

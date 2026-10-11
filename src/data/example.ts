@@ -1,6 +1,6 @@
-import type { ExampleEmailProps } from './types';
+import type { ExampleEmailProps } from '../templates/example/types.ts';
 
-export const exampleSample: ExampleEmailProps = {
+export const exampleData: ExampleEmailProps = {
   preheader:
     'This is example text for the preheader set via the YAML front-matter for each email.',
   sender_name: '[Sender Name]',

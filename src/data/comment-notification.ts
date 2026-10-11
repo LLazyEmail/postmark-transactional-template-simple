@@ -1,6 +1,6 @@
-import type { CommentNotificationEmailProps } from './types';
+import type { CommentNotificationEmailProps } from '../templates/comment-notification/types.ts';
 
-export const commentNotificationSample: CommentNotificationEmailProps = {
+export const commentNotificationData: CommentNotificationEmailProps = {
   body: 'Just left a comment on the Q3 launch doc.\nCan we ship the revised hero by Friday?',
   commenter_name: 'Sam Rivera',
   timestamp: 'January 5, 2026 2:14 PM',
