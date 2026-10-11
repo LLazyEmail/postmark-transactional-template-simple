@@ -39,7 +39,7 @@ the code wins; update this file.
 | `reference/<id>/` | Original Postmark exports. Compare rendered output; never edit |
 | `NEXT/` | Vendored, excluded from tsc. Do not import or build |
 | `docs/architecture.md` | Layers, data flow, test map (read on demand) |
-| `docs/adr/` | 0001 module boundaries, 0002 data instances |
+| `docs/adr/` | 0001 module boundaries, 0002 data instances, 0003 CamelCase ids |
 
 ## Commands
 
@@ -72,6 +72,7 @@ do not re-add them.
 ## Invariants
 
 - `manifest.ts` is the only registration list. Never edit `registry.ts` or add a second catalog file for a template.
+- Template ids are CamelCase (`<Name>Email`, equal to `name`). Kebab forms such as `password-reset` are aliases only; never register a new kebab-case id (ADR 0003).
 - Templates carry no payload data. Data lives in `src/data/` only.
 - Generated stems follow the slug of the id/alias; six baseline names are pinned in `tests/unit/generate-baseline.test.ts` and `tests/fixtures/generated-slugs.json` (`WelcomeEmail` writes `welcome.html`).
 - ESM with explicit `.ts` extensions on relative imports (`allowImportingTsExtensions`). `noUncheckedIndexedAccess` is on.

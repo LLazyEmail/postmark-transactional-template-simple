@@ -49,7 +49,8 @@ function adopt<Props>(
 export const templates: readonly TemplateRegistration[] = [
   passwordReset,
   adopt(orderConfirmation, {
-    id: 'order-confirmation',
+    id: 'OrderConfirmationEmail',
+    aliases: ['order-confirmation'],
     file: 'order-confirmation/orderConfirmationEmail.ts',
     exportName: 'orderConfirmation',
   }),

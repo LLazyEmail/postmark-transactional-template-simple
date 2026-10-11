@@ -16,7 +16,8 @@ import { defineTemplate } from '../defineTemplate.ts';
  */
 export const CommentNotificationEmail =
   defineTemplate<CommentNotificationEmailProps>({
-    id: 'comment-notification',
+    id: 'CommentNotificationEmail',
+    aliases: ['comment-notification'],
     name: 'CommentNotificationEmail',
     file: 'comment-notification/commentNotificationEmail.ts',
     exportName: 'CommentNotificationEmail',

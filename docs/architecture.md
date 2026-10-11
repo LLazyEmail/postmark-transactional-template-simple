@@ -31,17 +31,20 @@ Modules live under `src/templates/`, data instances under `src/data/`.
 
 | id | name | aliases | module (export) | style | data instance | props type |
 |---|---|---|---|---|---|---|
-| `password-reset` | `PasswordResetEmail` | — | `password-reset/passwordResetEmail.ts` (`passwordReset`) | defineTemplate | `password-reset.ts` (`passwordResetData`) | `PasswordResetEmailProps` |
-| `order-confirmation` | `OrderConfirmationEmail` | — | `order-confirmation/orderConfirmationEmail.ts` (`orderConfirmation`) | legacy ITemplate | `order-confirmation.ts` (`orderConfirmationData`) | `OrderConfirmationEmailProps` |
+| `PasswordResetEmail` | `PasswordResetEmail` | `password-reset` | `password-reset/passwordResetEmail.ts` (`passwordReset`) | defineTemplate | `password-reset.ts` (`passwordResetData`) | `PasswordResetEmailProps` |
+| `OrderConfirmationEmail` | `OrderConfirmationEmail` | `order-confirmation` | `order-confirmation/orderConfirmationEmail.ts` (`orderConfirmation`) | legacy ITemplate | `order-confirmation.ts` (`orderConfirmationData`) | `OrderConfirmationEmailProps` |
 | `WelcomeEmail` | `WelcomeEmail` | `welcome` | `welcome/welcomeEmail.ts` (`WelcomeEmail`) | legacy ITemplate | `welcome.ts` (`welcomeData`) | `WelcomeEmailProps` |
 | `InvoiceEmail` | `InvoiceEmail` | `invoice` | `invoice/invoiceEmail.ts` (`InvoiceEmail`) | legacy ITemplate | `invoice.ts` (`invoiceData`) | `InvoiceEmailProps` |
 | `TrialExpiringEmail` | `TrialExpiringEmail` | `trial-expiring` | `trial-expiring/trialExpiringEmail.ts` (`TrialExpiringEmail`) | legacy ITemplate | `trial-expiring.ts` (`trialExpiringData`) | `TrialExpiringEmailProps` |
 | `UserInvitationEmail` | `UserInvitationEmail` | `user-invitation` | `user-invitation/userInvitationEmail.ts` (`UserInvitationEmail`) | legacy ITemplate | `user-invitation.ts` (`userInvitationData`) | `UserInvitationEmailProps` |
-| `example` | `ExampleEmail` | — | `example/exampleEmail.ts` (`ExampleEmail`) | defineTemplate | `example.ts` (`exampleData`) | `ExampleEmailProps` |
-| `comment-notification` | `CommentNotificationEmail` | — | `comment-notification/commentNotificationEmail.ts` (`CommentNotificationEmail`) | defineTemplate | `comment-notification.ts` (`commentNotificationData`) | `CommentNotificationEmailProps` |
+| `ExampleEmail` | `ExampleEmail` | `example` | `example/exampleEmail.ts` (`ExampleEmail`) | defineTemplate | `example.ts` (`exampleData`) | `ExampleEmailProps` |
+| `CommentNotificationEmail` | `CommentNotificationEmail` | `comment-notification` | `comment-notification/commentNotificationEmail.ts` (`CommentNotificationEmail`) | defineTemplate | `comment-notification.ts` (`commentNotificationData`) | `CommentNotificationEmailProps` |
 
-Ground truth: `src/templates/manifest.ts` + `src/data/index.ts`. Update this
-table when either changes.
+Ids are CamelCase and equal `name`; the kebab forms are aliases kept so
+legacy lookups (`renderTemplate('password-reset')`, `--template=password-reset`)
+and the CLI slugs keep resolving (ADR 0003). Ground truth:
+`src/templates/manifest.ts` + `src/data/index.ts`. Update this table when
+either changes.
 
 ## Data and render flows
 
@@ -118,3 +121,4 @@ problem, not something to patch here (see AGENTS.md "Module regressions").
 - `AGENTS.md` — rules, task router, commands, invariants.
 - `docs/adr/0001-module-boundaries.md` — why `packages/` and `src/` are split.
 - `docs/adr/0002-data-instances.md` — why data lives in `src/data` and how the join works.
+- `docs/adr/0003-camelcase-template-ids.md` — why ids are CamelCase and kebab forms are aliases.

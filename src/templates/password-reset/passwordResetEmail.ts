@@ -6,7 +6,7 @@ import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
 import type { FieldCheck } from '@llazyemail/validator';
 
-/** Stable registry id. Legacy callers and `renderTemplate('password-reset')` use this. */
+/** Legacy kebab-case id. Kept as an alias so `renderTemplate('password-reset')` and the CLI keep resolving. */
 export const TEMPLATE_ID = 'password-reset' as const;
 
 const checks: FieldCheck[] = [
@@ -30,7 +30,8 @@ const checks: FieldCheck[] = [
  * the stylesheet, masthead, and footer.
  */
 export const passwordReset = defineTemplate<PasswordResetEmailProps>({
-  id: TEMPLATE_ID,
+  id: 'PasswordResetEmail',
+  aliases: [TEMPLATE_ID],
   name: 'PasswordResetEmail',
   file: 'password-reset/passwordResetEmail.ts',
   exportName: 'passwordReset',
