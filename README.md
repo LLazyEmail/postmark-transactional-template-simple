@@ -19,10 +19,18 @@ transactional emails with flat, simple payloads and no front-matter, digest
 sections, or ad variants. The goal is to prove the pattern cheaply here, then
 carry lessons back into the more complex repo once it settles.
 
-This repo does **not** depend on `hn_email_template` in any way. The two
-packages under `packages/` were copied in as a starting point and are now
-owned independently — feel free to change them without worrying about the
-other repo.
+This repo does **not** depend on `hn_email_template` in any way. The
+`packages/` folder started as a copy from that repo and is now owned
+independently — feel free to change it without worrying about the other repo.
+
+## Documentation
+
+- [AGENTS.md](AGENTS.md) — task router, commands, and invariants for AI
+  agents (also the fastest orientation for humans).
+- [docs/architecture.md](docs/architecture.md) — layers, data and render
+  flows, template inventory, test and CI maps.
+- [docs/adr/](docs/adr/) — decision records: module boundaries (0001), data
+  instances (0002).
 
 ## Setup
 
@@ -36,36 +44,43 @@ npm install
 |--------|-------------|
 | `npm test` | Run all unit and integration tests |
 | `npm run test:real-data` | Run only the integration tests that generate real HTML from fixture data |
+| `npm run test:coverage` | Run the suite with V8 coverage |
+| `npm run typecheck` | Type-check the repo (`tsc --noEmit`) |
 | `npm run generate:template -- --template=password-reset --out=generated/password-reset.html` | Generate a template's HTML from its data instance in `src/data/`. Add `--data=<path>` to render a real payload (`.js` or `.json`) instead. The published `@llazyemail/generate-template@1.6.1` bin loads `generate-template.config.ts` |
 | `npm run generate:assert -- --out=generated` | Assert generated HTML via `@llazyemail/generate-template`. A file counts if it contains `<html` or `<!doctype` |
 | `npm run lint` | Run ESLint |
 | `npm run lint:fix` | Run ESLint with auto-fix |
 | `npm run format` | Format source files with Prettier |
 | `npm run format:check` | Check formatting with Prettier |
+| `npm run build` | Bundle with tsup |
 
 ## Structure
 
 ```
 transactional-emails/
+├── AGENTS.md                       # agent task router, commands, invariants
 ├── packages/
-│   ├── template-engine/            # createTemplateFromDefinition + validation helpers
-│   └── template-runtime-display/   # head, main, body, footer, content, document
+│   └── component-types/            # typed components; aliased as @llazyemail/component-types
 ├── src/
 │   ├── index.ts                    # public exports
 │   ├── layout/                     # shared Postmark document + body blocks
 │   ├── templates/
 │   │   ├── manifest.ts             # the only registration list
+│   │   ├── registry.ts             # derived lookups (do not edit per template)
 │   │   ├── welcome/                # one folder per email
 │   │   ├── invoice/
 │   │   └── …
 │   └── data/                       # typed data instances + templateData map
 ├── tests/
 │   ├── unit/
-│   └── integration/
+│   ├── integration/
+│   └── fixtures/
 ├── scripts/
 │   └── create-project-generator.ts # catalog factory for the generate-template bin
 ├── generate-template.config.ts     # entry the published bin loads
-└── docs/adr/
+└── docs/
+    ├── architecture.md             # layers, data flow, test + CI map
+    └── adr/                        # 0001 boundaries, 0002 data instances
 ```
 
 ## Adding a new template
@@ -99,5 +114,7 @@ and asserts the output is well-formed HTML. To inspect real output, run
 ## Directory Policy
 
 See [docs/adr/0001-module-boundaries.md](docs/adr/0001-module-boundaries.md).
-Short version: template-specific logic lives in `src/templates/`, anything
-reusable across templates belongs in `packages/`.
+Short version: template-specific logic lives in `src/templates/`, data
+instances live in `src/data/` (see
+[docs/adr/0002-data-instances.md](docs/adr/0002-data-instances.md)), and
+anything reusable across templates belongs in `packages/`.

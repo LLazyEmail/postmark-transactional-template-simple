@@ -1,18 +1,83 @@
-# Agent rules
+# Agent guide
 
-## Package install
+Transactional email template generator: TypeScript ESM, Node >= 24, npm.
+This file exists so an agent can make correct changes **without exploring the
+repo first** — follow it instead of grepping. If code and this file disagree,
+the code wins; update this file.
 
-- Install `@llazyemail/*` packages with npm only (`npm install @llazyemail/generate-template`).
-- Do **not** add git URLs (`github:LLazyEmail/...`, `git+https://...`, `#main`) as the dependency spec.
-- Do **not** vendor, submodule, or `postinstall`-build the module from source as a substitute for a published package.
-- Pin `@llazyemail/generate-template` to an exact published version (currently `1.6.1`). Do not use a git URL or a floating `*` range.
-- If CI cannot install, fix registry auth (`GITHUB_TOKEN` / `NODE_AUTH_TOKEN` with `packages: read`). Do not switch the install source to git.
-- If the published package is wrong or incomplete, publish a new version of the module and bump the pin. Do not work around it from this repo.
+## Task router
 
-## Component types
+| Task | Read first | Touch only |
+|---|---|---|
+| Add / remove a template | README §"Adding a new template" | `src/templates/<id>/`, `src/data/<id>.ts`, `src/data/index.ts`, `src/templates/manifest.ts`, `src/index.ts`, one `tests/unit/` file |
+| Change what the CLI renders by default | — | `src/data/<id>.ts` (keep the props type) |
+| Change one email's copy or markup | that template's module | `src/templates/<id>/<name>Email.ts` (+ `types.ts`) |
+| Change the shared shell or styles (all emails) | `src/layout/` | `src/layout/` |
+| Add a lookup alias / rename an id | `src/templates/manifest.ts` | `manifest.ts`; id change also `src/data/index.ts` |
+| Generated HTML is wrong | "Module regressions" below | `scripts/create-project-generator.ts` only for catalog wiring; otherwise module bump |
+| Understand the split of concerns | `docs/architecture.md` | — |
 
-`packages/component-types` is the move-out boundary for `src/types/components`. Import it as `@llazyemail/component-types`. Do not add imports from this repository into that package. Publish it under that name when it leaves; do not replace the import with a git URL.
+## Repository map
 
+| Path | What it is |
+|---|---|
+| `src/index.ts` | Public API: templates, props types, data instances, `renderTemplate` / `listTemplates` / `getTemplate` |
+| `src/templates/manifest.ts` | The only registration list; `lookupKeys()` = id + name + aliases |
+| `src/templates/registry.ts` | Derived, case-insensitive lookups. Do not edit for a new template |
+| `src/templates/defineTemplate.ts` | `defineTemplate()`: id/name/aliases/file/exportName/checks + render |
+| `src/templates/<id>/` | One folder per email: `<name>Email.ts` + `types.ts` |
+| `src/data/<id>.ts` | One typed data instance per template — the payload the CLI renders |
+| `src/data/index.ts` | `templateData` map keyed by template id; the only join between data and templates |
+| `src/layout/` | Postmark document shell + blocks shared by all emails |
+| `scripts/create-project-generator.ts` | Engine catalog + `samplePayloads` wiring |
+| `generate-template.config.ts` | Entry the published bin loads |
+| `packages/component-types/` | Typed components; aliased as `@llazyemail/component-types`. Move-out boundary |
+| `packages/template-engine/` | Starter copy; nothing imports it. Ignore unless asked |
+| `tests/unit/` | Unit + generation contract tests (see `docs/architecture.md` test map) |
+| `tests/integration/render-all.test.ts` | Every template through `renderTemplate` |
+| `tests/fixtures/` | Props + `generated-slugs.json` baseline output stems |
+| `reference/<id>/` | Original Postmark exports. Compare rendered output; never edit |
+| `NEXT/` | Vendored, excluded from tsc. Do not import or build |
+| `docs/architecture.md` | Layers, data flow, test map (read on demand) |
+| `docs/adr/` | 0001 module boundaries, 0002 data instances |
+
+## Commands
+
+| Command | Purpose | Good outcome |
+|---|---|---|
+| `npm run typecheck` | `tsc --noEmit` | exit 0 |
+| `npx vitest run tests/unit/<file>.test.ts` | focused check while iterating (cheapest) | pass |
+| `npm test` | full suite before finishing | pass |
+| `npm run test:real-data` | integration render | pass |
+| `npm run generate:template -- --template=<id>` | render one template via its data instance | `generated/<slug>.html` |
+| `npm run generate:template -- --template=<id> --data=<path>` | render a real payload (`.js` / `.json`) | overrides the data instance |
+| `npm run generate:template -- --all` | render every template | `generated/*.html` |
+| `npm run generate:assert` | assert generated HTML against `tests/fixtures/generated-slugs.json` | pass |
+| `npm run lint` | `eslint src scripts` | pass |
+
+Change checklist: typecheck and full tests green. New or renamed templates keep
+`tests/unit/data-instances.test.ts` green (every template id has a `templateData`
+entry, no orphans). Run `test:real-data` when rendering or data changed.
+Do not run coverage while iterating.
+
+## Data flow (one paragraph)
+
+`src/data/<id>.ts` → `src/data/index.ts` `templateData` →
+`scripts/create-project-generator.ts` expands every entry over all lookup keys
+(id, name, aliases) into the engine's `samplePayloads` → CLI. Payload
+resolution at render: `--data=<path>` wins, then the data instance, then a
+thrown error. `dataDir` is not configured and `useDataFiles` is not enabled —
+do not re-add them.
+
+## Invariants
+
+- `manifest.ts` is the only registration list. Never edit `registry.ts` or add a second catalog file for a template.
+- Templates carry no payload data. Data lives in `src/data/` only.
+- Generated stems follow the slug of the id/alias; six baseline names are pinned in `tests/unit/generate-baseline.test.ts` and `tests/fixtures/generated-slugs.json` (`WelcomeEmail` writes `welcome.html`).
+- ESM with explicit `.ts` extensions on relative imports (`allowImportingTsExtensions`). `noUncheckedIndexedAccess` is on.
+- `welcomeData.signupDate` is a real `Date`; the engine is configured `reviveDates: true`.
+
+## Generate CLI flags
 
 Supported flags (do not rename or drop):
 
@@ -24,6 +89,36 @@ Supported flags (do not rename or drop):
 
 `npm run generate:template` must keep those flags. If the package CLI changes flag names, fix `@llazyemail/generate-template` and publish. Do not fork flags in this repo.
 
-## Module breaks working generation
+## Package install
+
+- Install `@llazyemail/*` packages with npm only (`npm install @llazyemail/generate-template`).
+- Do **not** add git URLs (`github:LLazyEmail/...`, `git+https://...`, `#main`) as the dependency spec.
+- Do **not** vendor, submodule, or `postinstall`-build the module from source as a substitute for a published package.
+- Pin `@llazyemail/generate-template` to an exact published version (currently `1.6.1`). Do not use a git URL or a floating `*` range.
+- If CI cannot install, fix registry auth (`GITHUB_TOKEN` / `NODE_AUTH_TOKEN` with `packages: read`). Do not switch the install source to git.
+- If the published package is wrong or incomplete, publish a new version of the module and bump the pin. Do not work around it from this repo.
+
+Registry: `.npmrc` maps `@llazyemail` to GitHub Packages and reads
+`GITHUB_TOKEN`. A local `npm install` without that token fails with E401 —
+that is an auth problem, never a reason to change the dependency spec.
+
+## Component types
+
+`packages/component-types` is the move-out boundary for `src/types/components`. Import it as `@llazyemail/component-types`. Do not add imports from this repository into that package. Publish it under that name when it leaves; do not replace the import with a git URL.
+
+## Module regressions (generate-template)
 
 `tests/unit/generate-html-diff.test.ts` and `tests/unit/generate-write-all.test.ts` are the contract. If an npm bump of `@llazyemail/generate-template` makes those fail, treat it as a module regression. Publish a new module version and bump the pin. Do not copy engine code back into `scripts/`.
+
+The locally installed copy can lag the pin (e.g. 1.0.3 installed while
+`package.json` pins 1.6.1). Missing exports from the package (`parseArgs`,
+`requestsFromArgs`, `assertGenerated`) or `Cannot find package
+'@llazyemail/validator'` mean the install is stale or unauthenticated —
+reinstall with a valid token. Never patch `node_modules`, vendor the engine,
+or stub the packages to make tests pass.
+
+## Credit savers
+
+- Read `manifest.ts` + `src/data/index.ts` (id/alias/payload truth) instead of grepping templates.
+- Do not open `NEXT/`, `reference/` (unless diffing rendered output), or the engine's `node_modules` source; the engine is a pinned black box here.
+- One focused test file before the full suite; open generated HTML in a browser instead of dumping it into context.
