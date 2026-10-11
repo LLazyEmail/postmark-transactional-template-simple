@@ -3,7 +3,8 @@ import type { CommentNotificationEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { attachmentTable } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
-import { defineTemplate } from '../defineTemplate.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { commentNotificationData } from '../../data/comment-notification.ts';
 
 /**
  * CommentNotificationEmail
@@ -15,12 +16,13 @@ import { defineTemplate } from '../defineTemplate.ts';
  * matching `{{#attachment_details}}`.
  */
 export const CommentNotificationEmail =
-  defineTemplate<CommentNotificationEmailProps>({
+  defineEmail<CommentNotificationEmailProps>({
     id: 'CommentNotificationEmail',
     aliases: ['comment-notification'],
     name: 'CommentNotificationEmail',
     file: 'comment-notification/commentNotificationEmail.ts',
     exportName: 'CommentNotificationEmail',
+    data: commentNotificationData,
 
     render: ({
       body,

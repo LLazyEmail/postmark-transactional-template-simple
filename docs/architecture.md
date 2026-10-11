@@ -2,9 +2,9 @@
 
 How this repo is wired, in one read. `AGENTS.md` is the rules and task
 router; this file is the reference behind it. Ground truth is code:
-`src/templates/manifest.ts` (registration), `src/data/index.ts` (payloads),
-`scripts/create-project-generator.ts` (CLI wiring). If this file disagrees
-with them, they win.
+`src/templates/manifest.ts` (registration), `src/templates/system.ts`
+(derived surface), `scripts/create-project-generator.ts` (CLI wiring). If
+this file disagrees with them, they win.
 
 ## Layers
 
@@ -13,9 +13,10 @@ with them, they win.
 | Component types | `packages/component-types/` | Typed HTML components (button, heading, …). Aliased as `@llazyemail/component-types` in `tsconfig.json` and `vitest.config.ts`. Move-out boundary: never import repo code into it |
 | Shared types | `src/types/` | `ITemplate`, `EmailBrandProps`; `src/types/components/` is a compat shim re-exporting the package |
 | Layout | `src/layout/` | Postmark document shell (`renderPostmarkDocument`: head, MSO fallback, body, footer, styles) + blocks (buttons, tables, sub-copy). Product-specific, not generic — not a package |
-| Templates | `src/templates/<id>/` | One folder per email: `<name>Email.ts` (render logic) + `types.ts` (props). `defineTemplate.ts` normalizes both definition styles |
-| Registration | `src/templates/manifest.ts` → `registry.ts` | One list → derived lookups (id, name, aliases, plus lowercase of each) |
-| Data | `src/data/` | One typed instance per template + `templateData` map; `index.ts` is the only join point |
+| Templates | `src/templates/<id>/` | One folder per email: `<name>Email.ts` (module via `defineEmail`: render + metadata + data binding) + `types.ts` (props) |
+| Module factory | `src/templates/defineEmail.ts` | `defineEmail()`: id/name/aliases/file/exportName/checks + typed `data` + render → `EmailModule<Props>` |
+| Registration | `src/templates/manifest.ts` → `registry.ts` → `system.ts` | One list; `createEmailSystem()` derives lookups, maps, and `templateData` (ADR 0004) |
+| Data | `src/data/` | One typed instance per template, bound into its module via `defineEmail({ data })`; `templateData` derives — there is no index file |
 | CLI wiring | `scripts/create-project-generator.ts` | Engine catalog + `samplePayloads`; `generate-template.config.ts` is the entry the published bin loads |
 | Tests | `tests/unit/`, `tests/integration/`, `tests/fixtures/` | See "Test map" below |
 | Inputs, never edit | `reference/<id>/`, `NEXT/` | Original Postmark exports / vendored starter; `NEXT/` is excluded from tsc and unused |
@@ -26,32 +27,34 @@ Dependency direction is one-way: `src/templates` and `src/layout` may import
 ## Template inventory
 
 Modules live under `src/templates/`, data instances under `src/data/`.
-"Style" is how the module is defined: `defineTemplate` directly, or a legacy
-`ITemplate` object adopted in the manifest.
+Every module is a single `defineEmail()` module and binds its data instance.
 
-| id | name | aliases | module (export) | style | data instance | props type |
-|---|---|---|---|---|---|---|
-| `PasswordResetEmail` | `PasswordResetEmail` | `password-reset` | `password-reset/passwordResetEmail.ts` (`passwordReset`) | defineTemplate | `password-reset.ts` (`passwordResetData`) | `PasswordResetEmailProps` |
-| `OrderConfirmationEmail` | `OrderConfirmationEmail` | `order-confirmation` | `order-confirmation/orderConfirmationEmail.ts` (`orderConfirmation`) | legacy ITemplate | `order-confirmation.ts` (`orderConfirmationData`) | `OrderConfirmationEmailProps` |
-| `WelcomeEmail` | `WelcomeEmail` | `welcome` | `welcome/welcomeEmail.ts` (`WelcomeEmail`) | legacy ITemplate | `welcome.ts` (`welcomeData`) | `WelcomeEmailProps` |
-| `InvoiceEmail` | `InvoiceEmail` | `invoice` | `invoice/invoiceEmail.ts` (`InvoiceEmail`) | legacy ITemplate | `invoice.ts` (`invoiceData`) | `InvoiceEmailProps` |
-| `TrialExpiringEmail` | `TrialExpiringEmail` | `trial-expiring` | `trial-expiring/trialExpiringEmail.ts` (`TrialExpiringEmail`) | legacy ITemplate | `trial-expiring.ts` (`trialExpiringData`) | `TrialExpiringEmailProps` |
-| `UserInvitationEmail` | `UserInvitationEmail` | `user-invitation` | `user-invitation/userInvitationEmail.ts` (`UserInvitationEmail`) | legacy ITemplate | `user-invitation.ts` (`userInvitationData`) | `UserInvitationEmailProps` |
-| `ExampleEmail` | `ExampleEmail` | `example` | `example/exampleEmail.ts` (`ExampleEmail`) | defineTemplate | `example.ts` (`exampleData`) | `ExampleEmailProps` |
-| `CommentNotificationEmail` | `CommentNotificationEmail` | `comment-notification` | `comment-notification/commentNotificationEmail.ts` (`CommentNotificationEmail`) | defineTemplate | `comment-notification.ts` (`commentNotificationData`) | `CommentNotificationEmailProps` |
+| id | name | aliases | module (export) | data instance | props type |
+|---|---|---|---|---|---|
+| `PasswordResetEmail` | `PasswordResetEmail` | `password-reset` | `password-reset/passwordResetEmail.ts` (`passwordReset`) | `password-reset.ts` (`passwordResetData`) | `PasswordResetEmailProps` |
+| `OrderConfirmationEmail` | `OrderConfirmationEmail` | `order-confirmation` | `order-confirmation/orderConfirmationEmail.ts` (`orderConfirmation`) | `order-confirmation.ts` (`orderConfirmationData`) | `OrderConfirmationEmailProps` |
+| `WelcomeEmail` | `WelcomeEmail` | `welcome` | `welcome/welcomeEmail.ts` (`WelcomeEmail`) | `welcome.ts` (`welcomeData`) | `WelcomeEmailProps` |
+| `InvoiceEmail` | `InvoiceEmail` | `invoice` | `invoice/invoiceEmail.ts` (`InvoiceEmail`) | `invoice.ts` (`invoiceData`) | `InvoiceEmailProps` |
+| `TrialExpiringEmail` | `TrialExpiringEmail` | `trial-expiring` | `trial-expiring/trialExpiringEmail.ts` (`TrialExpiringEmail`) | `trial-expiring.ts` (`trialExpiringData`) | `TrialExpiringEmailProps` |
+| `UserInvitationEmail` | `UserInvitationEmail` | `user-invitation` | `user-invitation/userInvitationEmail.ts` (`UserInvitationEmail`) | `user-invitation.ts` (`userInvitationData`) | `UserInvitationEmailProps` |
+| `ExampleEmail` | `ExampleEmail` | `example` | `example/exampleEmail.ts` (`ExampleEmail`) | `example.ts` (`exampleData`) | `ExampleEmailProps` |
+| `CommentNotificationEmail` | `CommentNotificationEmail` | `comment-notification` | `comment-notification/commentNotificationEmail.ts` (`CommentNotificationEmail`) | `comment-notification.ts` (`commentNotificationData`) | `CommentNotificationEmailProps` |
 
 Ids are CamelCase and equal `name`; the kebab forms are aliases kept so
 legacy lookups (`renderTemplate('password-reset')`, `--template=password-reset`)
 and the CLI slugs keep resolving (ADR 0003). Ground truth:
-`src/templates/manifest.ts` + `src/data/index.ts`. Update this table when
+`src/templates/manifest.ts` + the modules themselves. Update this table when
 either changes.
 
 ## Data and render flows
 
 CLI (generation):
 
-1. `src/data/<id>.ts` holds one typed instance per template.
-2. `src/data/index.ts` collects them into `templateData`, keyed by template id.
+1. `src/data/<id>.ts` holds one typed instance per template; each module
+   binds its instance via `defineEmail({ data })`.
+2. `registry.ts` builds the live system with
+   `createEmailSystem(templates)`; `emailSystem.templateData` (keyed by id)
+   is derived from the modules.
 3. `scripts/create-project-generator.ts` expands `templateData` over every
    lookup key (id, name, aliases) into the engine's `samplePayloads` and builds
    the `catalog` from `manifest.templates`.
@@ -74,22 +77,26 @@ from `src/index.ts`.
 
 Adding a template touches exactly:
 
-1. `src/templates/<id>/<name>Email.ts` + `types.ts` — render logic, props.
-2. `src/data/<id>.ts` + an entry in `src/data/index.ts` (`templateData`, keyed by id).
-3. One entry in `src/templates/manifest.ts`.
-4. A re-export in `src/index.ts` if callers should import it directly.
+1. `src/templates/<id>/types.ts` — the props interface.
+2. `src/data/<id>.ts` — one typed instance (the default payload).
+3. `src/templates/<id>/<name>Email.ts` — one `defineEmail()` module binding
+   both.
+4. One line in `src/templates/manifest.ts`.
 5. A test in `tests/unit/`.
 
-Everything else derives: `registry.ts` lookups, the engine catalog and
-`samplePayloads`, and the whole-suite guards (`data-instances.test.ts`,
-`registry.test.ts`, `render-all.test.ts`). Do not edit `registry.ts` for a
-new template. Step-by-step recipe: README §"Adding a new template".
+Everything else derives from that list through `createEmailSystem()`:
+lookups and maps, `templateData`, the engine catalog and `samplePayloads`,
+and the whole-suite guards (`data-instances.test.ts`, `registry.test.ts`,
+`render-all.test.ts`). Never edit `registry.ts`, `system.ts`, or
+`src/index.ts` for a new template. Step-by-step recipe: README §"Adding a
+new template".
 
 ## Test map
 
 | Test | Guards |
 |---|---|
 | `tests/unit/data-instances.test.ts` | Every template id has a `templateData` entry; no orphan instances |
+| `tests/unit/email-system.test.ts` | `defineEmail`/`createEmailSystem` contract: derived maps, lookups, order, error message, checks |
 | `tests/unit/registry.test.ts` | Canonical names, legacy ids, case-insensitivity, error messages |
 | `tests/unit/generate-baseline.test.ts` | Six baseline filenames + per-template render markers |
 | `tests/unit/generate-html-diff.test.ts` | Engine render through the catalog keeps baseline markers; welcome `Date` revives |
@@ -122,3 +129,4 @@ problem, not something to patch here (see AGENTS.md "Module regressions").
 - `docs/adr/0001-module-boundaries.md` — why `packages/` and `src/` are split.
 - `docs/adr/0002-data-instances.md` — why data lives in `src/data` and how the join works.
 - `docs/adr/0003-camelcase-template-ids.md` — why ids are CamelCase and kebab forms are aliases.
+- `docs/adr/0004-email-module-and-system.md` — why modules carry their data and the system is derived.

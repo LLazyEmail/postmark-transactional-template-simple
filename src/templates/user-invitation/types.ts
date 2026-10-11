@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template';
+import type { EmailModule } from '../defineEmail.ts';
 
 export interface UserInvitationEmailProps {
   /** Invitee's display name for the greeting. */
@@ -28,4 +28,4 @@ export interface UserInvitationEmailProps {
   company_url: string;
 }
 
-export type UserInvitationEmailTemplate = ITemplate<UserInvitationEmailProps>;
+export type UserInvitationEmailTemplate = EmailModule<UserInvitationEmailProps>;

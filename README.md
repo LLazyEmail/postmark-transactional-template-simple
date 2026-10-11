@@ -6,9 +6,10 @@ fully finished on its own timeline. See
 [docs/adr/0001-module-boundaries.md](docs/adr/0001-module-boundaries.md) for
 why the code is split the way it is.
 
-The public entry is `src/index.ts`. It exports every template, its props,
-the data instances from `src/data`, and
-`renderTemplate` / `listTemplates` / `getTemplate`.
+The public entry is `src/index.ts`. It exports the live email system
+(`renderTemplate` / `listTemplates` / `getTemplate`, `templateData`, lookup
+maps), the `defineEmail` / `createEmailSystem` factories for extending it,
+and every props type.
 
 ## Why this exists
 
@@ -30,7 +31,8 @@ independently — feel free to change it without worrying about the other repo.
 - [docs/architecture.md](docs/architecture.md) — layers, data and render
   flows, template inventory, test and CI maps.
 - [docs/adr/](docs/adr/) — decision records: module boundaries (0001), data
-  instances (0002), CamelCase template ids (0003).
+  instances (0002), CamelCase template ids (0003), email modules + derived
+  system (0004).
 
 ## Setup
 
@@ -66,11 +68,13 @@ transactional-emails/
 │   ├── layout/                     # shared Postmark document + body blocks
 │   ├── templates/
 │   │   ├── manifest.ts             # the only registration list
-│   │   ├── registry.ts             # derived lookups (do not edit per template)
+│   │   ├── defineEmail.ts          # module factory (render + metadata + data)
+│   │   ├── system.ts               # derives lookups, maps, templateData
+│   │   ├── registry.ts             # live system bound to the manifest
 │   │   ├── welcome/                # one folder per email
 │   │   ├── invoice/
 │   │   └── …
-│   └── data/                       # typed data instances + templateData map
+│   └── data/                       # typed data instances (bound by modules)
 ├── tests/
 │   ├── unit/
 │   ├── integration/
@@ -80,27 +84,25 @@ transactional-emails/
 ├── generate-template.config.ts     # entry the published bin loads
 └── docs/
     ├── architecture.md             # layers, data flow, test + CI map
-    └── adr/                        # 0001 boundaries, 0002 data instances
+    └── adr/                        # 0001–0004 decision records
 ```
 
 ## Adding a new template
 
-1. Add a props interface under `src/types/`. Extend `EmailBrandProps` for the
-   masthead and footer.
-2. Create `src/templates/<id>/<name>Email.ts` with `defineTemplate`. Render
-   the body through `renderPostmarkDocument` — do not copy the stylesheet or
-   the masthead/footer tables. Do not inline fixture data in the builder.
-3. Create `src/data/<id>.ts` with the payload typed as the template's props
-   interface and register it in the `templateData` map in
-   `src/data/index.ts`, keyed by the template's CamelCase id
-   (`SomethingEmail`). Add a kebab-case alias in the template's
-   registration only when a legacy or CLI name must keep resolving.
-4. Append that export to the list in `src/templates/manifest.ts`. The
-   registry, the generator catalog, and the render-all test pick it up
-   from there.
+1. Create `src/templates/<id>/types.ts` with the props interface. Extend
+   `EmailBrandProps` for the masthead and footer.
+2. Create `src/data/<id>.ts` with the payload typed as that props interface
+   (the default the CLI renders).
+3. Create `src/templates/<id>/<name>Email.ts`: one `defineEmail()` module
+   with `id` (CamelCase, e.g. `SomethingEmail`), `name`, `aliases`, `file`,
+   `exportName`, `data`, and `render`. Render the body through
+   `renderPostmarkDocument` — do not copy the stylesheet or the
+   masthead/footer tables. Add a kebab-case alias only when a legacy or CLI
+   name must keep resolving.
+4. Append the module to the list in `src/templates/manifest.ts`. The derived
+   system (lookups, `templateData`), the generator catalog, and the
+   render-all test pick it up from there.
 5. Add a unit test in `tests/unit/`.
-6. Re-export the template and its props from `src/index.ts` if callers
-   should import them directly.
 
 ## End-to-end proof
 

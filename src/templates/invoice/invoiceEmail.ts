@@ -1,5 +1,4 @@
 export type { InvoiceEmailProps } from './types.ts';
-import type { ITemplate } from '../../types/template';
 import type { InvoiceEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import {
@@ -10,6 +9,8 @@ import {
   subCopy,
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { invoiceData } from '../../data/invoice.ts';
 
 /**
  * InvoiceEmail
@@ -20,8 +21,13 @@ import { escapeHtml } from '../../layout/html.ts';
  * The shared Postmark document supplies the stylesheet, masthead, and
  * footer. `{{#each invoice_details}}` is expanded in TypeScript.
  */
-export const InvoiceEmail: ITemplate<InvoiceEmailProps> = {
+export const InvoiceEmail = defineEmail<InvoiceEmailProps>({
+  id: 'InvoiceEmail',
+  aliases: ['invoice'],
   name: 'InvoiceEmail',
+  file: 'invoice/invoiceEmail.ts',
+  exportName: 'InvoiceEmail',
+  data: invoiceData,
 
   render: ({
     name,
@@ -110,4 +116,4 @@ export const InvoiceEmail: ITemplate<InvoiceEmailProps> = {
       body,
     });
   },
-};
+});

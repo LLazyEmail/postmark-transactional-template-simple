@@ -3,7 +3,8 @@ import type { PasswordResetEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
-import { defineTemplate } from '../defineTemplate.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { passwordResetData } from '../../data/password-reset.ts';
 import type { FieldCheck } from '@llazyemail/validator';
 
 /** Legacy kebab-case id. Kept as an alias so `renderTemplate('password-reset')` and the CLI keep resolving. */
@@ -29,13 +30,14 @@ const checks: FieldCheck[] = [
  * product/company lines are props. The shared Postmark document supplies
  * the stylesheet, masthead, and footer.
  */
-export const passwordReset = defineTemplate<PasswordResetEmailProps>({
+export const passwordReset = defineEmail<PasswordResetEmailProps>({
   id: 'PasswordResetEmail',
   aliases: [TEMPLATE_ID],
   name: 'PasswordResetEmail',
   file: 'password-reset/passwordResetEmail.ts',
   exportName: 'passwordReset',
   checks,
+  data: passwordResetData,
 
   render: ({
     name,

@@ -1,5 +1,4 @@
 export type { UserInvitationEmailProps } from './types.ts';
-import type { ITemplate } from '../../types/template';
 import type { UserInvitationEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import {
@@ -10,6 +9,8 @@ import {
   subCopy,
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
+import { defineEmail } from '../defineEmail.ts';
+import { userInvitationData } from '../../data/user-invitation.ts';
 
 /**
  * UserInvitationEmail
@@ -17,8 +18,13 @@ import { escapeHtml } from '../../layout/html.ts';
  * Typed port of the "user invitation" transactional template.
  * The shared Postmark document supplies the stylesheet, masthead, and footer.
  */
-export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
+export const UserInvitationEmail = defineEmail<UserInvitationEmailProps>({
+  id: 'UserInvitationEmail',
+  aliases: ['user-invitation'],
   name: 'UserInvitationEmail',
+  file: 'user-invitation/userInvitationEmail.ts',
+  exportName: 'UserInvitationEmail',
+  data: userInvitationData,
 
   render: ({
     invitee_name,
@@ -88,4 +94,4 @@ export const UserInvitationEmail: ITemplate<UserInvitationEmailProps> = {
       body,
     });
   },
-};
+});

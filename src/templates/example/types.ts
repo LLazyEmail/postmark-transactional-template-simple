@@ -1,4 +1,4 @@
-import type { ITemplate } from '../../types/template/index.ts';
+import type { EmailModule } from '../defineEmail.ts';
 import type { EmailBrandProps } from '../../types/brand.ts';
 
 export interface ExampleEmailProps extends EmailBrandProps {
@@ -22,4 +22,4 @@ export interface ExampleEmailProps extends EmailBrandProps {
   discount_url: string;
 }
 
-export type ExampleEmailTemplate = ITemplate<ExampleEmailProps>;
+export type ExampleEmailTemplate = EmailModule<ExampleEmailProps>;

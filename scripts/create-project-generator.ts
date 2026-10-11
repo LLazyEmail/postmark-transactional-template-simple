@@ -2,7 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createGenerator } from '@llazyemail/generate-template';
 import { lookupKeys, templates } from '../src/templates/manifest.ts';
-import { templateData } from '../src/data/index.ts';
+import { templateData } from '../src/templates/registry.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
