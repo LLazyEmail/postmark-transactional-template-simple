@@ -21,7 +21,8 @@ import { defineTemplate } from '../defineTemplate.ts';
  * text, matching the reference.
  */
 export const ExampleEmail = defineTemplate<ExampleEmailProps>({
-  id: 'example',
+  id: 'ExampleEmail',
+  aliases: ['example'],
   name: 'ExampleEmail',
   file: 'example/exampleEmail.ts',
   exportName: 'ExampleEmail',

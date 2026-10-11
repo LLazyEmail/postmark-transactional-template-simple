@@ -13,7 +13,7 @@ import {
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
 
-/** Stable registry ID (legacy-compatible kebab-case). */
+/** Legacy kebab-case id. Kept as an alias so `renderTemplate('order-confirmation')` keeps resolving. */
 export const TEMPLATE_ID = 'order-confirmation' as const;
 
 /**

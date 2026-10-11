@@ -40,8 +40,8 @@ describe('generate CLI flags (step 5)', () => {
 
   it('--all writes slug.html names for the baseline six', () => {
     const expected = {
-      'password-reset': 'password-reset',
-      'order-confirmation': 'order-confirmation',
+      PasswordResetEmail: 'password-reset',
+      OrderConfirmationEmail: 'order-confirmation',
       WelcomeEmail: 'welcome',
       InvoiceEmail: 'invoice',
       TrialExpiringEmail: 'trial-expiring',

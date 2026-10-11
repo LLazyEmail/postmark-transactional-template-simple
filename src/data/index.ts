@@ -19,19 +19,19 @@ export {
 };
 
 /**
- * One data instance per registered template, keyed by template id
- * (see `src/templates/manifest.ts`). Templates themselves carry no
- * payload — the generator and the render-all tests join the two here.
- * `tests/unit/data-instances.test.ts` enforces that every template id
- * has an entry.
+ * One data instance per registered template, keyed by the CamelCase
+ * template id (see `src/templates/manifest.ts`). Templates themselves
+ * carry no payload — the generator and the render-all tests join the
+ * two here. `tests/unit/data-instances.test.ts` enforces that every
+ * template id has an entry.
  */
 export const templateData: Record<string, unknown> = {
-  'password-reset': passwordResetData,
-  'order-confirmation': orderConfirmationData,
+  PasswordResetEmail: passwordResetData,
+  OrderConfirmationEmail: orderConfirmationData,
   WelcomeEmail: welcomeData,
   InvoiceEmail: invoiceData,
   TrialExpiringEmail: trialExpiringData,
   UserInvitationEmail: userInvitationData,
-  example: exampleData,
-  'comment-notification': commentNotificationData,
+  ExampleEmail: exampleData,
+  CommentNotificationEmail: commentNotificationData,
 };

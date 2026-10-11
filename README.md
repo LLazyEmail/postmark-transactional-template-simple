@@ -30,7 +30,7 @@ independently — feel free to change it without worrying about the other repo.
 - [docs/architecture.md](docs/architecture.md) — layers, data and render
   flows, template inventory, test and CI maps.
 - [docs/adr/](docs/adr/) — decision records: module boundaries (0001), data
-  instances (0002).
+  instances (0002), CamelCase template ids (0003).
 
 ## Setup
 
@@ -46,7 +46,7 @@ npm install
 | `npm run test:real-data` | Run only the integration tests that generate real HTML from fixture data |
 | `npm run test:coverage` | Run the suite with V8 coverage |
 | `npm run typecheck` | Type-check the repo (`tsc --noEmit`) |
-| `npm run generate:template -- --template=password-reset --out=generated/password-reset.html` | Generate a template's HTML from its data instance in `src/data/`. Add `--data=<path>` to render a real payload (`.js` or `.json`) instead. The published `@llazyemail/generate-template@1.6.1` bin loads `generate-template.config.ts` |
+| `npm run generate:template -- --template=PasswordResetEmail --out=generated/password-reset.html` | Generate a template's HTML from its data instance in `src/data/`. Add `--data=<path>` to render a real payload (`.js` or `.json`) instead. The published `@llazyemail/generate-template@1.6.1` bin loads `generate-template.config.ts` |
 | `npm run generate:assert -- --out=generated` | Assert generated HTML via `@llazyemail/generate-template`. A file counts if it contains `<html` or `<!doctype` |
 | `npm run lint` | Run ESLint |
 | `npm run lint:fix` | Run ESLint with auto-fix |
@@ -92,7 +92,9 @@ transactional-emails/
    the masthead/footer tables. Do not inline fixture data in the builder.
 3. Create `src/data/<id>.ts` with the payload typed as the template's props
    interface and register it in the `templateData` map in
-   `src/data/index.ts`, keyed by the template id.
+   `src/data/index.ts`, keyed by the template's CamelCase id
+   (`SomethingEmail`). Add a kebab-case alias in the template's
+   registration only when a legacy or CLI name must keep resolving.
 4. Append that export to the list in `src/templates/manifest.ts`. The
    registry, the generator catalog, and the render-all test pick it up
    from there.

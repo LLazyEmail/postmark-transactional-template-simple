@@ -16,4 +16,10 @@ describe('data instances', () => {
       expect(ids.has(key), `Orphan data instance: ${key}`).toBe(true);
     }
   });
+
+  it('uses CamelCase template ids', () => {
+    for (const template of templates) {
+      expect(template.id, `Not CamelCase: ${template.id}`).toMatch(/^[A-Z][A-Za-z0-9]*$/);
+    }
+  });
 });
