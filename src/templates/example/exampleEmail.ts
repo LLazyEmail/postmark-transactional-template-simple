@@ -10,7 +10,6 @@ import {
 } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
-import { exampleSample } from './sample.ts';
 
 /**
  * ExampleEmail
@@ -26,7 +25,6 @@ export const ExampleEmail = defineTemplate<ExampleEmailProps>({
   name: 'ExampleEmail',
   file: 'example/exampleEmail.ts',
   exportName: 'ExampleEmail',
-  sample: exampleSample,
 
   render: ({
     preheader,

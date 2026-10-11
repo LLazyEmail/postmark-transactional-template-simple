@@ -1,6 +1,6 @@
-import type { UserInvitationEmailProps } from './types';
+import type { UserInvitationEmailProps } from '../templates/user-invitation/types.ts';
 
-export const userInvitationSample: UserInvitationEmailProps = {
+export const userInvitationData: UserInvitationEmailProps = {
   invitee_name: 'Alex',
   invitee_email: 'alex@example.com',
   inviter_name: 'Sam',

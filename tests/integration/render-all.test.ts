@@ -6,6 +6,7 @@ import {
   getTemplate,
 } from '../../src/templates/registry';
 import { templates } from '../../src/templates/manifest';
+import { templateData } from '../../src/data/index';
 import { welcomeMinimalProps } from '../fixtures/props';
 
 describe('integration: render every registered template', () => {
@@ -18,12 +19,12 @@ describe('integration: render every registered template', () => {
   it.each(templates.map((template) => template.name))('renders %s without throwing', (name) => {
     const template = templates.find((entry) => entry.name === name);
     expect(template, `Missing manifest entry for ${name}`).toBeDefined();
-    expect(() => renderTemplate(name, template!.sample)).not.toThrow();
+    expect(() => renderTemplate(name, templateData[template!.id])).not.toThrow();
   });
 
   it.each(templates.map((template) => template.name))('renders %s to valid HTML', (name) => {
     const template = templates.find((entry) => entry.name === name);
-    const html = renderTemplate(name, template!.sample);
+    const html = renderTemplate(name, templateData[template!.id]);
 
     expect(html).toMatch(/^<!DOCTYPE html/);
     expect(html).toContain('<html');
@@ -46,8 +47,8 @@ describe('integration: render every registered template', () => {
 
   it('every template render is deterministic', () => {
     for (const template of templates) {
-      const a = renderTemplate(template.name, template.sample);
-      const b = renderTemplate(template.name, template.sample);
+      const a = renderTemplate(template.name, templateData[template.id]);
+      const b = renderTemplate(template.name, templateData[template.id]);
       expect(a, `${template.name} is not deterministic`).toBe(b);
     }
   });

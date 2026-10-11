@@ -28,14 +28,14 @@ boundary rules from day one.
 - `src/templates/<id>/<name>Email.ts` — one folder and one module per
   template, created with `defineTemplate`. This is the ONLY place that
   template's copy and field mapping should live.
-- `src/templates/<id>/sample.ts` — the preview payload the CLI uses when no
-  `--data` file is passed. The email module imports it and passes it as
-  `sample`. Do not inline fixture data in the builder.
+- `src/templates/<id>/sample.ts` — preview payloads moved to
+  `src/data/<id>.ts`; see ADR 0002. Do not inline fixture data in the
+  builder.
 - `src/templates/manifest.ts` — the only registration list. The public
   `renderTemplate(id, payload)` registry and the generate-template catalog are derived
   from it. Adding a template means one module plus one line here.
-- `src/templates/legacySamples.ts` — preview payloads for templates that
-  predate `sample` on the module. Do not add new entries.
+- `src/templates/legacySamples.ts` — removed; superseded by the
+  `templateData` map in `src/data/index.ts` (ADR 0002).
 
 ## Rules
 
@@ -46,10 +46,9 @@ boundary rules from day one.
    could use). If a change only helps one template, it belongs in that
    template's definition file, not in a shared package.
 3. Every template must be a `defineTemplate()` module listed in
-   `src/templates/manifest.ts`, with a unit test in `tests/unit/`. The
-   preview payload lives in `sample.ts` and is passed to `defineTemplate`
-   as `sample`. Do not edit `registry.ts` for a new template. Do not add a
-   second catalog file.
+   `src/templates/manifest.ts`, with a unit test in `tests/unit/` and a
+   data instance in `src/data/` (ADR 0002). Do not edit `registry.ts` for a
+   new template. Do not add a second catalog file.
 
 ## Consequences
 

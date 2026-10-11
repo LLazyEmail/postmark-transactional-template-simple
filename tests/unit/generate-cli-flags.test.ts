@@ -19,9 +19,9 @@ describe('generate CLI flags (step 5)', () => {
   it('parses flags with the package CLI', () => {
     expect(parseArgs(['--list'])).toEqual({ list: true });
     expect(parseArgs(['--all', '--out=generated'])).toEqual({ all: true, out: 'generated' });
-    expect(parseArgs(['--template=welcome', '--data=src/data/welcome.data.js'])).toEqual({
+    expect(parseArgs(['--template=welcome', '--data=payloads/welcome.json'])).toEqual({
       template: 'welcome',
-      data: 'src/data/welcome.data.js',
+      data: 'payloads/welcome.json',
     });
   });
 

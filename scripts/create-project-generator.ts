@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createGenerator } from '@llazyemail/generate-template';
 import { lookupKeys, templates } from '../src/templates/manifest.ts';
+import { templateData } from '../src/data/index.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -18,14 +19,13 @@ export function createProjectGenerator() {
   const samplePayloads: Record<string, unknown> = {};
   for (const template of templates) {
     for (const id of lookupKeys(template)) {
-      samplePayloads[id] = template.sample;
+      samplePayloads[id] = templateData[template.id];
     }
   }
 
   return createGenerator({
     root: ROOT,
     templatesDir: 'src/templates',
-    dataDir: 'src/data',
     outDir: 'generated',
     reviveDates: true,
     catalog,

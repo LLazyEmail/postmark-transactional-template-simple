@@ -1,6 +1,6 @@
-import type { OrderConfirmationEmailProps } from './types';
+import type { OrderConfirmationEmailProps } from '../templates/order-confirmation/types.ts';
 
-export const orderConfirmationSample: OrderConfirmationEmailProps = {
+export const orderConfirmationData: OrderConfirmationEmailProps = {
   name: 'Jordan',
   preheader: 'Thanks for your order #1001.',
   order_id: '1001',

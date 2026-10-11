@@ -4,7 +4,6 @@ import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
 import { escapeHtml } from '../../layout/html.ts';
 import { defineTemplate } from '../defineTemplate.ts';
-import { passwordResetSample } from './sample.ts';
 import type { FieldCheck } from '@llazyemail/validator';
 
 /** Stable registry id. Legacy callers and `renderTemplate('password-reset')` use this. */
@@ -35,7 +34,6 @@ export const passwordReset = defineTemplate<PasswordResetEmailProps>({
   name: 'PasswordResetEmail',
   file: 'password-reset/passwordResetEmail.ts',
   exportName: 'passwordReset',
-  sample: passwordResetSample,
   checks,
 
   render: ({

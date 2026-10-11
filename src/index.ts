@@ -13,6 +13,18 @@ export {
   getTemplate,
 } from './templates/registry.ts';
 
+export {
+  templateData,
+  welcomeData,
+  invoiceData,
+  orderConfirmationData,
+  trialExpiringData,
+  userInvitationData,
+  passwordResetData,
+  exampleData,
+  commentNotificationData,
+} from './data/index.ts';
+
 export type { WelcomeEmailProps, WelcomeEmailTemplate } from './templates/welcome/types.ts';
 export type { InvoiceEmailProps, InvoiceEmailTemplate } from './templates/invoice/types.ts';
 export type { TrialExpiringEmailProps, TrialExpiringEmailTemplate } from './templates/trial-expiring/types.ts';
