@@ -2,7 +2,6 @@ export type { CommentAttachment, CommentNotificationEmailProps } from './types.t
 import type { CommentNotificationEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { attachmentTable } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { commentNotificationData } from '../../data/comment-notification.ts';
 
@@ -37,13 +36,13 @@ export const CommentNotificationEmail =
       company_suite,
       company_url,
     }) => {
-      const bodyHtml = escapeHtml(body).replace(/\r\n|\r|\n/g, '<br />');
+      const bodyHtml = body.replace(/\r\n|\r|\n/g, '<br />');
       const inner = `${bodyHtml}
                         <br />
                         <br />
                         ${attachmentTable(attachment_details)}
-                        <p>By ${escapeHtml(commenter_name)} at ${escapeHtml(timestamp)}</p>
-                        <p class="sub"><a href="${escapeHtml(action_url)}">View the comment</a> or <a href="${escapeHtml(notifications_url)}">Manage notifications</a></p>`;
+                        <p>By ${commenter_name} at ${timestamp}</p>
+                        <p class="sub"><a href="${action_url}">View the comment</a> or <a href="${notifications_url}">Manage notifications</a></p>`;
 
       return renderPostmarkDocument({
         product_name,

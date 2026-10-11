@@ -1,5 +1,3 @@
-import { escapeHtml } from './blocks.ts';
-
 export interface PostmarkShellProps {
   productName: string;
   companyUrl: string;
@@ -14,7 +12,7 @@ export function renderPostmarkShell({
   bodyHtml,
   footerHtml,
 }: PostmarkShellProps): string {
-  const masthead = `<a href="${escapeHtml(companyUrl)}" class="f-fallback email-masthead_name">${escapeHtml(productName)}</a>`;
+  const masthead = `<a href="${companyUrl}" class="f-fallback email-masthead_name">${productName}</a>`;
 
   return `<table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr><td align="center">

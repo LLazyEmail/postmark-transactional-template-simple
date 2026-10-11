@@ -1,3 +1,4 @@
+import { escapeHtml } from '@llazyemail/template-runtime-display';
 import type { FieldCheck } from '@llazyemail/validator';
 import type { ITemplate } from '../types/template/index.ts';
 
@@ -25,6 +26,26 @@ export interface EmailModule<Props> extends ITemplate<Props> {
 }
 
 /**
+ * Deep-copies a payload with every string HTML-escaped. Dates, numbers, and
+ * other non-strings pass through, so values a render body derives itself
+ * (e.g. a formatted date) stay the template's responsibility to escape.
+ */
+function escapePayload<Props>(value: unknown): Props {
+  if (typeof value === 'string') return escapeHtml(value) as unknown as Props;
+  if (Array.isArray(value)) {
+    return value.map((entry) => escapePayload(entry)) as unknown as Props;
+  }
+  if (value instanceof Date || value === null || typeof value !== 'object') {
+    return value as Props;
+  }
+  const escaped: Record<string, unknown> = {};
+  for (const [key, nested] of Object.entries(value)) {
+    escaped[key] = escapePayload(nested);
+  }
+  return escaped as Props;
+}
+
+/**
  * The only template factory. Pairs a render definition with its typed data
  * instance, so `data` is compile-time checked against the props the render
  * function consumes. Replaces `defineTemplate()` and the legacy
@@ -48,7 +69,7 @@ export function defineEmail<Props>(config: {
     exportName: config.exportName,
     checks: config.checks,
     data: config.data,
-    render: config.render,
+    render: (props: Props) => config.render(escapePayload<Props>(props)),
   };
 }
 

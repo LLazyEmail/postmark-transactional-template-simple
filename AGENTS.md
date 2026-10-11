@@ -68,14 +68,16 @@ Do not run coverage while iterating.
 `scripts/create-project-generator.ts` expands every entry over all lookup keys
 (id, name, aliases) into the engine's `samplePayloads` → CLI. Payload
 resolution at render: `--data=<path>` wins, then the data instance, then a
-thrown error. `dataDir` is not configured and `useDataFiles` is not enabled —
-do not re-add them.
+thrown error; every path runs through the module's `render`, which escapes
+payload strings once (`escapePayload`). `dataDir` is not configured and
+`useDataFiles` is not enabled — do not re-add them.
 
 ## Invariants
 
 - `manifest.ts` is the only registration list (a flat list of `defineEmail()` modules). Never edit `registry.ts`, `system.ts`, or `src/index.ts` for a template, and never add a second catalog file.
 - Template ids are CamelCase (`<Name>Email`, equal to `name`). Kebab forms such as `password-reset` are aliases only; never register a new kebab-case id (ADR 0003).
 - Payloads live in `src/data/` only; a module binds its instance via `defineEmail({ data })` — never inline fixture data in render bodies.
+- Payload strings are HTML-escaped once, inside `defineEmail()` (`escapePayload`): render bodies interpolate props as-is and layout blocks trust their inputs. Only values a render body derives itself (e.g. `signupDate.toDateString()`) are escaped at the call site.
 - Generated stems follow the slug of the id/alias; six baseline names are pinned in `tests/unit/generate-baseline.test.ts` and `tests/fixtures/generated-slugs.json` (`WelcomeEmail` writes `welcome.html`).
 - ESM with explicit `.ts` extensions on relative imports (`allowImportingTsExtensions`). `noUncheckedIndexedAccess` is on.
 - `welcomeData.signupDate` is a real `Date`; the engine is configured `reviveDates: true`.

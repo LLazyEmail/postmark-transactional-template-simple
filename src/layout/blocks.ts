@@ -1,5 +1,4 @@
-import { escapeHtml } from '@llazyemail/template-runtime-display';
-
+/** Markup combinators. Inputs are trusted: pre-escaped payload strings or literal HTML. */
 export { body, escapeHtml, head } from '@llazyemail/template-runtime-display';
 export type { BodyProps, HeadProps } from '@llazyemail/template-runtime-display';
 
@@ -16,7 +15,7 @@ export function bulletproofButton(
   return `<table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center">
-                                    <a href="${escapeHtml(href)}" class="f-fallback button${variantClass}" target="_blank">${escapeHtml(label)}</a>
+                                    <a href="${href}" class="f-fallback button${variantClass}" target="_blank">${label}</a>
                                   </td>
                                 </tr>
                               </table>`;
@@ -53,13 +52,11 @@ export function attributeTable(rowsHtml: string): string {
 
 /** Fallback URL under the button. `url` is linked when `asLink` is set. */
 export function subCopy(message: string, url: string, asLink = false): string {
-  const urlHtml = asLink
-    ? `<a href="${escapeHtml(url)}">${escapeHtml(url)}</a>`
-    : escapeHtml(url);
+  const urlHtml = asLink ? `<a href="${url}">${url}</a>` : url;
   return `<table class="body-sub" role="presentation">
                           <tr>
                             <td>
-                              <p class="f-fallback sub">${escapeHtml(message)}</p>
+                              <p class="f-fallback sub">${message}</p>
                               <p class="f-fallback sub">${urlHtml}</p>
                             </td>
                           </tr>
@@ -79,7 +76,7 @@ export function attachmentTable(items: readonly AttachmentDetail[] | undefined):
   const rows = items
     .map((item) =>
       attributeRow(
-        `<a href="${escapeHtml(item.attachment_url)}">${escapeHtml(item.attachment_name)}</a> <span>(${escapeHtml(item.attachment_size)} ${escapeHtml(item.attachment_type)})</span>`
+        `<a href="${item.attachment_url}">${item.attachment_name}</a> <span>(${item.attachment_size} ${item.attachment_type})</span>`
       )
     )
     .join('');

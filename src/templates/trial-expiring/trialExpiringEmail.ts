@@ -8,7 +8,6 @@ import {
   bulletproofButton,
   subCopy,
 } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { trialExpiringData } from '../../data/trial-expiring.ts';
 
@@ -25,9 +24,9 @@ function buildBenefitCtaBlocks({
       ({ title, description }) => `
                         <tr>
                           <td class="benefit_item">
-                            <p class="f-fallback benefit_title"><strong>${escapeHtml(title)}</strong>${
+                            <p class="f-fallback benefit_title"><strong>${title}</strong>${
         description
-          ? ` \u2014 <span class="benefit_description">${escapeHtml(description)}</span>`
+          ? ` \u2014 <span class="benefit_description">${description}</span>`
           : ''
       }</p>
                           </td>
@@ -40,7 +39,7 @@ function buildBenefitCtaBlocks({
                         <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td align="center">
-                              <a href="${escapeHtml(secondary_url)}" class="f-fallback" target="_blank">Compare plans</a>
+                              <a href="${secondary_url}" class="f-fallback" target="_blank">Compare plans</a>
                             </td>
                           </tr>
                         </table>`
@@ -85,26 +84,26 @@ export const TrialExpiringEmail = defineEmail<TrialExpiringEmailProps>({
       secondary_url,
     });
 
-    const body = `<h1>Hi ${escapeHtml(name)},</h1>
-                        <p>Your <strong>${escapeHtml(plan_name)}</strong> trial ends on <strong>${escapeHtml(trial_end_date)}</strong> \u2014 that's in <strong>${escapeHtml(trial_days_remaining)}</strong> day(s). After that, you'll be charged <strong>${escapeHtml(plan_price)}</strong> unless you cancel.</p>
+    const body = `<h1>Hi ${name},</h1>
+                        <p>Your <strong>${plan_name}</strong> trial ends on <strong>${trial_end_date}</strong> \u2014 that's in <strong>${trial_days_remaining}</strong> day(s). After that, you'll be charged <strong>${plan_price}</strong> unless you cancel.</p>
                         ${attributeTable(
                           attributeRow(
-                            `<span class="f-fallback"><strong>Plan:</strong> ${escapeHtml(plan_name)}</span>`
+                            `<span class="f-fallback"><strong>Plan:</strong> ${plan_name}</span>`
                           ) +
                             attributeRow(
-                              `<span class="f-fallback"><strong>Trial ends:</strong> ${escapeHtml(trial_end_date)}</span>`
+                              `<span class="f-fallback"><strong>Trial ends:</strong> ${trial_end_date}</span>`
                             ) +
                             attributeRow(
-                              `<span class="f-fallback"><strong>Price after trial:</strong> ${escapeHtml(plan_price)}</span>`
+                              `<span class="f-fallback"><strong>Price after trial:</strong> ${plan_price}</span>`
                             )
                         )}
                         <p>If you do nothing, your account will continue seamlessly. Here's what you'll keep:</p>
                         <table width="100%" cellpadding="0" cellspacing="0" role="presentation">${benefitItems}
                         </table>
                         ${actionBlock(bulletproofButton(action_url, `Keep My ${plan_name} Plan`, 'green'))}${secondaryCta}
-                        <p>If you have any questions about your trial or billing, just reply to this email or reach out to our <a href="${escapeHtml(support_url)}">support team</a>.</p>
+                        <p>If you have any questions about your trial or billing, just reply to this email or reach out to our <a href="${support_url}">support team</a>.</p>
                         <p>Cheers,
-                          <br>The ${escapeHtml(product_name)} team</p>
+                          <br>The ${product_name} team</p>
                         ${subCopy(
                           "If you're having trouble with the button above, copy and paste the URL below into your web browser.",
                           action_url

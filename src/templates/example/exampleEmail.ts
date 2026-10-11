@@ -8,7 +8,6 @@ import {
   bulletproofButton,
   subCopy,
 } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { exampleData } from '../../data/example.ts';
 
@@ -48,7 +47,6 @@ export const ExampleEmail = defineEmail<ExampleEmailProps>({
     company_suite,
     company_url,
   }) => {
-    const product = escapeHtml(product_name);
     const body = `<hr />
                         <h1>Escaped Handlebars Brackets</h1>
                         <p>Working with templates, you'll occasionally need to put some <a href="https://github.com/activecampaign/mustachio">Mustachio</a> code in your Handlebars templates. To prevent the Handlebars processing from attempting to process your Mustachio code, you'll need to escape the curly braces by adding a backslash just before the opening curly braces.</p>
@@ -89,34 +87,34 @@ export const ExampleEmail = defineEmail<ExampleEmailProps>({
                         <h1>Attribute List</h1>
                         <p>If your email client baseline is sufficiently modern, you can achieve the same effects with list much more succinctly. We chose to use tables for these lists to accommodate Outlook 2007, 2010, and 2013.</p>
                         ${attributeTable(
-                          attributeRow(`<strong>Login Page:</strong> ${escapeHtml(login_url)}`) +
-                            attributeRow(`<strong>Username:</strong> ${escapeHtml(username)}`)
+                          attributeRow(`<strong>Login Page:</strong> ${login_url}`) +
+                            attributeRow(`<strong>Username:</strong> ${username}`)
                         )}
                         <hr />
                         <h1>Option List</h1>
                         <p>For the most part, option lists are just like attribute lists. They just use line breaks to create some separation between the items.</p>
                         ${attributeTable(
                           attributeRow(
-                            `<strong><a href="${escapeHtml(trial_extension_url)}">Restart your trial</a></strong> - If you didn't get a chance to fully try out the product or need a little more time to evaluate, just let us know. Simply reply to this email and we'll extend your trial period.
+                            `<strong><a href="${trial_extension_url}">Restart your trial</a></strong> - If you didn't get a chance to fully try out the product or need a little more time to evaluate, just let us know. Simply reply to this email and we'll extend your trial period.
                                     <br />
                                     <br />`
                           ) +
                             attributeRow(
-                              `<strong><a href="${escapeHtml(feedback_url)}">Share feedback</a></strong> - If ${product} isn't right for you, let us know what you were looking for and we might be able to suggest some alternatives that might be a better fit.`
+                              `<strong><a href="${feedback_url}">Share feedback</a></strong> - If ${product_name} isn't right for you, let us know what you were looking for and we might be able to suggest some alternatives that might be a better fit.`
                             )
                         )}
                         <hr />
                         <h1>Example Closing</h1>
                         <p>Thanks,
-                          <br>${escapeHtml(sender_name)} and the ${product} team</p>
-                        <p><strong>P.S.</strong> Need help getting started? Check out our help documentation. Or, just reply to this email with any questions or issues you have. The ${product} support team is always excited to help you.</p>
+                          <br>${sender_name} and the ${product_name} team</p>
+                        <p><strong>P.S.</strong> Need help getting started? Check out our help documentation. Or, just reply to this email with any questions or issues you have. The ${product_name} support team is always excited to help you.</p>
                         <hr />
                         <h1>Discount Code</h1>
                         <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td align="center">
                               <h1 class="f-fallback discount_heading">10% off your next purchase!</h1>
-                              <p class="f-fallback discount_body">Thanks for your support! Here's a coupon for 10% off your next purchase if used by ${escapeHtml(expiration_date)}.</p>
+                              <p class="f-fallback discount_body">Thanks for your support! Here's a coupon for 10% off your next purchase if used by ${expiration_date}.</p>
                               ${bulletproofButton(discount_url, 'Use this discount now...', 'green')}
                             </td>
                           </tr>

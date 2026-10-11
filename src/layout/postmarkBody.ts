@@ -1,5 +1,5 @@
 import type { EmailBrandProps } from '../types/brand.ts';
-import { body as renderBody, escapeHtml } from './blocks.ts';
+import { body as renderBody } from './blocks.ts';
 import { renderPostmarkFooter } from './postmarkFooter.ts';
 import { renderPostmarkShell } from './postmarkShell.ts';
 
@@ -10,7 +10,7 @@ export interface PostmarkBodyProps extends EmailBrandProps {
 
 function renderPreheader(preheader: string | undefined): string {
   if (preheader === undefined) return '';
-  return `<span class="preheader">${escapeHtml(preheader)}</span>\n    `;
+  return `<span class="preheader">${preheader}</span>\n    `;
 }
 
 /** Postmark `<body>`: preheader, shell, and footer around the template HTML. */
