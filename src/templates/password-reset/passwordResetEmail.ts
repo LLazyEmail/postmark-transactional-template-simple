@@ -2,7 +2,6 @@ export type { PasswordResetEmailProps } from './types.ts';
 import type { PasswordResetEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
 import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { passwordResetData } from '../../data/password-reset.ts';
 import type { FieldCheck } from '@llazyemail/validator';
@@ -52,12 +51,12 @@ export const passwordReset = defineEmail<PasswordResetEmailProps>({
     company_suite,
     company_url,
   }) => {
-    const body = `<h1>Hi ${escapeHtml(name)},</h1>
-                        <p>You recently requested to reset your password for your ${escapeHtml(product_name)} account. Use the button below to reset it. <strong>This password reset is only valid for the next 24 hours.</strong></p>
+    const body = `<h1>Hi ${name},</h1>
+                        <p>You recently requested to reset your password for your ${product_name} account. Use the button below to reset it. <strong>This password reset is only valid for the next 24 hours.</strong></p>
                         ${actionBlock(bulletproofButton(action_url, 'Reset your password', 'green'))}
-                        <p>For security, this request was received from a ${escapeHtml(operating_system)} device using ${escapeHtml(browser_name)}. If you did not request a password reset, please ignore this email or <a href="${escapeHtml(support_url)}">contact support</a> if you have questions.</p>
+                        <p>For security, this request was received from a ${operating_system} device using ${browser_name}. If you did not request a password reset, please ignore this email or <a href="${support_url}">contact support</a> if you have questions.</p>
                         <p>Thanks,
-                          <br>The ${escapeHtml(product_name)} team</p>
+                          <br>The ${product_name} team</p>
                         ${subCopy(
                           "If you're having trouble with the button above, copy and paste the URL below into your web browser.",
                           action_url

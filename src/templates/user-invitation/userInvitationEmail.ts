@@ -8,14 +8,13 @@ import {
   bulletproofButton,
   subCopy,
 } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { userInvitationData } from '../../data/user-invitation.ts';
 
 /** " join <strong>Workspace</strong>" suffix; empty when no workspace name. */
 function buildWorkspaceBlurb(workspace_name: string | undefined): string {
   return workspace_name
-    ? ` join <strong>${escapeHtml(workspace_name)}</strong>`
+    ? ` join <strong>${workspace_name}</strong>`
     : '';
 }
 
@@ -26,7 +25,7 @@ function buildDeclineBlock(decline_url: string | undefined): string {
                         <table class="body-action-secondary" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
                             <td align="center">
-                              <a href="${escapeHtml(decline_url)}" class="f-fallback" target="_blank">Decline invitation</a>
+                              <a href="${decline_url}" class="f-fallback" target="_blank">Decline invitation</a>
                             </td>
                           </tr>
                         </table>`
@@ -68,26 +67,26 @@ export const UserInvitationEmail = defineEmail<UserInvitationEmailProps>({
     const workspaceBlurb = buildWorkspaceBlurb(workspace_name);
     const declineBlock = buildDeclineBlock(decline_url);
 
-    const body = `<h1>Hi ${escapeHtml(invitee_name)},</h1>
-                        <p><strong>${escapeHtml(inviter_name)}</strong> has invited you to${workspaceBlurb} on ${escapeHtml(product_name)} as a <strong>${escapeHtml(role)}</strong>.</p>
+    const body = `<h1>Hi ${invitee_name},</h1>
+                        <p><strong>${inviter_name}</strong> has invited you to${workspaceBlurb} on ${product_name} as a <strong>${role}</strong>.</p>
                         ${attributeTable(
                           attributeRow(
-                            `<span class="f-fallback"><strong>Invited by:</strong> ${escapeHtml(inviter_name)}</span>`
+                            `<span class="f-fallback"><strong>Invited by:</strong> ${inviter_name}</span>`
                           ) +
                             attributeRow(
-                              `<span class="f-fallback"><strong>Role:</strong> ${escapeHtml(role)}</span>`
+                              `<span class="f-fallback"><strong>Role:</strong> ${role}</span>`
                             ) +
                             attributeRow(
-                              `<span class="f-fallback"><strong>Invited email:</strong> ${escapeHtml(invitee_email)}</span>`
+                              `<span class="f-fallback"><strong>Invited email:</strong> ${invitee_email}</span>`
                             ) +
                             attributeRow(
-                              `<span class="f-fallback"><strong>Invitation expires:</strong> ${escapeHtml(expires_at)}</span>`
+                              `<span class="f-fallback"><strong>Invitation expires:</strong> ${expires_at}</span>`
                             )
                         )}
                         ${actionBlock(bulletproofButton(action_url, 'Accept Invitation', 'green'))}${declineBlock}
-                        <p>If you have any questions, reach out to <a href="${escapeHtml(support_url)}">our support team</a> \u2014 we're happy to help.</p>
+                        <p>If you have any questions, reach out to <a href="${support_url}">our support team</a> \u2014 we're happy to help.</p>
                         <p>Cheers,
-                          <br>The ${escapeHtml(product_name)} team</p>
+                          <br>The ${product_name} team</p>
                         ${subCopy(
                           "If you're having trouble with the button above, copy and paste the URL below into your web browser.",
                           action_url

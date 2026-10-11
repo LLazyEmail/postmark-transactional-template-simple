@@ -8,12 +8,11 @@ import {
   bulletproofButton,
   subCopy,
 } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { orderConfirmationData } from '../../data/order-confirmation.ts';
 
 function formatAddress(addr: string): string {
-  return addr.split('\n').map((line) => escapeHtml(line)).join('<br>');
+  return addr.split('\n').join('<br>');
 }
 
 /** Billing address block; empty when billing matches shipping or is blank. */
@@ -70,10 +69,10 @@ export const orderConfirmation = defineEmail<OrderConfirmationEmailProps>({
       .map(
         ({ description, unit_price, quantity, total: lineTotal }) => `
                                 <tr>
-                                  <td width="60%" class="purchase_item"><span class="f-fallback">${escapeHtml(description)}</span></td>
-                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${escapeHtml(unit_price)}</span></td>
-                                  <td class="align-right" width="10%" class="purchase_item"><span class="f-fallback">${escapeHtml(quantity)}</span></td>
-                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${escapeHtml(lineTotal)}</span></td>
+                                  <td width="60%" class="purchase_item"><span class="f-fallback">${description}</span></td>
+                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${unit_price}</span></td>
+                                  <td class="align-right" width="10%" class="purchase_item"><span class="f-fallback">${quantity}</span></td>
+                                  <td class="align-right" width="15%" class="purchase_item"><span class="f-fallback">${lineTotal}</span></td>
                                 </tr>`
       )
       .join('');
@@ -83,16 +82,16 @@ export const orderConfirmation = defineEmail<OrderConfirmationEmailProps>({
       shipping_address,
     });
 
-    const body = `<h1>Hi ${escapeHtml(name)},</h1>
-                        <p>Thanks for your order. This email is your receipt for order <strong>${escapeHtml(order_id)}</strong> placed on <strong>${escapeHtml(order_date)}</strong>.</p>
+    const body = `<h1>Hi ${name},</h1>
+                        <p>Thanks for your order. This email is your receipt for order <strong>${order_id}</strong> placed on <strong>${order_date}</strong>.</p>
                         ${actionBlock(bulletproofButton(action_url, 'View your order', 'green'))}
                         <table class="purchase" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td>
-                              <h3>${escapeHtml(order_id)}</h3>
+                              <h3>${order_id}</h3>
                             </td>
                             <td>
-                              <h3 class="align-right">${escapeHtml(order_date)}</h3>
+                              <h3 class="align-right">${order_date}</h3>
                             </td>
                           </tr>
                           <tr>
@@ -109,7 +108,7 @@ export const orderConfirmation = defineEmail<OrderConfirmationEmailProps>({
                                     <p class="f-fallback purchase_total purchase_total--label">Total</p>
                                   </td>
                                   <td width="20%" class="purchase_footer" valign="middle">
-                                    <p class="f-fallback purchase_total">${escapeHtml(total)}</p>
+                                    <p class="f-fallback purchase_total">${total}</p>
                                   </td>
                                 </tr>
                               </table>
@@ -121,8 +120,8 @@ export const orderConfirmation = defineEmail<OrderConfirmationEmailProps>({
                             `<span class="f-fallback"><strong>Shipping address:</strong><br>${formatAddress(shipping_address)}</span>`
                           )
                         )}${billingBlock}
-                        <p>If you have any questions about this order, simply reply to this email or reach out to our <a href="${escapeHtml(support_url)}">support team</a>.</p>
-                        <p>Cheers,<br>The ${escapeHtml(product_name)} team</p>
+                        <p>If you have any questions about this order, simply reply to this email or reach out to our <a href="${support_url}">support team</a>.</p>
+                        <p>Cheers,<br>The ${product_name} team</p>
                         ${subCopy(
                           "If you're having trouble with the button above, copy and paste the URL below into your web browser.",
                           action_url

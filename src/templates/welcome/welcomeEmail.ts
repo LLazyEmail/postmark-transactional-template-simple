@@ -1,7 +1,6 @@
 import type { WelcomeEmailProps } from './types.ts';
 import { renderPostmarkDocument } from '../../layout/postmarkDocument.ts';
-import { actionBlock, bulletproofButton, subCopy } from '../../layout/blocks.ts';
-import { escapeHtml } from '../../layout/html.ts';
+import { actionBlock, bulletproofButton, escapeHtml, subCopy } from '../../layout/blocks.ts';
 import { defineEmail } from '../defineEmail.ts';
 import { welcomeData } from '../../data/welcome.ts';
 import type { FieldCheck } from '@llazyemail/validator';
@@ -21,7 +20,7 @@ function buildProduct(product_name: string | undefined): string {
 /** Support paragraph; empty when no support URL. */
 function buildSupport(support_url: string | undefined): string {
   return support_url
-    ? `<p>If you have any questions, reach out to our <a href="${escapeHtml(support_url)}">support team</a>.</p>`
+    ? `<p>If you have any questions, reach out to our <a href="${support_url}">support team</a>.</p>`
     : '';
 }
 
@@ -56,12 +55,14 @@ export const WelcomeEmail = defineEmail<WelcomeEmailProps>({
     company_suite,
     company_url,
   }) => {
+    const signupDateText = escapeHtml(signupDate.toDateString());
+
     if (!action_url) {
       return `
     <html>
       <body>
         <h1>Welcome, ${userName}!</h1>
-        <p>Thanks for signing up on ${signupDate.toDateString()}.</p>
+        <p>Thanks for signing up on ${signupDateText}.</p>
       </body>
     </html>
   `;
@@ -69,14 +70,14 @@ export const WelcomeEmail = defineEmail<WelcomeEmailProps>({
 
     const product = buildProduct(product_name);
     const support = buildSupport(support_url);
-    const body = `<h1>Welcome, ${escapeHtml(userName)}!</h1>
-                        <p>Thanks for signing up on ${escapeHtml(signupDate.toDateString())}.</p>
+    const body = `<h1>Welcome, ${userName}!</h1>
+                        <p>Thanks for signing up on ${signupDateText}.</p>
                         ${support}
                         ${actionBlock(
                           bulletproofButton(action_url, action_label ?? 'Get Started', 'green')
                         )}
                         <p>Cheers,
-                          <br>The ${escapeHtml(product)} team</p>
+                          <br>The ${product} team</p>
                         ${subCopy(
                           "If you're having trouble with the button above, copy and paste the URL below into your web browser.",
                           action_url

@@ -1,4 +1,3 @@
-import { escapeHtml } from './blocks.ts';
 import type { EmailBrandProps } from '../types/brand.ts';
 
 export type PostmarkFooterBrandProps = Pick<
@@ -24,7 +23,7 @@ export function renderPostmarkFooter({
 }: PostmarkFooterProps): string {
   const content =
     innerHtml ??
-    `<p class="f-fallback sub align-center">${escapeHtml(company_name)}<br>${escapeHtml(company_address)}<br>${escapeHtml(company_suite)}</p>`;
+    `<p class="f-fallback sub align-center">${company_name}<br>${company_address}<br>${company_suite}</p>`;
 
   return `<table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
                   <tr><td class="content-cell" align="center">
