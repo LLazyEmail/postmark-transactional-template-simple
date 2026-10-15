@@ -1,5 +1,4 @@
 import type { EmailBrandProps } from '../types/brand.ts';
-import { body as renderBody } from './blocks.ts';
 import { renderPostmarkFooter } from './postmarkFooter.ts';
 import { renderPostmarkShell } from './postmarkShell.ts';
 
@@ -13,7 +12,7 @@ function renderPreheader(preheader: string | undefined): string {
   return `<span class="preheader">${preheader}</span>\n    `;
 }
 
-/** Postmark `<body>`: preheader, shell, and footer around the template HTML. */
+/** Inner content for the Postmark `<body>` (preheader + shell). Document wraps it. */
 export function renderPostmarkBody({
   preheader,
   product_name,
@@ -23,17 +22,16 @@ export function renderPostmarkBody({
   company_url,
   body,
 }: PostmarkBodyProps): string {
-  return renderBody({
-    preheaderHtml: renderPreheader(preheader),
-    mainHtml: renderPostmarkShell({
-      productName: product_name,
-      companyUrl: company_url,
-      bodyHtml: body,
-      footerHtml: renderPostmarkFooter({
-        company_name,
-        company_address,
-        company_suite,
-      }),
+  const preheaderHtml = renderPreheader(preheader);
+  const shell = renderPostmarkShell({
+    productName: product_name,
+    companyUrl: company_url,
+    bodyHtml: body,
+    footerHtml: renderPostmarkFooter({
+      company_name,
+      company_address,
+      company_suite,
     }),
   });
+  return `${preheaderHtml}${shell}`;
 }
