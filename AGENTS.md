@@ -31,7 +31,7 @@ the code wins; update this file.
 | `src/layout/` | Postmark document shell + blocks shared by all emails |
 | `scripts/create-project-generator.ts` | Engine catalog + `samplePayloads` wiring |
 | `generate-template.config.ts` | Entry the published bin loads |
-| `packages/component-types/` | Typed components; aliased as `@llazyemail/component-types`. Move-out boundary |
+| `packages/component-types/` | Move-out component contracts. Import `@llazyemail/component-types`. Docs in `packages/component-types/docs/`. No host imports |
 | `packages/template-engine/` | Starter copy; nothing imports it. Ignore unless asked |
 | `tests/unit/` | Unit + generation contract tests (see `docs/architecture.md` test map) |
 | `tests/integration/render-all.test.ts` | Every template through `renderTemplate` |

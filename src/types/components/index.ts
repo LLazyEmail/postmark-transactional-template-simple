@@ -5,6 +5,7 @@
 export type {
   ButtonComponent,
   ButtonProps,
+  ComponentKey,
   HeadingComponent,
   HeadingProps,
   HtmlString,
@@ -37,3 +38,4 @@ export type {
   TypographyComponent,
   TypographyComponents,
 } from '@llazyemail/component-types';
+export { COMPONENT_KEYS } from '@llazyemail/component-types';

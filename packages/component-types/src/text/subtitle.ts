@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** subtitle.js — subtitleComponent → <p><span><span><strong> */
 export interface SubtitleProps {

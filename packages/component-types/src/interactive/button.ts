@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** button2.js — buttonComponent → <a class="mlContentButton"> */
 export interface ButtonProps {

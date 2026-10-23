@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** paragraphComponentUpdated.js — paragraph plus an image. */
 export interface ParagraphUpdatedProps {

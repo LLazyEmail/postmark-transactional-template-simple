@@ -1,6 +1,6 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
-/** italic.js — italicComponent → <i> */
+/** italic.js — italicComponent */
 export interface ItalicProps {
   content: string;
 }
