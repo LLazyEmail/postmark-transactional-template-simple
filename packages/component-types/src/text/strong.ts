@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** strong.js — strongComponent → <strong style="font-weight: bolder;"> */
 export interface StrongProps {

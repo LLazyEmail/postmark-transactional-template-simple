@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** paragraph.js — paragraphComponent → plain text/HTML paragraph, no image */
 export interface ParagraphProps {

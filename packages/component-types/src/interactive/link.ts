@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** link.js — linkComponent → <a target="_blank"> */
 export interface LinkProps {

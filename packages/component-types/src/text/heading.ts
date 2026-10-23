@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** heading.js — headingComponent → <h3 class="mc-toc-title"> */
 export interface HeadingProps {

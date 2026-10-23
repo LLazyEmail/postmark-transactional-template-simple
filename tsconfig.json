@@ -33,6 +33,7 @@
     "tests/**/*.ts",
     "scripts/**/*.ts",
     "packages/component-types/src/**/*.ts",
+    "packages/component-types/tests/**/*.ts",
     "packages/template-runtime-display/src/**/*.ts",
     "vitest.config.ts",
     "tsup.config.ts"

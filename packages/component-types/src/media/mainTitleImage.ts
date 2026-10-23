@@ -1,4 +1,4 @@
-import type { TypographyComponent } from './typographyComponent.ts';
+import type { TypographyComponent } from '../core/typographyComponent.ts';
 
 /** mainTitleImage.js — mainTitleImageComponent. Same shape as ImageComponent. */
 export interface MainTitleImageProps {
