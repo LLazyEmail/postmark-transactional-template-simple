@@ -1,6 +1,6 @@
 /** Markup combinators. Inputs are trusted: pre-escaped payload strings or literal HTML. */
-export { body, escapeHtml, head } from '@llazyemail/template-runtime-display';
-export type { BodyProps, HeadProps } from '@llazyemail/template-runtime-display';
+export { escapeHtml, head } from '@llazyemail/template-runtime-display';
+export type { HeadProps } from '@llazyemail/template-runtime-display';
 
 
 export type ButtonVariant = 'green' | 'red';
