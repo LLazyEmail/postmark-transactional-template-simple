@@ -119,7 +119,7 @@ problem, not something to patch here (see AGENTS.md "Module regressions").
 - `.github/workflows/generate-templates.yml` — render only; runs on every PR,
   on manual dispatch, and on push to `main` when `src/**`, `scripts/**`,
   `package.json`, `package-lock.json`, or itself change. Uses
-  `LLazyEmail/email-template-workflows@v2.1.0` command mode with
+  `LLazyEmail/email-template-workflows@v2.3.0` command mode with
   `--all --out=generated`, then `generate:assert`. Lint and tests stay in
   `node.js.yml`.
 
