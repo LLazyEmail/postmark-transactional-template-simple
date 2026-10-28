@@ -103,7 +103,7 @@ Supported flags (do not rename or drop):
 - If CI cannot install, fix registry auth (`GITHUB_TOKEN` / `NODE_AUTH_TOKEN` with `packages: read`). Do not switch the install source to git.
 - If the published package is wrong or incomplete, publish a new version of the module and bump the pin. Do not work around it from this repo.
 
-Registry: `.npmrc` maps `@llazyemail` to GitHub Packages and reads
+Registry: `.npmrc` maps `@llazyemail` to GitHub Packages and reads `NODE_AUTH_TOKEN` from
 `GITHUB_TOKEN`. A local `npm install` without that token fails with E401 —
 that is an auth problem, never a reason to change the dependency spec.
 
