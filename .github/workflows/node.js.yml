@@ -13,8 +13,9 @@ jobs:
       contents: read
       packages: read
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [24.x]
+        node-version: [24.x, 26.x]
 
     steps:
       - uses: actions/checkout@v5
@@ -37,6 +38,7 @@ jobs:
       - run: npm test
       - run: npm run test:real-data
 
+      # Generate + assert + artifacts once (primary Node), not once per matrix cell.
       - name: Generate HTML templates
         if: matrix.node-version == '24.x'
         run: npm run generate:template -- --all
