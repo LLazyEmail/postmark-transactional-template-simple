@@ -127,3 +127,13 @@ or stub the packages to make tests pass.
 - Read `manifest.ts` + the template module's `defineEmail({ data })` block (id/alias/payload truth) instead of grepping templates.
 - Do not open `NEXT/`, `reference/` (unless diffing rendered output), or the engine's `node_modules` source; the engine is a pinned black box here.
 - One focused test file before the full suite; open generated HTML in a browser instead of dumping it into context.
+
+## Conventions
+
+- Small, single-purpose PRs; open them as **draft** first.
+- Commit trailer when working for the maintainer:
+  `Co-authored-by: petroved <arthur.tkachenko.netweight@gmail.com>`
+- Node: `engines.node` is `>=24`. CI runs on Node 24 and newer (not 22).
+- Keep `noUncheckedIndexedAccess` on. Prefer tests over lowering coverage gates.
+- Docs: extend or annotate; do not delete existing docs content.
+
