@@ -104,8 +104,9 @@ Supported flags (do not rename or drop):
 - If the published package is wrong or incomplete, publish a new version of the module and bump the pin. Do not work around it from this repo.
 
 Registry: `.npmrc` maps `@llazyemail` to GitHub Packages and reads
-`GITHUB_TOKEN`. A local `npm install` without that token fails with E401 —
-that is an auth problem, never a reason to change the dependency spec.
+`${NODE_AUTH_TOKEN}` (CI sets `NODE_AUTH_TOKEN` from `secrets.GITHUB_TOKEN`).
+A local `npm install` without that token fails with E401 — that is an auth
+problem, never a reason to change the dependency spec.
 
 ## Component types
 
