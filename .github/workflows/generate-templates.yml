@@ -1,7 +1,7 @@
 name: Generate templates
 
 # Render only. Lint, tests, and coverage stay in node.js.yml.
-# Uses LLazyEmail/email-template-workflows@v2.1.0 command mode so the catalog CLI
+# Uses LLazyEmail/email-template-workflows@v2.5.0 command mode so the catalog CLI
 # keeps --all/--out= and the action writes index.html, uploads, and comments.
 # .npmrc reads GITHUB_TOKEN for @llazyemail packages.
 
@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: LLazyEmail/email-template-workflows@v2.1.0
+      - uses: LLazyEmail/email-template-workflows@v2.5.0
         with:
           working-directory: .
           command: npm run generate:template -- --all --out=generated
