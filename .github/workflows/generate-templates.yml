@@ -1,8 +1,10 @@
 name: Generate templates
 
 # Render only. Lint, tests, and coverage stay in node.js.yml.
-# Uses LLazyEmail/email-template-workflows@v2.5.0 command mode so the catalog CLI
+# Uses LLazyEmail/email-template-workflows@v3 command mode so the catalog CLI
 # keeps --all/--out= and the action writes index.html, uploads, and comments.
+# Explicit product-name/size-limit-kb restore the v2 email defaults that
+# changed in the v3 breaking release.
 # .npmrc reads GITHUB_TOKEN for @llazyemail packages.
 
 on:
@@ -30,12 +32,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: LLazyEmail/email-template-workflows@v2.5.0
+      - uses: LLazyEmail/email-template-workflows@205c017968bd23a59cb4ccbc7d436fccfed11e57 # v3 (main; no @v3 tag yet)
         with:
           working-directory: .
           command: npm run generate:template -- --all --out=generated
           artifact-directory: generated
           artifact-name: generated-html-templates
+          product-name: emails
+          size-limit-kb: 102
 
       - name: Assert generated HTML snapshot files
         run: npm run generate:assert
