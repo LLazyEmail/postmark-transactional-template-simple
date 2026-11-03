@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: LLazyEmail/email-template-workflows@205c017968bd23a59cb4ccbc7d436fccfed11e57 # v3 (main; no @v3 tag yet)
+      - uses: LLazyEmail/email-template-workflows@v3
         with:
           working-directory: .
           command: npm run generate:template -- --all --out=generated
